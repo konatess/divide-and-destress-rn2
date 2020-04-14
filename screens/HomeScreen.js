@@ -17,18 +17,18 @@ export default function HomeScreen() {
 
       <FlatList 
         data={[
-            { key: 'Devin' },
-            { key: 'Dan' },
-            { key: 'Dominic' },
-            { key: 'Jackson' },
-            { key: 'James' },
-            { key: 'Joel' },
-            { key: 'John' },
-            { key: 'Jillian' },
-            { key: 'Jimmy' },
-            { key: 'Julie' }
+            { key: 'Devin', age: 5 },
+            { key: 'Dan', age: 4 },
+            { key: 'Dominic', age: 6 },
+            { key: 'Jackson', age: 5 },
+            { key: 'James', age: 7 },
+            { key: 'Joel', age: 5 },
+            { key: 'John', age: 5 },
+            { key: 'Jillian', age: 5 },
+            { key: 'Jimmy', age: 5 },
+            { key: 'Julie', age: 5 }
           ]}
-          renderItem={({ item }) => <Text style={styles.item}>{item.key}</Text>}
+          renderItem={({ item }) => <Text style={styles.item}>{item.key}, {item.age}</Text>}
       />
     </View>
   );
