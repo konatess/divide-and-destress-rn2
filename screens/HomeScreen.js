@@ -1,24 +1,14 @@
-import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, FlatList } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-
-import { MonoText } from '../components/StyledText';
+import { Platform, StyleSheet, Text, View, FlatList } from 'react-native';
+import { ScrollView, RectButton } from 'react-native-gesture-handler';
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
-        </View>
-        
-      </ScrollView>
-
       <FlatList 
         data={[
-            { key: 'Devin', age: 5 },
-            { key: 'Dan', age: 4 },
+            { key: 'Devin', age: 5238 },
+            { key: 'Dan with a really long name that is so long it has to wrap', age: 4234 },
             { key: 'Dominic', age: 6 },
             { key: 'Jackson', age: 5 },
             { key: 'James', age: 7 },
@@ -28,7 +18,10 @@ export default function HomeScreen() {
             { key: 'Jimmy', age: 5 },
             { key: 'Julie', age: 5 }
           ]}
-          renderItem={({ item }) => <Text style={styles.item}>{item.key}, {item.age}</Text>}
+          renderItem={({ item }) => <ProjectButton
+            label={item.key} 
+            due={item.age}
+          ></ProjectButton>}
       />
     </View>
   );
@@ -38,123 +31,46 @@ HomeScreen.navigationOptions = {
   header: null,
 };
 
-function DevelopmentModeNotice() {
-  if (__DEV__) {
-    const learnMoreButton = (
-      <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
-        Learn more
-      </Text>
-    );
-
-    return (
-      <Text style={styles.developmentModeText}>
-        Development mode is enabled: your app will be slower but you can use useful development
-        tools. {learnMoreButton}
-      </Text>
-    );
-  } else {
-    return (
-      <Text style={styles.developmentModeText}>
-        You are not in development mode: your app will run at full speed.
-      </Text>
-    );
-  }
-}
-
-function handleLearnMorePress() {
-  WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/workflow/development-mode/');
+function ProjectButton({ label, due, onPress, isLastOption }) {
+  return (
+    <RectButton style={[styles.project, isLastOption && styles.lastOption]} onPress={onPress}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={styles.projectLabelTextContainer} accessible>
+          <Text style={styles.labelText}>{label}</Text>
+        </View>
+        <View style={styles.projectDueTextContainer} accessible>
+          <Text style={styles.dueText}>{due}</Text>
+        </View>
+      </View>
+    </RectButton>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    padding: 5,
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
-  },
-  contentContainer: {
-    paddingTop: 30,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
-  item: {
+  project: {
     padding: 10,
+    backgroundColor: 'pink',
+  },
+  projectLabelTextContainer: {
+    flexGrow: 1,
+    backgroundColor: 'green'
+  },
+  labelText: {
+    fontSize: 22,
+    backgroundColor: 'white',
+  },
+  projectDueTextContainer: {
+    backgroundColor: 'blue',
+  },
+  dueText: {
     fontSize: 18,
-    height: 44,
+    width: 50,
+    flexShrink: 0,
+    backgroundColor: 'white',
   },
 });
