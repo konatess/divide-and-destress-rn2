@@ -57,8 +57,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'pink',
   },
   projectLabelTextContainer: {
-    flexGrow: 1,
-    backgroundColor: 'green'
+    flexShrink: 1,
+    backgroundColor: 'green',
+    paddingRight: 10,
   },
   labelText: {
     fontSize: 22,
@@ -66,11 +67,11 @@ const styles = StyleSheet.create({
   },
   projectDueTextContainer: {
     backgroundColor: 'blue',
+    paddingLeft: 5,
+    justifyContent: 'center',
   },
   dueText: {
     fontSize: 18,
-    width: 50,
-    flexShrink: 0,
     backgroundColor: 'white',
   },
 });
