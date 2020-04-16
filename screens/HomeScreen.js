@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Platform, StyleSheet, Text, View, FlatList } from 'react-native';
-import { ScrollView, RectButton } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { RectButton } from 'react-native-gesture-handler';
+import { Project } from '../constants/ProjectClass.js'
 
 export default function HomeScreen() {
   return (
@@ -8,7 +9,7 @@ export default function HomeScreen() {
       <FlatList 
         data={[
             { key: 'Devin', age: 5238 },
-            { key: 'Dan with a really long name that is so long it has to wrap', age: 4234 },
+            { key: 'Dan with a really long name that is so long it has to wrap', age: 423419384731 },
             { key: 'Dominic', age: 6 },
             { key: 'Jackson', age: 5 },
             { key: 'James', age: 7 },
