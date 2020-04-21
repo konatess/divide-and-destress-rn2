@@ -32,14 +32,14 @@ export default function LinksScreen() {
       />
 
       <OptionButton
-        icon="md-alarm"
+        icon="md-notifications"
         label="Default Notification Preferences"
         onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
       />
 
       <OptionButton
         icon="md-swap"
-        label="Set Default Total vs Start/End"
+        label="Set Default Count to Total or Start/End"
         onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
       />
 

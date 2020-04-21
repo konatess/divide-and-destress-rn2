@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-import { Project } from '../constants/ProjectClass.js'
+import { Project } from '../constants/ProjectClass.js';
 
 export default function HomeScreen() {
   return (

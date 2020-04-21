@@ -10,7 +10,7 @@ export class Project {
         this._totalVsRange = tR;
         this._tags = tag;
         this._notifySettings = nS;
-        this._textLimit = /([\w'\- _/])/g
+        this._textLimit = /([\w'\- _/])/g //change this to a static method instead?
     }  
     set title(newtitle) {
         if (this._textLimit.test(newtitle)) {
