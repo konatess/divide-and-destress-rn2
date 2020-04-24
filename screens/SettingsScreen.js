@@ -39,7 +39,7 @@ export default function LinksScreen() {
 
       <OptionButton
         icon="md-swap"
-        label="Set Default Count to Total or Start/End"
+        label="Set Default Count  to Total or Start/End"
         onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
       />
 

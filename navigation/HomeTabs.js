@@ -4,7 +4,7 @@ import * as React from 'react';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import ProjectScreen from '../screens/ProjectScreen';
+import DisplayScreen from '../screens/DisplayScreen';
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -35,7 +35,7 @@ export default function BottomTabNavigator({ navigation, route }) {
       />
       <BottomTab.Screen
         name="Display"
-        component={ProjectScreen}
+        component={DisplayScreen}
         options={{
           title: 'Display',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
@@ -56,7 +56,7 @@ function getHeaderTitle(route) {
     case 'Create':
         return 'New Project';
     case 'Display':
-        return 'Display';
+        return 'Display Project';
     case 'Edit':
         return 'Editing...';
   }
