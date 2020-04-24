@@ -2,8 +2,10 @@ import * as React from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Project } from '../constants/ProjectClass.js';
+import ButtonBar from '../components/ButtonBar'
+import CustomButton from '../components/Button'
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <FlatList 
@@ -24,6 +26,14 @@ export default function HomeScreen() {
             due={item.age}
           ></ProjectButton>}
       />
+      <ButtonBar>
+          <CustomButton 
+            title= 'Settings' 
+            color= {{ backgroundColor: 'blue' }}
+            iconName= 'md-settings'
+            onPress= {() => navigation.navigate('Settings')}
+          />
+      </ButtonBar>
     </View>
   );
 }
