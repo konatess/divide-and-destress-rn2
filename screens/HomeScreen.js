@@ -1,11 +1,25 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Button } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
-import CustomButton from '../components/Button'
+import Colors from '../constants/Colors'
+import { ButtonObj } from '../constants/ButtonClass.js';
+
+// const button1 = {
+//   'title': 'Home',
+//   'color': Colors.home,
+//   'iconName': 'md-home', 
+//   'onPress': null
+// };
+// const button1 = new ButtonObj('Settings', 'Settings', Colors.settings, 'md-settings')
+// const button2 = new ButtonObj('Home', 'Home', Colors.home, 'md-home');
+// const button3 = new ButtonObj('Display', 'Create', Colors.create, 'md-add');
 
 export default function HomeScreen({ navigation }) {
+  const button1 = new ButtonObj(navigation, 'Settings', 'Settings', Colors.settings, 'md-settings')
+  const button2 = new ButtonObj(navigation, 'Home', 'Home', Colors.home, 'md-home');
+  const button3 = new ButtonObj(navigation, 'Display', 'Create', Colors.create, 'md-add');
   return (
     <View style={styles.container}>
       <FlatList 
@@ -26,14 +40,12 @@ export default function HomeScreen({ navigation }) {
             due={item.age}
           ></ProjectButton>}
       />
-      <ButtonBar>
-          <CustomButton 
-            title= 'Settings' 
-            color= {{ backgroundColor: 'blue' }}
-            iconName= 'md-settings'
-            onPress= {() => navigation.navigate('Settings')}
-          />
-      </ButtonBar>
+      <ButtonBar 
+        navigation={navigation}
+        b1= {button1}
+        b2= {button2}
+        b3= {button3}
+      />
     </View>
   );
 }
@@ -61,7 +73,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 5,
   },
   project: {
     padding: 10,

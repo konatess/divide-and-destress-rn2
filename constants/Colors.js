@@ -1,4 +1,5 @@
 const tintColor = '#2f95dc';
+const purple = '#9200DA';
 
 export default {
   tintColor,
@@ -11,4 +12,14 @@ export default {
   warningText: '#666804',
   noticeBackground: tintColor,
   noticeText: '#fff',
+  navButtonText: '#fff',
+  navButtonIcon: '#fff',
+  settings: '#0090FF',
+  home: '#FFBE00',
+  order: purple,
+  save: '#0DD435',
+  delete: '#DE0000',
+  create: '#138A36',
+  edit: purple,
+  cancel: '#888',
 };
