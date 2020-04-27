@@ -11,19 +11,19 @@ export default function ButtonBar({ navigation, b1, b2, b3}) {
         title={b1._title} 
         color={b1._color} 
         iconName={b1._iconName} 
-        onPress={b1._onPress(navigation)}/>
+        onPress={() => navigation.navigate(b1._route)} />
         <CustomButton 
         // navigation={navigation} 
         title={b2._title} 
         color={b2._color} 
         iconName={b2._iconName} 
-        onPress={b2._onPress}/>
+        onPress={() => navigation.navigate(b2._route)}/>
         <CustomButton 
         // navigation={navigation} 
         title={b3._title} 
         color={b3._color} 
         iconName={b3._iconName} 
-        onPress={b3._onPress}/>
+        onPress={() => navigation.navigate(b3._route)}/>
     </View>
 }
 
