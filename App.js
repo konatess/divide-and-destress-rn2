@@ -56,11 +56,11 @@ export default function App(props) {
         <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
           <Stack.Navigator initialRouteName="Root">
             {/* <Stack.Screen name="Root" component={BottomTabNavigator} /> */}
-            <Stack.Screen name="Root" component={HomeTabs} />
-            {/* <Stack.Screen name="Settings" component={SettingsScreen} /> */}
-            {/* <Stack.Screen name="CreateTabs" component={CreateTabs} /> */}
-            {/* <Stack.Screen name="DisplayTabs" component={DisplayScreen} /> */}
-            {/* <Stack.Screen name="EditTabs" component={EditTabs} /> */}
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Settings" component={SettingsScreen} />
+            {/* <Stack.Screen name="Create" component={CreateTabs} /> */}
+            <Stack.Screen name="Display" component={DisplayScreen} />
+            {/* <Stack.Screen name="Edit" component={EditTabs} /> */}
           </Stack.Navigator>
         </NavigationContainer>
       </View>

@@ -14,7 +14,7 @@ export default {
   noticeText: '#fff',
   navButtonText: '#fff',
   navButtonIcon: '#fff',
-  settings: '#BD8D00',
+  settings: '#CC9A34',
   home: '#0090FF',
   order: purple,
   save: '#0DD435',

@@ -18,13 +18,13 @@ class ButtonObj {
 };
 
 // const allButtonsObj = {};
-const settings= ButtonObj('Settings', 'Settings', Colors.settings, 'md-settings');
-const home= ButtonObj('Home', 'Home', Colors.home, 'md-home');
-const order= ButtonObj('Order', 'Order', Colors.order, '');
+const settings= new ButtonObj('Settings', 'Settings', Colors.settings, 'md-settings');
+const home= new ButtonObj('Home', 'Home', Colors.home, 'md-home');
+const order= new ButtonObj('Order', 'Order', Colors.order, 'md-reorder');
 // allButtonsObj.save= ButtonObj('Save', 'Save', Colors.save, 'md-save');
-const trash= ButtonObj('Delete', 'Delete', Colors.delete, 'md-trash');
-const create= ButtonObj('Create', 'Create', Colors.create, 'md-add');
-const edit= ButtonObj('Edit', 'Edit', Colors.edit, 'md-create');
+const trash= new ButtonObj('Delete', 'Delete', Colors.delete, 'md-trash');
+const create= new ButtonObj('Create', 'Create', Colors.create, 'md-add');
+const edit= new ButtonObj('Edit', 'Edit', Colors.edit, 'md-create');
 // allButtonsObj.cancel= ButtonObj('Cancel', 'Cancel', Colors.cancel, 'md-close');
 
 export default {
