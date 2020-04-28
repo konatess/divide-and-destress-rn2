@@ -1,27 +1,69 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 
 export default function LinksScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <OptionButton
-        icon="md-school"
-        label="Read the Expo documentation"
+        icon="md-contrast"
+        label="Dark Mode On/Off"
         onPress={() => WebBrowser.openBrowserAsync('https://docs.expo.io')}
       />
 
       <OptionButton
-        icon="md-compass"
-        label="Read the React Navigation documentation"
+        icon="md-globe"
+        label="Language"
+        onPress={() => WebBrowser.openBrowserAsync('https://docs.expo.io')}
+      />
+
+      <OptionButton
+        icon="md-bed"
+        label="Day Change"
         onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
       />
 
       <OptionButton
-        icon="ios-chatboxes"
-        label="Ask a question on the forums"
+        icon="md-calendar"
+        label="Date Format"
+        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
+      />
+
+      <OptionButton
+        icon="md-notifications"
+        label="Default Notification Preferences"
+        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
+      />
+
+      <OptionButton
+        icon="md-swap"
+        label="Set Default Count  to Total or Start/End"
+        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
+      />
+
+      <OptionButton
+        icon="md-list"
+        label="Set Default Unit"
+        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
+      />
+
+      <OptionButton
+        icon="ios-pricetags"
+        label="Edit Your Tags"
+        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
+      />
+
+      <OptionButton
+        icon="md-trash"
+        label="Start Fresh - Delete All Projects"
+        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
+      />
+
+      <OptionButton
+        icon="md-chatbubbles"
+        label="Send Us Your Feedback"
         onPress={() => WebBrowser.openBrowserAsync('https://forums.expo.io')}
         isLastOption
       />
