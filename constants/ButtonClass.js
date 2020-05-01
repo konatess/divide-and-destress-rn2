@@ -7,6 +7,7 @@
 // set on press in button bar?
 
 import Colors from './Colors';
+import Strings from './Strings';
 
 class ButtonObj {
     constructor(r, t, c, i) {
@@ -18,13 +19,13 @@ class ButtonObj {
 };
 
 // const allButtonsObj = {};
-const settings= new ButtonObj('Settings', 'Settings', Colors.settings, 'md-settings');
-const home= new ButtonObj('Home', 'Home', Colors.home, 'md-home');
-const order= new ButtonObj('Order', 'Order', Colors.order, 'md-reorder');
+const settings= new ButtonObj('Settings', Strings.buttons.settings, Colors.settings, 'md-settings');
+const home= new ButtonObj('Home', Strings.buttons.home, Colors.home, 'md-home');
+const order= new ButtonObj('Order', Strings.buttons.order, Colors.order, 'md-reorder');
 // allButtonsObj.save= ButtonObj('Save', 'Save', Colors.save, 'md-save');
-const trash= new ButtonObj('Delete', 'Delete', Colors.delete, 'md-trash');
-const create= new ButtonObj('Create', 'Create', Colors.create, 'md-add');
-const edit= new ButtonObj('Edit', 'Edit', Colors.edit, 'md-create');
+const trash= new ButtonObj('Delete', Strings.buttons.delete, Colors.delete, 'md-trash');
+const create= new ButtonObj('Create', Strings.buttons.create, Colors.create, 'md-add');
+const edit= new ButtonObj('Edit', Strings.buttons.edit, Colors.edit, 'md-create');
 // allButtonsObj.cancel= ButtonObj('Cancel', 'Cancel', Colors.cancel, 'md-close');
 
 export default {

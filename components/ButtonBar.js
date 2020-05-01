@@ -3,6 +3,9 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import CustomButton from './Button';
 
+// pull out onPress and set them on the page instead, 
+// so that it can be used for Save and Delete buttons as well
+
 export default function ButtonBar({ navigation, b1, b2, b3}) {
     return <View style={ styles.container }>
         {/* <Text>Buttons Here</Text> */}

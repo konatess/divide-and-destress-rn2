@@ -6,12 +6,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import BottomTabNavigator from './navigation/BottomTabNavigator';
-import HomeTabs from './navigation/HomeTabs'
 import useLinking from './navigation/useLinking';
 import HomeScreen from './screens/HomeScreen'
 import SettingsScreen from './screens/SettingsScreen';
 import DisplayScreen from './screens/DisplayScreen';
+import CreateScreen from './screens/CreateScreen';
+import EditScreen from './screens/EditScreen';
 
 const Stack = createStackNavigator();
 
@@ -54,13 +54,13 @@ export default function App(props) {
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
         <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-          <Stack.Navigator initialRouteName="Root">
+          <Stack.Navigator initialRouteName="Home">
             {/* <Stack.Screen name="Root" component={BottomTabNavigator} /> */}
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
-            {/* <Stack.Screen name="Create" component={CreateTabs} /> */}
+            <Stack.Screen name="Create" component={CreateScreen} />
             <Stack.Screen name="Display" component={DisplayScreen} />
-            {/* <Stack.Screen name="Edit" component={EditTabs} /> */}
+            <Stack.Screen name="Edit" component={EditScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>

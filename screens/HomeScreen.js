@@ -1,30 +1,13 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, FlatList, Button } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
 import Colors from '../constants/Colors'
 import AllButtons from '../constants/ButtonClass.js';
 
-// const button1 = {
-//   'title': 'Home',
-//   'color': Colors.home,
-//   'iconName': 'md-home', 
-//   'onPress': null
-// };
-// const button1 = new ButtonObj('Settings', 'Settings', Colors.settings, 'md-settings')
-// const button2 = new ButtonObj('Home', 'Home', Colors.home, 'md-home');
-// const button3 = new ButtonObj('Display', 'Create', Colors.create, 'md-add');
-
-// const allButtons = ButtonObj();
-// const button1 = allButtons.settings;
-// const button2 = allButtons.order;
-// const button3 = allButtons.create;
 
 export default function HomeScreen({ navigation }) {
-  // const button1 = new ButtonObj(navigation, 'Settings', 'Settings', Colors.settings, 'md-settings');
-  // const button2 = new ButtonObj(navigation, 'Home', 'Home', Colors.home, 'md-home');
-  // const button3 = new ButtonObj(navigation, 'Display', 'Create', Colors.create, 'md-add');
   const button1 = AllButtons.settings;
   const button2 = AllButtons.order;
   const button3 = AllButtons.create;
