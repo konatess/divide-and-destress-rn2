@@ -1,12 +1,15 @@
 import * as React from 'react';
-import { StyleSheet, Text, TextInput, View, Picker, DatePickerAndroid } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Picker, Switch } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
+import CalendarPicker from 'react-native-calendar-picker';
 import { Project } from '../constants/ProjectClass.js';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings'
 
 export default function CreateScreen() {
     const [selectedValue, setSelectedValue] = React.useState(Strings.units[1]);
+    const [isEnabled, setIsEnabled] = React.useState(false);
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     return (
         <View style={styles.container}>
             <Text style={styles.labelText}>{Strings.labels.title}</Text>
@@ -15,7 +18,11 @@ export default function CreateScreen() {
                 placeholder={Strings.placeholder.title}
                 returnKeyType='next'
             />
-            <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
+            <View style={styles.row}>
+                <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
+                <Text></Text>
+                {/* <CalendarPicker/> */}
+            </View>
             <View style={styles.row}>
                 <Text style={styles.labelText}>{Strings.labels.unitName}</Text>
                 <Picker 
@@ -47,7 +54,19 @@ export default function CreateScreen() {
                 placeholder={Strings.placeholder.tags}
             />
             <Text style={styles.labelText}>{Strings.labels.notification}</Text>
-            <Text style={styles.labelText}>{Strings.labels.toggle}</Text>
+            <View style={styles.row}>
+
+            </View>
+            <View style={styles.row}>
+                <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings.labels.toggle}</Text>
+                <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isEnabled}
+                />
+            </View>
             {/* title (text input), 
             due date (calendar picker), 
             unit name (dropdown), 
