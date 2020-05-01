@@ -5,18 +5,21 @@ import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
 import Colors from '../constants/Colors'
 import AllButtons from '../constants/ButtonClass.js';
+import Moment from 'moment'
 
 
 export default function HomeScreen({ navigation }) {
   const button1 = AllButtons.settings;
   const button2 = AllButtons.order;
   const button3 = AllButtons.create;
+  const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy'], {'freq':'daily', 'time':'8pm'});
+  const project2 = new Project('King of Anything', 20200501, 20200525, 4, 90, 6, 'page', false, ['Music', 'Anthem'], {'freq':'daily', 'time':'8pm'});
   return (
     <View style={styles.container}>
       <FlatList 
         data={[
-            { key: 'Devin', age: 5238 },
-            { key: 'Dan with a really long name that is so long it has to wrap', age: 423419384731 },
+            { key: project1._title, age: project1._dueDate },
+            { key: project2._title, age: project2._dueDate },
             { key: 'Dominic', age: 6 },
             { key: 'Jackson', age: 5 },
             { key: 'James', age: 7 },
@@ -29,6 +32,7 @@ export default function HomeScreen({ navigation }) {
           renderItem={({ item }) => <ProjectButton
             label={item.key} 
             due={item.age}
+            onPress={() => navigation.navigate('Display')}
           ></ProjectButton>}
       />
       <ButtonBar 
