@@ -3,17 +3,21 @@ import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
-import Colors from '../constants/Colors'
+import Colors from '../constants/Colors';
+import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass.js';
-import Moment from 'moment'
+import Moment from 'moment';
 
 
 export default function HomeScreen({ navigation }) {
   const button1 = AllButtons.settings;
   const button2 = AllButtons.order;
   const button3 = AllButtons.create;
+  button1.onPress = () => navigation.navigate(Strings.routes.settings);
+  button2.onPress = () => navigation.navigate(Strings.routes.order);
+  button3.onPress = () => navigation.navigate(Strings.routes.create);
   const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy'], {'freq':'daily', 'time':'8pm'});
-  const project2 = new Project('King of Anything', 20200501, 20200525, 4, 90, 6, 'page', false, ['Music', 'Anthem'], {'freq':'daily', 'time':'8pm'});
+  const project2 = new Project('King of Anything', 20200501, 20200520, 4, 90, 6, 'page', false, ['Music', 'Anthem'], {'freq':'daily', 'time':'8pm'});
   return (
     <View style={styles.container}>
       <FlatList 

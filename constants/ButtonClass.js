@@ -10,23 +10,22 @@ import Colors from './Colors';
 import Strings from './Strings';
 
 class ButtonObj {
-    constructor(r, t, c, i) {
+    constructor(t, c, i) {
         this._title= t;
         this._color= c; 
         this._iconName= i; 
-        this._route= r;
     }
 };
 
 // const allButtonsObj = {};
-const settings= new ButtonObj('Settings', Strings.buttons.settings, Colors.settings, 'md-settings');
-const home= new ButtonObj('Home', Strings.buttons.home, Colors.home, 'md-home');
-const order= new ButtonObj('Order', Strings.buttons.order, Colors.order, 'md-reorder');
-// allButtonsObj.save= ButtonObj('Save', 'Save', Colors.save, 'md-save');
-const trash= new ButtonObj('Delete', Strings.buttons.delete, Colors.delete, 'md-trash');
-const create= new ButtonObj('Create', Strings.buttons.create, Colors.create, 'md-add');
-const edit= new ButtonObj('Edit', Strings.buttons.edit, Colors.edit, 'md-create');
-// allButtonsObj.cancel= ButtonObj('Cancel', 'Cancel', Colors.cancel, 'md-close');
+const settings= new ButtonObj(Strings.buttons.settings, Colors.settings, 'md-settings');
+const home= new ButtonObj(Strings.buttons.home, Colors.home, 'md-home');
+const order= new ButtonObj(Strings.buttons.order, Colors.order, 'md-reorder');
+const save= new ButtonObj(Strings.buttons.save, Colors.save, 'md-save');
+const trash= new ButtonObj(Strings.buttons.delete, Colors.delete, 'md-trash');
+const create= new ButtonObj(Strings.buttons.create, Colors.create, 'md-add');
+const edit= new ButtonObj(Strings.buttons.edit, Colors.edit, 'md-create');
+const cancel= new ButtonObj(Strings.buttons.cancel, Colors.cancel, 'md-close');
 
 export default {
     settings: settings,
@@ -34,5 +33,7 @@ export default {
     order: order,
     delete: trash,
     create: create,
-    edit: edit
+    edit: edit,
+    save: save,
+    cancel: cancel
 };

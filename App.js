@@ -12,6 +12,7 @@ import SettingsScreen from './screens/SettingsScreen';
 import DisplayScreen from './screens/DisplayScreen';
 import CreateScreen from './screens/CreateScreen';
 import EditScreen from './screens/EditScreen';
+import Strings from './constants/Strings';
 
 const Stack = createStackNavigator();
 
@@ -54,13 +55,12 @@ export default function App(props) {
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
         <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-          <Stack.Navigator initialRouteName="Home">
-            {/* <Stack.Screen name="Root" component={BottomTabNavigator} /> */}
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Settings" component={SettingsScreen} />
-            <Stack.Screen name="Create" component={CreateScreen} />
-            <Stack.Screen name="Display" component={DisplayScreen} />
-            <Stack.Screen name="Edit" component={EditScreen} />
+          <Stack.Navigator initialRouteName={Strings.routes.home}>
+            <Stack.Screen name={Strings.routes.home} component={HomeScreen} />
+            <Stack.Screen name={Strings.routes.settings} component={SettingsScreen} />
+            <Stack.Screen name={Strings.routes.create} component={CreateScreen} />
+            <Stack.Screen name={Strings.routes.display} component={DisplayScreen} />
+            <Stack.Screen name={Strings.routes.edit} component={EditScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>

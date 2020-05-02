@@ -14,6 +14,15 @@ export default {
         edit: 'Edit',
         cancel: 'Cancel',
     },
+    routes: {
+        home: 'Home',
+        settings: 'Settings',
+        order: 'Order',
+        delete: 'Delete',
+        create: 'Create',
+        edit: 'Edit',
+        display: 'Display'
+    },
     labels: {
         title: 'Title:',
         dueDate: 'Due Date:',
