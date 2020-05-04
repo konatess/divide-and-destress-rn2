@@ -14,7 +14,7 @@ export default function HomeScreen({ navigation }) {
   const button2 = AllButtons.order;
   const button3 = AllButtons.create;
   button1.onPress = () => navigation.navigate(Strings.routes.settings);
-  button2.onPress = () => navigation.navigate(Strings.routes.order);
+  // button2.onPress = () => navigation.navigate(Strings.routes.order);
   button3.onPress = () => navigation.navigate(Strings.routes.create);
   const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy'], {'freq':'daily', 'time':'8pm'});
   const project2 = new Project('King of Anything', 20200501, 20200520, 4, 90, 6, 'page', false, ['Music', 'Anthem'], {'freq':'daily', 'time':'8pm'});
@@ -31,16 +31,18 @@ export default function HomeScreen({ navigation }) {
             { key: 'John', age: 5 },
             { key: 'Jillian', age: 5 },
             { key: 'Jimmy', age: 5 },
-            { key: 'Julie', age: 5 }
+            { key: 'Julie', age: 5 },
+            { key: 'Bonsai', age: 7 },
+            { key: 'Moony', age: 6 }
           ]}
           renderItem={({ item }) => <ProjectButton
             label={item.key} 
             due={item.age}
-            onPress={() => navigation.navigate('Display')}
+            onPress={() => navigation.navigate(Strings.routes.display)}
           ></ProjectButton>}
       />
       <ButtonBar 
-        navigation={navigation}
+        // navigation={navigation}
         b1= {button1}
         b2= {button2}
         b3= {button3}
