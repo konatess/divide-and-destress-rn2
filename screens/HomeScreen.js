@@ -73,7 +73,7 @@ function ProjectButton({ label, due, onPress, isLastOption }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.mainbackground,
   },
   project: {
     padding: 10,

@@ -33,7 +33,7 @@ export default function DisplayScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: 'pink',
+      backgroundColor: Colors.mainbackground,
     },
     mainview: {
         flex: 1,
