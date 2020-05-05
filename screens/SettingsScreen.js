@@ -12,7 +12,7 @@ export default function SettingsScreen() {
 	  dateFormat: 'mm/dd',
 	  notifications: {
 		  freq: 1,
-		  time: '16:00'
+		  time: '20:00'
 	  },
 	  total: false,
 	  unit: 1,
