@@ -13,6 +13,7 @@ import DisplayScreen from './screens/DisplayScreen';
 import CreateScreen from './screens/CreateScreen';
 import EditScreen from './screens/EditScreen';
 import Strings from './constants/Strings';
+import Storage from './storage/Async';
 
 const Stack = createStackNavigator();
 
@@ -36,6 +37,7 @@ export default function App(props) {
           ...Ionicons.font,
           'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
         });
+        let settingsObj = await Storage.getSettings();
       } catch (e) {
         // We might want to provide this error information to an error reporting service
         console.warn(e);

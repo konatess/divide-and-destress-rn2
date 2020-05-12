@@ -41,5 +41,6 @@ export default {
     units: ['word', 'page', 'chapter'],
     keys: {
         settings: 'USER_SETTINGS',
+        projPrefix: 'PROJ-',
     }
 };

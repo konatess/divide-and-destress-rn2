@@ -4,20 +4,6 @@ import * as React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 
-const settingsobj = {
-	darkmode: false,
-	language: 'English',
-	dayChange: '00:00',
-	dateFormat: 'mm/dd',
-	notifications: {
-		freq: 1,
-		time: '20:00'
-	},
-	total: false,
-	unit: 1,
-	tags: []
-};
-
 export default function SettingsScreen() {
 	return (
 		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
