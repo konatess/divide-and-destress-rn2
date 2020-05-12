@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, AsyncStorage } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
@@ -56,8 +56,12 @@ export default function App(props) {
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
         <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
           <Stack.Navigator initialRouteName={Strings.routes.home}>
-            <Stack.Screen name={Strings.routes.home} component={HomeScreen} />
-            <Stack.Screen name={Strings.routes.settings} component={SettingsScreen} />
+            <Stack.Screen name={Strings.routes.home} 
+            component={HomeScreen}
+            options={{title: Strings.headers.home}} />
+            <Stack.Screen name={Strings.routes.settings} 
+            component={SettingsScreen}
+            options={{title: Strings.headers.settings}} />
             <Stack.Screen name={Strings.routes.create} component={CreateScreen} />
             <Stack.Screen name={Strings.routes.display} component={DisplayScreen} />
             <Stack.Screen name={Strings.routes.edit} component={EditScreen} />

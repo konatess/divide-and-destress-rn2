@@ -3,85 +3,74 @@ import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
+import Storage from '../storage/Async';
 
-export default function SettingsScreen() {
-  const settingsobj = {
-	  darkmode: false,
-	  language: 'English',
-	  dayChange: '00:00',
-	  dateFormat: 'mm/dd',
-	  notifications: {
-		  freq: 1,
-		  time: '20:00'
-	  },
-	  total: false,
-	  unit: 1,
-	  tags: []
-  };
-  return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-      <OptionButton
-        icon="md-contrast"
-        label="Dark Mode On/Off"
-        onPress={() => WebBrowser.openBrowserAsync('https://docs.expo.io')}
-      />
+export default function SettingsScreen( {route, navigation} ) {
+	let {settingsobj} = route.params
+	return (
+		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+		<OptionButton
+			icon="md-contrast"
+			label="Dark Mode On/Off"
+			onPress={() => console.log(settingsobj.darkmode)}
+		/>
 
-      <OptionButton
-        icon="md-globe"
-        label="Language"
-        onPress={() => WebBrowser.openBrowserAsync('https://docs.expo.io')}
-      />
+		<OptionButton
+			icon="md-globe"
+			label="Language"
+			onPress={() => console.log(settingsobj.language)}
+		/>
 
-      <OptionButton
-        icon="md-bed"
-        label="Day Change"
-        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
-      />
+		<OptionButton
+			icon="md-bed"
+			label="Day Change"
+			onPress={() => console.log(settingsobj.dayChange)}
+		/>
 
-      <OptionButton
-        icon="md-calendar"
-        label="Date Format"
-        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
-      />
+		<OptionButton
+			icon="md-calendar"
+			label="Date Format"
+			onPress={() => console.log(settingsobj.dateFormat)}
+		/>
 
-      <OptionButton
-        icon="md-notifications"
-        label="Default Notification Preferences"
-        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
-      />
+		<OptionButton
+			icon="md-notifications"
+			label="Default Notification Preferences"
+			onPress={() => console.log(settingsobj.notifications)}
+		/>
 
-      <OptionButton
-        icon="md-swap"
-        label="Set Default Count  to Total or Start/End"
-        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
-      />
+		<OptionButton
+			icon="md-swap"
+			label="Set Default Count to Total or Start/End"
+			onPress={() => console.log(settingsobj.total)}
+		/>
 
-      <OptionButton
-        icon="md-list"
-        label="Set Default Unit"
-        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
-      />
+		<OptionButton
+			icon="md-list"
+			label="Set Default Unit"
+			onPress={() => console.log(settingsobj.unit)}
+		/>
 
-      <OptionButton
-        icon="ios-pricetags"
-        label="Edit Your Tags"
-        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
-      />
+		<OptionButton
+			icon="ios-pricetags"
+			label="Edit Your Tags"
+			onPress={() => console.log(settingsobj.tags)}
+		/>
 
-      <OptionButton
-        icon="md-trash"
-        label="Start Fresh - Delete All Projects"
-        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
-      />
+		<OptionButton
+			icon="md-trash"
+			label="Start Fresh - Delete All Projects"
+			onPress={() => console.log('clicked Delete All')}
+		/>
 
-      <OptionButton
-        icon="md-chatbubbles"
-        label="Send Us Your Feedback"
-        onPress={() => WebBrowser.openBrowserAsync('https://forums.expo.io')}
-        isLastOption
-      />
-    </ScrollView>
-  );
+		<OptionButton
+			icon="md-chatbubbles"
+			label="Send Us Your Feedback"
+			onPress={() => console.log('clicked Feedback')}
+			isLastOption
+		/>
+		</ScrollView>
+	);
 }
 
 function OptionButton({ icon, label, onPress, isLastOption }) {

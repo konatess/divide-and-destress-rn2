@@ -39,5 +39,8 @@ export default {
         tags: 'Chemistry, English, Nonfiction, Sci-Fi...',
     },
     units: ['word', 'page', 'chapter'],
-
+    keys: {
+        settings: 'USER_SETTINGS',
+        projPrefix: 'PROJ-',
+    }
 };
