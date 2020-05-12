@@ -1,13 +1,18 @@
 import * as React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, AsyncStorage } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import BottomTabNavigator from './navigation/BottomTabNavigator';
 import useLinking from './navigation/useLinking';
+import HomeScreen from './screens/HomeScreen'
+import SettingsScreen from './screens/SettingsScreen';
+import DisplayScreen from './screens/DisplayScreen';
+import CreateScreen from './screens/CreateScreen';
+import EditScreen from './screens/EditScreen';
+import Strings from './constants/Strings';
 
 const Stack = createStackNavigator();
 
@@ -50,8 +55,16 @@ export default function App(props) {
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
         <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-          <Stack.Navigator>
-            <Stack.Screen name="Root" component={BottomTabNavigator} />
+          <Stack.Navigator initialRouteName={Strings.routes.home}>
+            <Stack.Screen name={Strings.routes.home} 
+            component={HomeScreen}
+            options={{title: Strings.headers.home}} />
+            <Stack.Screen name={Strings.routes.settings} 
+            component={SettingsScreen}
+            options={{title: Strings.headers.settings}} />
+            <Stack.Screen name={Strings.routes.create} component={CreateScreen} />
+            <Stack.Screen name={Strings.routes.display} component={DisplayScreen} />
+            <Stack.Screen name={Strings.routes.edit} component={EditScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>
