@@ -13,7 +13,6 @@ import DisplayScreen from './screens/DisplayScreen';
 import CreateScreen from './screens/CreateScreen';
 import EditScreen from './screens/EditScreen';
 import Strings from './constants/Strings';
-import Storage from './storage/Async';
 
 const Stack = createStackNavigator();
 
@@ -37,7 +36,6 @@ export default function App(props) {
           ...Ionicons.font,
           'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
         });
-        let settingsObj = await Storage.getSettings();
       } catch (e) {
         // We might want to provide this error information to an error reporting service
         console.warn(e);
@@ -58,8 +56,12 @@ export default function App(props) {
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
         <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
           <Stack.Navigator initialRouteName={Strings.routes.home}>
-            <Stack.Screen name={Strings.routes.home} component={HomeScreen} />
-            <Stack.Screen name={Strings.routes.settings} component={SettingsScreen} />
+            <Stack.Screen name={Strings.routes.home} 
+            component={HomeScreen}
+            options={{title: Strings.headers.home}} />
+            <Stack.Screen name={Strings.routes.settings} 
+            component={SettingsScreen}
+            options={{title: Strings.headers.settings}} />
             <Stack.Screen name={Strings.routes.create} component={CreateScreen} />
             <Stack.Screen name={Strings.routes.display} component={DisplayScreen} />
             <Stack.Screen name={Strings.routes.edit} component={EditScreen} />

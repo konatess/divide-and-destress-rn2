@@ -3,8 +3,10 @@ import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
+import Storage from '../storage/Async';
 
-export default function SettingsScreen() {
+export default function SettingsScreen( {route, navigation} ) {
+	let {settingsobj} = route.params
 	return (
 		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
 		<OptionButton

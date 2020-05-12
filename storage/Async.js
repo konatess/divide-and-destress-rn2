@@ -4,7 +4,7 @@ import Strings from '../constants/Strings';
 export default {
     getSettings: async () => {
         try {
-            const settingsobj = await AsyncStorage.getItem(Strings.keys.settings)
+            const settingsobj = await AsyncStorage.getItem(Strings.keys.settings);
             if (settingsobj !== null) {
                 return JSON.parse(settingsobj);
             }
