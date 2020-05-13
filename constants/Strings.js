@@ -42,5 +42,14 @@ export default {
     keys: {
         settings: 'USER_SETTINGS',
         projPrefix: 'PROJ-',
+    },
+    alerts: {
+        title: {
+            exists: 'Title already exists',
+            blank: 'Title cannot be blank'
+        },
+        first: 'First page cannot be blank',
+        last: 'Last page cannot be blank'
+
     }
 };

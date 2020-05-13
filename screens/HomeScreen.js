@@ -11,22 +11,21 @@ import Storage from '../storage/Async';
 
 
 export default function HomeScreen({ navigation }) {
-	let settingsobj;
 	const fetchSettings = async () => {
 		return await Storage.getSettings().then(results => {
 			console.log(results)
-			settingsobj = results;
+			return results;
 		});
 	};
-	fetchSettings();
+	const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy'], {'freq':'daily', 'time':'8pm'});
+	const project2 = new Project('King of Anything', 20200501, 20200520, 4, 90, 6, 'page', false, ['Music', 'Anthem'], {'freq':'daily', 'time':'8pm'});
+	const titles = [project1._title, project2._title];
 	const button1 = AllButtons.settings;
 	const button2 = AllButtons.order;
 	const button3 = AllButtons.create;
-	button1.onPress = () => navigation.navigate(Strings.routes.settings, {settingsobj: settingsobj});
-	// button2.onPress = () => navigation.navigate(Strings.routes.order);
-	button3.onPress = () => navigation.navigate(Strings.routes.create);
-	const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy'], {'freq':'daily', 'time':'8pm'});
-	const project2 = new Project('King of Anything', 20200501, 20200520, 4, 90, 6, 'page', false, ['Music', 'Anthem'], {'freq':'daily', 'time':'8pm'});
+	button1.onPress = () => navigation.navigate(Strings.routes.settings, {settingsobj: fetchSettings()});
+	button2.onPress = () => Storage.getAllProj();
+	button3.onPress = () => navigation.navigate(Strings.routes.create, {titles: titles, settings: fetchSettings()});
 	return (
 		<View style={styles.container}>
 		<FlatList 
@@ -51,7 +50,6 @@ export default function HomeScreen({ navigation }) {
 			></ProjectButton>}
 		/>
 		<ButtonBar 
-			// navigation={navigation}
 			b1= {button1}
 			b2= {button2}
 			b3= {button3}

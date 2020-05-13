@@ -6,38 +6,61 @@ import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
-import AllButtons from '../constants/ButtonClass.js';
+import AllButtons from '../constants/ButtonClass';
+import Storage from '../storage/Async';
+import Moment from 'moment'
 
-export default function CreateScreen() {
+export default function CreateScreen({ route, navigation}) {
+    const knowntitles = route.params.titles
+    const settings = route.params.settingsobj
     const [selectedValue, setSelectedValue] = React.useState(Strings.units[1]);
     const [isEnabled, setIsEnabled] = React.useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const newProj = new Project();
+    const saveProj = () => {
+        if (knowntitles.some((value, index, array) => {
+            return value === newProj._title
+        })) {
+            console.log(Strings.alerts.title.exists);
+            alert(Strings.alerts.title.exists);
+        }
+        else {
+            console.log('Save Project');
+        // Storage.createProj(newProj)
+        }
+    };
     const button1 = AllButtons.delete;
     const button2 = AllButtons.save;
     // button1.onPress = () => navigation.navigate(Strings.routes.settings);
-    // button2.onPress = () => navigation.navigate(Strings.routes.edit);
+    button2.onPress = () => {saveProj()};
     return (
         <View style={styles.container}>
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings.labels.title}</Text>
                 <TextInput
-                    style={styles.inputField}
+                    style={[styles.inputField, {marginBottom: 10}]}
                     placeholder={Strings.placeholder.title}
                     returnKeyType='next'
+                    onEndEditing={(e) => {
+                        newProj.title = e.nativeEvent.text;
+                        console.log('Title changed');
+                    }}
                 />
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
-                    <Text></Text>
+                    <TextInput style={styles.inputField} 
+                        value={Moment().format(settings.dateFormat)}
+                        onFocus={() => {}} />
                     {/* <CalendarPicker/> */}
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.unitName}</Text>
+                    <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings.labels.unitName}</Text>
                     <Picker 
                         selectedValue={selectedValue}
                         style={{ flexGrow: 1 }}
                         onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                     >
-                        <Picker.Item style={styles.pItem} label={Strings.units[0]} value={Strings.units[0]} />
+                        <Picker.Item label={Strings.units[0]} value={Strings.units[0]} />
                         <Picker.Item label={Strings.units[1]} value={Strings.units[1]} />
                         <Picker.Item label={Strings.units[2]} value={Strings.units[2]} />
                     </Picker>
@@ -57,7 +80,7 @@ export default function CreateScreen() {
                 </View>
                 <Text style={styles.labelText}>{Strings.labels.tags}</Text>
                 <TextInput
-                    style={styles.inputField}
+                    style={[styles.inputField, {marginBottom: 10}]}
                     placeholder={Strings.placeholder.tags}
                 />
                 <Text style={styles.labelText}>{Strings.labels.notification}</Text>
@@ -95,17 +118,17 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row', 
         justifyContent: 'space-between',
-        // alignItems: 'center',
+        marginBottom: 10
     },
     labelText: {
         fontSize: 20,
+        textAlignVertical: 'center'
     }, 
     inputField: {
         borderColor: Colors.inputBorder, 
         borderWidth: 1, 
         padding: 3,
         paddingHorizontal: 10,
-        marginBottom: 10,
         fontSize: 18,
     }, 
 });
