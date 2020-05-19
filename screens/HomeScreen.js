@@ -10,22 +10,17 @@ import Moment from 'moment';
 import Storage from '../storage/Async';
 
 
-export default function HomeScreen({ navigation }) {
-	const fetchSettings = async () => {
-		return await Storage.getSettings().then(results => {
-			console.log(results)
-			return results;
-		});
-	};
+export default function HomeScreen({ route, navigation }) {
+	const { settings } = route.params;
 	const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy'], {'freq':'daily', 'time':'8pm'});
 	const project2 = new Project('King of Anything', 20200501, 20200520, 4, 90, 6, 'page', false, ['Music', 'Anthem'], {'freq':'daily', 'time':'8pm'});
 	const titles = [project1._title, project2._title];
 	const button1 = AllButtons.settings;
 	const button2 = AllButtons.order;
 	const button3 = AllButtons.create;
-	button1.onPress = () => navigation.navigate(Strings.routes.settings, {settingsobj: fetchSettings()});
+	button1.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings});
 	button2.onPress = () => Storage.getAllProj();
-	button3.onPress = () => navigation.navigate(Strings.routes.create, {titles: titles, settings: fetchSettings()});
+	button3.onPress = () => navigation.navigate(Strings.routes.create, {titles: titles, settings: settings});
 	return (
 		<View style={styles.container}>
 		<FlatList 

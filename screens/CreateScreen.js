@@ -3,7 +3,8 @@ import { StyleSheet, Text, TextInput, View, Picker, Switch } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler';
 import CalendarPicker from 'react-native-calendar-picker';
 import { Project } from '../constants/ProjectClass.js';
-import ButtonBar from '../components/ButtonBar'
+import ButtonBar from '../components/ButtonBar';
+import CustModal from '../components/Modal';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass';
@@ -11,10 +12,11 @@ import Storage from '../storage/Async';
 import Moment from 'moment'
 
 export default function CreateScreen({ route, navigation}) {
-    const knowntitles = route.params.titles
-    const settings = route.params.settingsobj
+    const { knowntitles } = route.params
+    const { settings } = route.params
     const [selectedValue, setSelectedValue] = React.useState(Strings.units[1]);
     const [isEnabled, setIsEnabled] = React.useState(false);
+    const [visible, setVisible] = React.useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     const newProj = new Project();
     const saveProj = () => {
@@ -35,6 +37,7 @@ export default function CreateScreen({ route, navigation}) {
     button2.onPress = () => {saveProj()};
     return (
         <View style={styles.container}>
+            <CustModal modalVisible={visible} />
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings.labels.title}</Text>
                 <TextInput
@@ -50,7 +53,9 @@ export default function CreateScreen({ route, navigation}) {
                     <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
                     <TextInput style={styles.inputField} 
                         value={Moment().format(settings.dateFormat)}
-                        onFocus={() => {}} />
+                        onFocus={() => {
+                            setVisible(true);
+                        }} />
                     {/* <CalendarPicker/> */}
                 </View>
                 <View style={styles.row}>
