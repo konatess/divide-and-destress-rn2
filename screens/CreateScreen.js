@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text, TextInput, View, Picker, Switch } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-import CalendarPicker from 'react-native-calendar-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar';
 import CustModal from '../components/Modal';
@@ -14,10 +14,10 @@ import Moment from 'moment'
 export default function CreateScreen({ route, navigation}) {
     const { knowntitles } = route.params
     const { settings } = route.params
-    const [selectedValue, setSelectedValue] = React.useState(Strings.units[1]);
-    const [isEnabled, setIsEnabled] = React.useState(false);
+    const [selectedValue, setSelectedValue] = React.useState(1);
     const [visible, setVisible] = React.useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const [isTotal, setisTotal] = React.useState(false);
+    const toggleSwitch = () => setisTotal(previousState => !previousState);
     const newProj = new Project();
     const saveProj = () => {
         if (knowntitles.some((value, index, array) => {
@@ -56,7 +56,6 @@ export default function CreateScreen({ route, navigation}) {
                         onFocus={() => {
                             setVisible(true);
                         }} />
-                    {/* <CalendarPicker/> */}
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings.labels.unitName}</Text>
@@ -65,19 +64,21 @@ export default function CreateScreen({ route, navigation}) {
                         style={{ flexGrow: 1 }}
                         onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                     >
-                        <Picker.Item label={Strings.units[0]} value={Strings.units[0]} />
-                        <Picker.Item label={Strings.units[1]} value={Strings.units[1]} />
-                        <Picker.Item label={Strings.units[2]} value={Strings.units[2]} />
+                        {Strings.units.map((unit, index) => {
+                            return (
+                                <Picker.Item label={unit} value={index} />
+                            )
+                        })}
                     </Picker>
                 </View>
                 
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.startUnit + selectedValue + ': '}</Text>
+                    <Text style={styles.labelText}>{Strings.labels.startUnit + Strings.units[selectedValue] + ': '}</Text>
                     <TextInput
                         style={styles.inputField}
                         defaultValue={'1'}
                     />
-                    <Text style={styles.labelText}>{Strings.labels.endUnit + selectedValue + ': '}</Text>
+                    <Text style={styles.labelText}>{Strings.labels.endUnit + Strings.units[selectedValue] + ': '}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
@@ -96,10 +97,10 @@ export default function CreateScreen({ route, navigation}) {
                     <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings.labels.toggle}</Text>
                     <Switch
                         trackColor={{ false: "#767577", true: "#81b0ff" }}
-                        thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                        thumbColor={isTotal ? "#f5dd4b" : "#f4f3f4"}
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={toggleSwitch}
-                        value={isEnabled}
+                        value={isTotal}
                     />
                 </View>
             </View>

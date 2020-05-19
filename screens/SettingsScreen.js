@@ -6,55 +6,55 @@ import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import Storage from '../storage/Async';
 
 export default function SettingsScreen( {route, navigation} ) {
-	let {settingsobj} = route.params
+	let {settings} = route.params
 	return (
 		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
 		<OptionButton
 			icon="md-contrast"
 			label="Dark Mode On/Off"
-			onPress={() => console.log(settingsobj.darkmode)}
+			onPress={() => console.log(settings.darkmode)}
 		/>
 
 		<OptionButton
 			icon="md-globe"
 			label="Language"
-			onPress={() => console.log(settingsobj.language)}
+			onPress={() => console.log(settings.language)}
 		/>
 
 		<OptionButton
 			icon="md-bed"
 			label="Day Change"
-			onPress={() => console.log(settingsobj.dayChange)}
+			onPress={() => console.log(settings.dayChange)}
 		/>
 
 		<OptionButton
 			icon="md-calendar"
 			label="Date Format"
-			onPress={() => console.log(settingsobj.dateFormat)}
+			onPress={() => console.log(settings.dateFormat)}
 		/>
 
 		<OptionButton
 			icon="md-notifications"
 			label="Default Notification Preferences"
-			onPress={() => console.log(settingsobj.notifications)}
+			onPress={() => console.log(settings.notifications)}
 		/>
 
 		<OptionButton
 			icon="md-swap"
 			label="Set Default Count to Total or Start/End"
-			onPress={() => console.log(settingsobj.total)}
+			onPress={() => console.log(settings.total)}
 		/>
 
 		<OptionButton
 			icon="md-list"
 			label="Set Default Unit"
-			onPress={() => console.log(settingsobj.unit)}
+			onPress={() => console.log(settings.unit)}
 		/>
 
 		<OptionButton
 			icon="ios-pricetags"
 			label="Edit Your Tags"
-			onPress={() => console.log(settingsobj.tags)}
+			onPress={() => console.log(settings.tags)}
 		/>
 
 		<OptionButton
