@@ -57,6 +57,7 @@ export default function CreateScreen({ route, navigation}) {
                             setVisible(true);
                         }} />
                 </View>
+                {/* <DateTimePicker value={1598051730000} /> */}
                 <View style={styles.row}>
                     <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings.labels.unitName}</Text>
                     <Picker 
@@ -66,7 +67,7 @@ export default function CreateScreen({ route, navigation}) {
                     >
                         {Strings.units.map((unit, index) => {
                             return (
-                                <Picker.Item label={unit} value={index} />
+                                <Picker.Item key={index} label={unit} value={index} />
                             )
                         })}
                     </Picker>

@@ -13,6 +13,7 @@ export default {
         create: 'New',
         edit: 'Edit',
         cancel: 'Cancel',
+        done: 'Done'
     },
     routes: {
         home: 'Home',

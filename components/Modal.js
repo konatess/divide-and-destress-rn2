@@ -7,29 +7,39 @@ import {
   TouchableHighlight,
   View
 } from "react-native";
+import Colors from '../constants/Colors';
+import Strings from '../constants/Strings';
+import { Ionicons } from '@expo/vector-icons';
 
-export default (modalVisible) => {
+export default ({modalVisible, message, buttons}) => {
     return (
         <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+          console.log("Modal has been closed.");
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
+            {message && <Text style={styles.modalText}>{message}</Text>}
 
-            <TouchableHighlight
-              style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </TouchableHighlight>
+            {buttons.map((unit, index) => {
+                return (
+                    <TouchableHighlight
+                        key={index}
+                        style={{ ...styles.openButton, backgroundColor: unit._color}}
+                        onPress={unit.onPress}
+                        >
+                        
+                        <Text style={styles.textStyle}>
+                            {unit._iconName && <Ionicons name={unit._iconName} />}
+                            {'  ' + unit._title}
+                        </Text>
+                    </TouchableHighlight>
+                )
+            })}
           </View>
         </View>
       </Modal>
@@ -65,7 +75,7 @@ const styles = StyleSheet.create({
       elevation: 2
     },
     textStyle: {
-      color: "white",
+      color: Colors.navButtonText,
       fontWeight: "bold",
       textAlign: "center"
     },
