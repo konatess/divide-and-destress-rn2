@@ -1,32 +1,30 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Modal } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-import { Project } from '../constants/ProjectClass.js';
+import { Project } from '../constants/ProjectClass';
 import ButtonBar from '../components/ButtonBar'
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
-import AllButtons from '../constants/ButtonClass.js';
+import AllButtons from '../constants/ButtonClass';
+import CustModal from '../components/Modal';
 import Moment from 'moment';
 import Storage from '../storage/Async';
 
 
-export default function HomeScreen({ navigation }) {
-	let settingsobj;
-	const fetchSettings = async () => {
-		return await Storage.getSettings().then(results => {
-			console.log(results)
-			settingsobj = results;
-		});
-	};
-	fetchSettings();
-	const button1 = AllButtons.settings;
-	const button2 = AllButtons.order;
-	const button3 = AllButtons.create;
-	button1.onPress = () => navigation.navigate(Strings.routes.settings, {settingsobj: settingsobj});
-	// button2.onPress = () => navigation.navigate(Strings.routes.order);
-	button3.onPress = () => navigation.navigate(Strings.routes.create);
+export default function HomeScreen({ route, navigation }) {
+	const { settings } = route.params;
+	const [modalVisible, setModalVisible] = React.useState(false);
 	const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy'], {'freq':'daily', 'time':'8pm'});
 	const project2 = new Project('King of Anything', 20200501, 20200520, 4, 90, 6, 'page', false, ['Music', 'Anthem'], {'freq':'daily', 'time':'8pm'});
+	const titles = [project1._title, project2._title];
+	const settingsbtn = AllButtons.settings;
+	settingsbtn.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings});
+	const orderbtn = AllButtons.order;
+	orderbtn.onPress = () => setModalVisible(true);
+	const createbtn = AllButtons.create;
+	createbtn.onPress = () => navigation.navigate(Strings.routes.create, {titles: titles, settings: settings});
+	const modalDonebtn = AllButtons.done;
+	modalDonebtn.onPress = () => setModalVisible(false);
 	return (
 		<View style={styles.container}>
 		<FlatList 
@@ -51,11 +49,17 @@ export default function HomeScreen({ navigation }) {
 			></ProjectButton>}
 		/>
 		<ButtonBar 
-			// navigation={navigation}
-			b1= {button1}
-			b2= {button2}
-			b3= {button3}
+			b1= {settingsbtn}
+			b2= {orderbtn}
+			b3= {createbtn}
 		/>
+		<CustModal 
+			modalVisible={modalVisible} 
+			// onPress={() => {setModalVisible(false)}}
+			message={"I am Groot! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+			buttons={[ modalDonebtn ]}
+			>
+		</CustModal>
 		</View>
 	);
 }

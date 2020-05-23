@@ -22,6 +22,7 @@ export default {
     create: '#138A36',
     edit: purple,
     cancel: '#888',
+    done: '#888',
     inputBorder: '#ddd',
     mainbackground: 'pink'
 };

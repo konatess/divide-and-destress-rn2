@@ -26,6 +26,7 @@ const trash= new ButtonObj(Strings.buttons.delete, Colors.delete, 'md-trash');
 const create= new ButtonObj(Strings.buttons.create, Colors.create, 'md-add');
 const edit= new ButtonObj(Strings.buttons.edit, Colors.edit, 'md-create');
 const cancel= new ButtonObj(Strings.buttons.cancel, Colors.cancel, 'md-close');
+const done= new ButtonObj(Strings.buttons.done, Colors.done, 'md-checkmark');
 
 export default {
     settings: settings,
@@ -35,5 +36,6 @@ export default {
     create: create,
     edit: edit,
     save: save,
-    cancel: cancel
+    cancel: cancel,
+    done: done
 };
