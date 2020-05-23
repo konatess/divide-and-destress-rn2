@@ -14,8 +14,15 @@ import Moment from 'moment'
 export default function CreateScreen({ route, navigation}) {
     const { knowntitles } = route.params
     const { settings } = route.params
-    const [selectedValue, setSelectedValue] = React.useState(1);
-    const [visible, setVisible] = React.useState(false);
+    // Unit picker
+    const [unitValue, setUnitValue] = React.useState(1);
+    // modal visibility
+    const [modalVisible, setmodalVisible] = React.useState(false);
+    // date picker
+    // Moment is returning a promise, which doesn't work here. 
+    // Figure out how to get that data without putting the promise inside here
+    const [dateValue, setDateValue] = React.useState(Moment().add(7, 'days').format(settings.dateFormat))
+    // total units vs start and end
     const [isTotal, setisTotal] = React.useState(false);
     const toggleSwitch = () => setisTotal(previousState => !previousState);
     const newProj = new Project();
@@ -31,13 +38,21 @@ export default function CreateScreen({ route, navigation}) {
         // Storage.createProj(newProj)
         }
     };
-    const button1 = AllButtons.delete;
-    const button2 = AllButtons.save;
-    // button1.onPress = () => navigation.navigate(Strings.routes.settings);
-    button2.onPress = () => {saveProj()};
+    const deletebtn = AllButtons.delete;
+    const savebtn = AllButtons.save;
+    const modaldonebtn =AllButtons.done;
+
+    // deletebtn.onPress = () => navigation.navigate(Strings.routes.settings);
+    savebtn.onPress = () => saveProj();
+    modaldonebtn.onPress = () => setmodalVisible(false);
     return (
         <View style={styles.container}>
-            <CustModal modalVisible={visible} />
+            <CustModal 
+            startVisible={modalVisible} 
+            message={'I am Groot'} 
+            buttons={[ modaldonebtn ]} 
+            >
+            </CustModal>
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings.labels.title}</Text>
                 <TextInput
@@ -52,18 +67,20 @@ export default function CreateScreen({ route, navigation}) {
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
                     <TextInput style={styles.inputField} 
-                        value={Moment().format(settings.dateFormat)}
-                        onFocus={() => {
-                            setVisible(true);
-                        }} />
+                        value={dateValue}
+                        // onFocus={() => setmodalVisible(true)}
+                    />
                 </View>
-                {/* <DateTimePicker value={1598051730000} /> */}
+                {/* <DateTimePicker 
+                    value={Moment(dateValue, settings.dateFormat)} 
+                    onChange={(event, date) => setDateValue(date)}
+                /> */}
                 <View style={styles.row}>
                     <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings.labels.unitName}</Text>
                     <Picker 
-                        selectedValue={selectedValue}
+                        selectedValue={unitValue}
                         style={{ flexGrow: 1 }}
-                        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                        onValueChange={(itemValue, itemIndex) => setUnitValue(itemValue)}
                     >
                         {Strings.units.map((unit, index) => {
                             return (
@@ -74,12 +91,12 @@ export default function CreateScreen({ route, navigation}) {
                 </View>
                 
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.startUnit + Strings.units[selectedValue] + ': '}</Text>
+                    <Text style={styles.labelText}>{Strings.labels.startUnit + Strings.units[unitValue] + ': '}</Text>
                     <TextInput
                         style={styles.inputField}
                         defaultValue={'1'}
                     />
-                    <Text style={styles.labelText}>{Strings.labels.endUnit + Strings.units[selectedValue] + ': '}</Text>
+                    <Text style={styles.labelText}>{Strings.labels.endUnit + Strings.units[unitValue] + ': '}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
@@ -106,8 +123,8 @@ export default function CreateScreen({ route, navigation}) {
                 </View>
             </View>
             <ButtonBar 
-                b1= {button1}
-                b2= {button2}
+                b1= {deletebtn}
+                b2= {savebtn}
             />
         </View>
     )
