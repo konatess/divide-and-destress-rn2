@@ -33,7 +33,7 @@ export default {
         total: 'Total ',
         tags: 'Tags, e.g. class or genre:',
         notification: 'Notification settings:',
-        frequency: 'Frequency:',
+        frequency: 'Freq:',
         time: 'Time:',
         toggle: 'First and last page vs. total number of pages:'
     },
@@ -42,6 +42,7 @@ export default {
         tags: 'Chemistry, English, Nonfiction, Sci-Fi...',
     },
     units: ['word', 'page', 'chapter'],
+    frequencyWords: ['default', 'daily', '2 days', '3 days', '4 days', '5 days', '6 days', 'weekly'],
     keys: {
         settings: 'USER_SETTINGS',
         projPrefix: 'PROJ-',

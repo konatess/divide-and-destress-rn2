@@ -1,15 +1,16 @@
 export class Project {
-    constructor(ti, sD, dD, sU, eU, cU, uN, tR, tag, nS) {
+    constructor(ti, sD, dD, sU, eU, cU, uN, tR, tag, freq, time) {
         this._title = ti;
         this._startDate = sD;
         this._dueDate = dD;
-        this._startUnit = sU;
+        this._startUnit = sU || 1;
         this._endUnit = eU;
         this._currentUnit = cU;
         this._unitName = uN;
-        this._totalVsRange = tR;
+        this._totalVsRange = tR || false;
         this._tags = tag;
-        this._notifySettings = nS;
+        this._frequency = freq || 0;
+        this._time = time || 'default';
         this._textLimit = /([\w'\- _/])/g //change this to a static method instead?
     }  
     get title() {
@@ -71,10 +72,16 @@ export class Project {
     set tags(tagsArr) {
         this._tags = tagsArr;
     }
-    get notifySettings() {
-        return this._notifySettings;
+    get freq() {
+        return this._frequency;
     }
-    set notifySettings(notifications) {
-        this._notifySettings = notifications;
+    set freq(number) {
+        this._frequency = number;
+    }
+    get time() {
+        return this._time;
+    }
+    set time(timestring) {
+        this._time = timestring;
     }
 }

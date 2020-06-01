@@ -18,9 +18,13 @@ export default function CreateScreen({ route, navigation}) {
     const [unitValue, setUnitValue] = React.useState(1);
     // modal visibility
     const [modalVisible, setmodalVisible] = React.useState(false);
-    // date picker
+    // date/time picker
     const [showDate, setShowDate] = React.useState(false);
+    const [dateMode, setDateMode] = React.useState('date');
     const [dateValue, setDateValue] = React.useState(Moment().add(7, 'days').toDate() || new Date(1598051730000))
+    const [timeValue, setTimeValue] = React.useState('default');
+    // Frequency picker
+    const [freqValue, setFreqValue] = React.useState(0);
     // total units vs start and end
     const [isTotal, setisTotal] = React.useState(false);
     const toggleSwitch = () => setisTotal(previousState => !previousState);
@@ -52,8 +56,7 @@ export default function CreateScreen({ route, navigation}) {
             startVisible={modalVisible} 
             message={'I am Groot'} 
             buttons={[ modaldonebtn ]} 
-            >
-            </CustModal>
+            />
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings.labels.title}</Text>
                 <TextInput
@@ -73,19 +76,10 @@ export default function CreateScreen({ route, navigation}) {
                         value={Moment(dateValue).format(settings.dateFormat)}
                         onFocus={() => {
                             setShowDate(true);
+                            setDateMode('date');
                         }}
                     />
                 </View>
-                { showDate && <DateTimePicker 
-                    value={dateValue} 
-                    onChange={(event, date) => {
-                        Keyboard.dismiss();
-                        setShowDate(false);
-                        if (date !== undefined) {
-                            setDateValue(date); 
-                        }
-                    }}
-                />}
                 <View style={styles.row}>
                     <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings.labels.unitName}</Text>
                     <Picker 
@@ -106,30 +100,50 @@ export default function CreateScreen({ route, navigation}) {
                     <TextInput
                         style={styles.inputField}
                         defaultValue={'1'}
+                        onEndEditing={(e) => {
+                        newProj.startUnit = e.nativeEvent.text;
+                    }}
                     />
                     <Text style={styles.labelText}>{Strings.labels.endUnit + Strings.units[unitValue] + ': '}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
+                        onEndEditing={(e) => {
+                        newProj.endUnit = e.nativeEvent.text;
+                    }}
                     />
                 </View>
                 <Text style={styles.labelText}>{Strings.labels.tags}</Text>
                 <TextInput
                     style={[styles.inputField, {marginBottom: 10}]}
                     placeholder={Strings.placeholder.tags}
+                    onEndEditing={(e) => {
+                        newProj.tags = e.nativeEvent.text;
+                    }}
                 />
                 <Text style={styles.labelText}>{Strings.labels.notification}</Text>
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings.labels.time}</Text>
                     <TextInput
                         style={styles.inputField}
-                        defaultValue={'default'}
+                        value={timeValue}
+                        onFocus={() => {
+                            setShowDate(true);
+                            setDateMode('time');
+                        }}
                     />
-                    <Text style={styles.labelText}>{Strings.labels.frequency}</Text>
-                    <TextInput
-                        style={styles.inputField}
-                        defaultValue={'default'}
-                    />
+                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings.labels.frequency}</Text>
+                    <Picker 
+                        selectedValue={freqValue}
+                        style={{ flexGrow: 1 }}
+                        onValueChange={(itemValue, itemIndex) => setFreqValue(itemValue)}
+                    >
+                        {Strings.frequencyWords.map((unit, index) => {
+                            return (
+                                <Picker.Item key={index} label={unit} value={index} />
+                            )
+                        })}
+                    </Picker>
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings.labels.toggle}</Text>
@@ -141,6 +155,25 @@ export default function CreateScreen({ route, navigation}) {
                         value={isTotal}
                     />
                 </View>
+                { showDate && <DateTimePicker 
+                    value={dateValue}
+                    mode={dateMode}
+                    minimumDate={Moment().add(2, 'days').toDate()}
+                    onChange={(event, date) => {
+                        Keyboard.dismiss();
+                        setShowDate(false);
+                        if (dateMode === 'date' && date !== undefined) {
+                            setDateValue(date); 
+                        }
+                        if (dateMode === 'time' && date !== undefined) {
+                            setTimeValue(Moment(date).format('h:mm a'));
+                            setDateValue(date);
+                        }
+                        if (dateMode === 'time' && date === undefined) {
+                            setTimeValue('default');
+                        }
+                    }}
+                />}
             </View>
             <ButtonBar 
                 b1= {deletebtn}
@@ -166,6 +199,7 @@ const styles = StyleSheet.create({
     },
     labelText: {
         fontSize: 20,
+        paddingRight: 5,
         textAlignVertical: 'center'
     }, 
     inputField: {

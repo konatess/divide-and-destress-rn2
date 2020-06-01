@@ -14,8 +14,8 @@ import Storage from '../storage/Async';
 export default function HomeScreen({ route, navigation }) {
 	const { settings } = route.params;
 	const [modalVisible, setModalVisible] = React.useState(false);
-	const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy'], {'freq':'daily', 'time':'8pm'});
-	const project2 = new Project('King of Anything', 20200501, 20200520, 4, 90, 6, 'page', false, ['Music', 'Anthem'], {'freq':'daily', 'time':'8pm'});
+	const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy']);
+	const project2 = new Project('King of Anything', 20200501, 20200520, 4, 90, 6, 'page', false, ['Music', 'Anthem']);
 	const titles = [project1._title, project2._title];
 	const settingsbtn = AllButtons.settings;
 	settingsbtn.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings});
