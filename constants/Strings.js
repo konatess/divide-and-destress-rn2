@@ -33,6 +33,8 @@ export default {
         total: 'Total ',
         tags: 'Tags, e.g. class or genre:',
         notification: 'Notification settings:',
+        frequency: 'Frequency:',
+        time: 'Time:',
         toggle: 'First and last page vs. total number of pages:'
     },
     placeholder: {

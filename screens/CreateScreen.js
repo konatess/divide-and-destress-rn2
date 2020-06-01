@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text, TextInput, View, Picker, Switch } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Picker, Switch, Keyboard } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Project } from '../constants/ProjectClass.js';
@@ -19,16 +19,16 @@ export default function CreateScreen({ route, navigation}) {
     // modal visibility
     const [modalVisible, setmodalVisible] = React.useState(false);
     // date picker
-    // Moment is returning a promise, which doesn't work here. 
-    // Figure out how to get that data without putting the promise inside here
-    const [dateValue, setDateValue] = React.useState(Moment().add(7, 'days').format(settings.dateFormat))
+    const [showDate, setShowDate] = React.useState(false);
+    const [dateValue, setDateValue] = React.useState(Moment().add(7, 'days').toDate() || new Date(1598051730000))
     // total units vs start and end
     const [isTotal, setisTotal] = React.useState(false);
     const toggleSwitch = () => setisTotal(previousState => !previousState);
+    // project to save
     const newProj = new Project();
     const saveProj = () => {
         if (knowntitles.some((value, index, array) => {
-            return value === newProj._title
+            return value === newProj.title
         })) {
             console.log(Strings.alerts.title.exists);
             alert(Strings.alerts.title.exists);
@@ -45,6 +45,7 @@ export default function CreateScreen({ route, navigation}) {
     // deletebtn.onPress = () => navigation.navigate(Strings.routes.settings);
     savebtn.onPress = () => saveProj();
     modaldonebtn.onPress = () => setmodalVisible(false);
+    
     return (
         <View style={styles.container}>
             <CustModal 
@@ -58,6 +59,7 @@ export default function CreateScreen({ route, navigation}) {
                 <TextInput
                     style={[styles.inputField, {marginBottom: 10}]}
                     placeholder={Strings.placeholder.title}
+                    autoCapitalize={'words'}
                     returnKeyType='next'
                     onEndEditing={(e) => {
                         newProj.title = e.nativeEvent.text;
@@ -66,15 +68,24 @@ export default function CreateScreen({ route, navigation}) {
                 />
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
-                    <TextInput style={styles.inputField} 
-                        value={dateValue}
-                        // onFocus={() => setmodalVisible(true)}
+                    <TextInput 
+                        style={styles.inputField} 
+                        value={Moment(dateValue).format(settings.dateFormat)}
+                        onFocus={() => {
+                            setShowDate(true);
+                        }}
                     />
                 </View>
-                {/* <DateTimePicker 
-                    value={Moment(dateValue, settings.dateFormat)} 
-                    onChange={(event, date) => setDateValue(date)}
-                /> */}
+                { showDate && <DateTimePicker 
+                    value={dateValue} 
+                    onChange={(event, date) => {
+                        Keyboard.dismiss();
+                        setShowDate(false);
+                        if (date !== undefined) {
+                            setDateValue(date); 
+                        }
+                    }}
+                />}
                 <View style={styles.row}>
                     <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings.labels.unitName}</Text>
                     <Picker 
@@ -109,14 +120,23 @@ export default function CreateScreen({ route, navigation}) {
                 />
                 <Text style={styles.labelText}>{Strings.labels.notification}</Text>
                 <View style={styles.row}>
-
+                    <Text style={styles.labelText}>{Strings.labels.time}</Text>
+                    <TextInput
+                        style={styles.inputField}
+                        defaultValue={'default'}
+                    />
+                    <Text style={styles.labelText}>{Strings.labels.frequency}</Text>
+                    <TextInput
+                        style={styles.inputField}
+                        defaultValue={'default'}
+                    />
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings.labels.toggle}</Text>
                     <Switch
-                        trackColor={{ false: "#767577", true: "#81b0ff" }}
-                        thumbColor={isTotal ? "#f5dd4b" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
+                        trackColor={{ false: Colors.toggle.trackfalse, true: Colors.toggle.tracktrue }}
+                        thumbColor={isTotal ? Colors.toggle.thumbtrue : Colors.toggle.thumbfalse}
+                        ios_backgroundColor={Colors.toggle.ios_backgroundColor}
                         onValueChange={toggleSwitch}
                         value={isTotal}
                     />
