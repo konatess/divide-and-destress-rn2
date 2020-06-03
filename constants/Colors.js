@@ -24,5 +24,12 @@ export default {
     cancel: '#888',
     done: '#888',
     inputBorder: '#ddd',
-    mainbackground: 'pink'
+    mainbackground: 'pink',
+    toggle: {
+        trackfalse: '#888', 
+        tracktrue: '#0090FF',
+        thumbfalse: "#aaa",
+        thumbtrue: purple,
+        ios_backgroundColor: "#3e3e3e"
+    },
 };

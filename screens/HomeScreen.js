@@ -14,15 +14,15 @@ import Storage from '../storage/Async';
 export default function HomeScreen({ route, navigation }) {
 	const { settings } = route.params;
 	const [modalVisible, setModalVisible] = React.useState(false);
-	const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy'], {'freq':'daily', 'time':'8pm'});
-	const project2 = new Project('King of Anything', 20200501, 20200520, 4, 90, 6, 'page', false, ['Music', 'Anthem'], {'freq':'daily', 'time':'8pm'});
+	const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy']);
+	const project2 = new Project('King of Anything', 20200501, 20200520, 4, 90, 6, 'page', false, ['Music', 'Anthem']);
 	const titles = [project1._title, project2._title];
 	const settingsbtn = AllButtons.settings;
 	settingsbtn.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings});
 	const orderbtn = AllButtons.order;
 	orderbtn.onPress = () => setModalVisible(true);
 	const createbtn = AllButtons.create;
-	createbtn.onPress = () => navigation.navigate(Strings.routes.create, {titles: titles, settings: settings});
+	createbtn.onPress = () => navigation.navigate(Strings.routes.create, {knowntitles: titles, settings: settings});
 	const modalDonebtn = AllButtons.done;
 	modalDonebtn.onPress = () => setModalVisible(false);
 	return (
@@ -54,8 +54,7 @@ export default function HomeScreen({ route, navigation }) {
 			b3= {createbtn}
 		/>
 		<CustModal 
-			modalVisible={modalVisible} 
-			// onPress={() => {setModalVisible(false)}}
+			visible={modalVisible} 
 			message={"I am Groot! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
 			buttons={[ modalDonebtn ]}
 			>
