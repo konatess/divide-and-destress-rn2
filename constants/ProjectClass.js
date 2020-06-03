@@ -5,24 +5,18 @@ export class Project {
         this._dueDate = dD;
         this._startUnit = sU || 1;
         this._endUnit = eU;
-        this._currentUnit = cU;
-        this._unitName = uN;
+        this._currentUnit = cU || 1;
+        this._unitName = uN || 1;
         this._totalVsRange = tR || false;
-        this._tags = tag;
+        this._tags = tag || [];
         this._frequency = freq || 0;
         this._time = time || 'default';
-        this._textLimit = /([\w'\- _/])/g //change this to a static method instead?
     }  
     get title() {
         return this._title
     }
     set title(newtitle) {
-        if (this._textLimit.test(newtitle)) {
-            this._title = newtitle;
-        }
-        else {
-            console.log('title error');
-        }
+        this._title = newtitle;
     }
     get startDate() {
         return this._startDate;
@@ -83,5 +77,8 @@ export class Project {
     }
     set time(timestring) {
         this._time = timestring;
+    }
+    stringIsValid(string) {
+        return /([\w'\- _/])/g.test(string);
     }
 }

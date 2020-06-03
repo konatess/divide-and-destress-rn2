@@ -16,8 +16,10 @@ export default function CreateScreen({ route, navigation}) {
     const { settings } = route.params
     // Unit picker
     const [unitValue, setUnitValue] = React.useState(1);
-    // modal visibility
+    // modal
     const [modalVisible, setmodalVisible] = React.useState(false);
+    const [modalMessage, setModalMessage] = React.useState();
+    const [modalButtons, setModalButtons] = React.useState([]);
     // date/time picker
     const [showDate, setShowDate] = React.useState(false);
     const [dateMode, setDateMode] = React.useState('date');
@@ -31,31 +33,57 @@ export default function CreateScreen({ route, navigation}) {
     // project to save
     const newProj = new Project();
     const saveProj = () => {
-        if (knowntitles.some((value, index, array) => {
+        newProj.dueDate = dateValue;
+        newProj.startDate = Moment().toDate();
+        newProj.unitName = unitValue;
+        newProj.freq = freqValue;
+        newProj.time = timeValue;
+        newProj.isTotal = isTotal;
+        console.log(newProj);
+        console.log(!newProj.title)
+        if (!newProj.title) {
+            setModalMessage(Strings.alerts.title.blank);
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
+        else if (knowntitles.some((value) => {
             return value === newProj.title
         })) {
-            console.log(Strings.alerts.title.exists);
-            alert(Strings.alerts.title.exists);
+            setModalMessage(Strings.alerts.title.exists);
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
+        else if (!newProj.startUnit) {
+            setModalMessage(Strings.alerts.first);
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
+        else if (!newProj.endUnit) {
+            setModalMessage(Strings.alerts.last);
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
         }
         else {
             console.log('Save Project');
-        // Storage.createProj(newProj)
+        // Storage.createProj(newProj);
         }
     };
     const deletebtn = AllButtons.delete;
     const savebtn = AllButtons.save;
     const modaldonebtn =AllButtons.done;
+    const modalokaybtn = AllButtons.okay;
 
     // deletebtn.onPress = () => navigation.navigate(Strings.routes.settings);
     savebtn.onPress = () => saveProj();
     modaldonebtn.onPress = () => setmodalVisible(false);
+    modalokaybtn.onPress = () => setmodalVisible(false);
     
     return (
         <View style={styles.container}>
             <CustModal 
-            startVisible={modalVisible} 
-            message={'I am Groot'} 
-            buttons={[ modaldonebtn ]} 
+            visible={modalVisible} 
+            message={modalMessage} 
+            buttons={modalButtons} 
             />
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings.labels.title}</Text>
@@ -63,10 +91,15 @@ export default function CreateScreen({ route, navigation}) {
                     style={[styles.inputField, {marginBottom: 10}]}
                     placeholder={Strings.placeholder.title}
                     autoCapitalize={'words'}
-                    returnKeyType='next'
                     onEndEditing={(e) => {
-                        newProj.title = e.nativeEvent.text;
-                        console.log('Title changed');
+                        if (newProj.stringIsValid(e.nativeEvent.text)) {
+                            newProj.title = e.nativeEvent.text;
+                        }
+                        else {
+                            setModalMessage(Strings.alerts.charTitle);
+                            setModalButtons([modalokaybtn]);
+                            setmodalVisible(true);
+                        }
                     }}
                 />
                 <View style={styles.row}>
@@ -100,17 +133,20 @@ export default function CreateScreen({ route, navigation}) {
                     <TextInput
                         style={styles.inputField}
                         defaultValue={'1'}
+                        keyboardType={'number-pad'}
                         onEndEditing={(e) => {
-                        newProj.startUnit = e.nativeEvent.text;
-                    }}
+                            newProj.startUnit = parseInt(e.nativeEvent.text);
+                            newProj.currentUnit = parseInt(e.nativeEvent.text);
+                        }}
                     />
                     <Text style={styles.labelText}>{Strings.labels.endUnit + Strings.units[unitValue] + ': '}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
+                        keyboardType={'number-pad'}
                         onEndEditing={(e) => {
-                        newProj.endUnit = e.nativeEvent.text;
-                    }}
+                            newProj.endUnit = parseInt(e.nativeEvent.text);
+                        }}
                     />
                 </View>
                 <Text style={styles.labelText}>{Strings.labels.tags}</Text>
@@ -118,7 +154,21 @@ export default function CreateScreen({ route, navigation}) {
                     style={[styles.inputField, {marginBottom: 10}]}
                     placeholder={Strings.placeholder.tags}
                     onEndEditing={(e) => {
-                        newProj.tags = e.nativeEvent.text;
+                        let tagsSplit = e.nativeEvent.text.trim().split(/\s*,\s*/);
+                        let tags = tagsSplit.filter(item => {
+                            return item.length > 0
+                        })
+                        console.log(tags);
+                        if (tags.length === 0 || tags.every((value, index, array) => {
+                            return newProj.stringIsValid(value)
+                        })) {
+                            newProj.tags = tags;
+                        }
+                        else if (tags.length > 0) {
+                            setModalMessage(Strings.alerts.charTags);
+                            setModalButtons([modalokaybtn]);
+                            setmodalVisible(true);
+                        }
                     }}
                 />
                 <Text style={styles.labelText}>{Strings.labels.notification}</Text>

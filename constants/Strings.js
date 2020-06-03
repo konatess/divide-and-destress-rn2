@@ -13,7 +13,8 @@ export default {
         create: 'New',
         edit: 'Edit',
         cancel: 'Cancel',
-        done: 'Done'
+        done: 'Done',
+        okay: 'Okay'
     },
     routes: {
         home: 'Home',
@@ -25,8 +26,8 @@ export default {
         display: 'Display'
     },
     labels: {
-        title: 'Title:',
-        dueDate: 'Due Date:',
+        title: 'Project Title:',
+        dueDate: 'Project Due Date:',
         unitName: 'Unit Name:',
         startUnit: 'First ', 
         endUnit: 'Last ', 
@@ -53,7 +54,9 @@ export default {
             blank: 'Title cannot be blank'
         },
         first: 'First page cannot be blank',
-        last: 'Last page cannot be blank'
+        last: 'Last page cannot be blank',
+        charTitle: 'Title can only contain letters, numbers, spaces, dashes and underscores.',
+        charTags: 'Tags can only contain letters, numbers, spaces, dashes and underscores. Use commas to separate.',
 
     }
 };

@@ -11,12 +11,12 @@ import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import { Ionicons } from '@expo/vector-icons';
 
-export default ({startVisible, message, buttons}) => {
+export default ({visible, message, buttons}) => {
     return (
         <Modal
         animationType="slide"
         transparent={true}
-        visible={startVisible}
+        visible={visible}
         onRequestClose={() => {
           console.log("Modal has been closed.");
         }}
