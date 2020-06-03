@@ -13,12 +13,14 @@ import DisplayScreen from './screens/DisplayScreen';
 import CreateScreen from './screens/CreateScreen';
 import EditScreen from './screens/EditScreen';
 import Strings from './constants/Strings';
+import Storage from './storage/Async';
 
 const Stack = createStackNavigator();
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
   const [initialNavigationState, setInitialNavigationState] = React.useState();
+  const [settingsObj, fetchSettingsObj] = React.useState();
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
 
@@ -30,6 +32,7 @@ export default function App(props) {
 
         // Load our initial navigation state
         setInitialNavigationState(await getInitialState());
+        fetchSettingsObj(await Storage.getSettings());
 
         // Load fonts
         await Font.loadAsync({
@@ -58,7 +61,8 @@ export default function App(props) {
           <Stack.Navigator initialRouteName={Strings.routes.home}>
             <Stack.Screen name={Strings.routes.home} 
             component={HomeScreen}
-            options={{title: Strings.headers.home}} />
+            options={{title: Strings.headers.home}}
+            initialParams={{settings: settingsObj}} />
             <Stack.Screen name={Strings.routes.settings} 
             component={SettingsScreen}
             options={{title: Strings.headers.settings}} />

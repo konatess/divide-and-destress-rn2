@@ -13,6 +13,8 @@ export default {
         create: 'New',
         edit: 'Edit',
         cancel: 'Cancel',
+        done: 'Done',
+        okay: 'Okay'
     },
     routes: {
         home: 'Home',
@@ -24,14 +26,16 @@ export default {
         display: 'Display'
     },
     labels: {
-        title: 'Title:',
-        dueDate: 'Due Date:',
+        title: 'Project Title:',
+        dueDate: 'Project Due Date:',
         unitName: 'Unit Name:',
         startUnit: 'First ', 
         endUnit: 'Last ', 
         total: 'Total ',
         tags: 'Tags, e.g. class or genre:',
         notification: 'Notification settings:',
+        frequency: 'Freq:',
+        time: 'Time:',
         toggle: 'First and last page vs. total number of pages:'
     },
     placeholder: {
@@ -39,8 +43,20 @@ export default {
         tags: 'Chemistry, English, Nonfiction, Sci-Fi...',
     },
     units: ['word', 'page', 'chapter'],
+    frequencyWords: ['default', 'daily', '2 days', '3 days', '4 days', '5 days', '6 days', 'weekly'],
     keys: {
         settings: 'USER_SETTINGS',
         projPrefix: 'PROJ-',
+    },
+    alerts: {
+        title: {
+            exists: 'Title already exists',
+            blank: 'Title cannot be blank'
+        },
+        first: 'First page cannot be blank',
+        last: 'Last page cannot be blank',
+        charTitle: 'Title can only contain letters, numbers, spaces, dashes and underscores.',
+        charTags: 'Tags can only contain letters, numbers, spaces, dashes and underscores. Use commas to separate.',
+
     }
 };
