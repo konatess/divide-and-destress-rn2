@@ -28,21 +28,29 @@ export default function CreateScreen({ route, navigation}) {
     // Frequency picker
     const [freqValue, setFreqValue] = React.useState(0);
     // total units vs start and end
-    const [isTotal, setisTotal] = React.useState(false);
-    const toggleSwitch = () => setisTotal(previousState => !previousState);
+    const [isTotal, setIsTotal] = React.useState(false);
+    const toggleSwitch = () => setIsTotal(previousState => !previousState);
+    // the following state values are purely for retrieval
+    // title value
+    const [titleValue, setTitleValue] = React.useState("");
+    // tags value
+    const [tagsValue, setTagsValue] = React.useState("");
+    // start and end values
+    const [startValue, setStartValue] = React.useState(1);
+    const [endValue, setEndValue] = React.useState(0);
     // project to save
     const newProj = new Project();
     const saveProj = () => {
-        newProj.dueDate = dateValue;
-        newProj.startDate = Moment().toDate();
-        newProj.unitName = unitValue;
-        newProj.freq = freqValue;
-        newProj.time = timeValue;
-        newProj.isTotal = isTotal;
-        console.log(newProj);
-        console.log(!newProj.title)
-        if (!newProj.title) {
+        console.log("tagsValue: " + tagsValue)
+        console.log("not tagsAreValid: " + !newProj.tagsAreValid(tagsValue))
+        console.log('tags length: ' + tagsValue.length)
+        if (titleValue.trim() === "") {
             setModalMessage(Strings.alerts.title.blank);
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
+        else if (!newProj.titleIsValid(titleValue)) {
+            setModalMessage(Strings.alerts.charTitle);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
@@ -53,17 +61,41 @@ export default function CreateScreen({ route, navigation}) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!newProj.startUnit) {
+        else if (!startValue) {
             setModalMessage(Strings.alerts.first);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!newProj.endUnit) {
+        else if (!endValue) {
             setModalMessage(Strings.alerts.last);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
+        else if (tagsValue && !newProj.tagsAreValid(tagsValue)) {
+            setModalMessage(Strings.alerts.charTags);
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
         else {
+            let tags = [];
+            if (tagsValue) {
+                let tagsSplit = tagsValue.trim().split(/\s*,\s*/);
+                tags = tagsSplit.filter(item => {
+                    return item.length > 0
+                })
+            }
+            newProj.title = titleValue;
+            newProj.startDate = Moment().toDate();
+            newProj.dueDate = dateValue;
+            newProj.startUnit = parseInt(startValue);
+            newProj.endUnit = parseInt(endValue);
+            newProj.currentUnit = parseInt(startValue);
+            newProj.unitName = unitValue;
+            newProj.isTotal = isTotal;
+            newProj.tags = tags;
+            newProj.freq = freqValue;
+            newProj.time = timeValue;
+            console.log(newProj);
             console.log('Save Project');
         // Storage.createProj(newProj);
         }
@@ -91,16 +123,7 @@ export default function CreateScreen({ route, navigation}) {
                     style={[styles.inputField, {marginBottom: 10}]}
                     placeholder={Strings.placeholder.title}
                     autoCapitalize={'words'}
-                    onEndEditing={(e) => {
-                        if (newProj.stringIsValid(e.nativeEvent.text)) {
-                            newProj.title = e.nativeEvent.text;
-                        }
-                        else {
-                            setModalMessage(Strings.alerts.charTitle);
-                            setModalButtons([modalokaybtn]);
-                            setmodalVisible(true);
-                        }
-                    }}
+                    onChangeText={text => setTitleValue(text)}
                 />
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
@@ -133,43 +156,23 @@ export default function CreateScreen({ route, navigation}) {
                     <TextInput
                         style={styles.inputField}
                         defaultValue={'1'}
+                        placeholder={'1'}
                         keyboardType={'number-pad'}
-                        onEndEditing={(e) => {
-                            newProj.startUnit = parseInt(e.nativeEvent.text);
-                            newProj.currentUnit = parseInt(e.nativeEvent.text);
-                        }}
+                        onChangeText={text => setStartValue(text)}
                     />
                     <Text style={styles.labelText}>{Strings.labels.endUnit + Strings.units[unitValue] + ': '}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
                         keyboardType={'number-pad'}
-                        onEndEditing={(e) => {
-                            newProj.endUnit = parseInt(e.nativeEvent.text);
-                        }}
+                        onChangeText={text => setEndValue(text)}
                     />
                 </View>
                 <Text style={styles.labelText}>{Strings.labels.tags}</Text>
                 <TextInput
                     style={[styles.inputField, {marginBottom: 10}]}
                     placeholder={Strings.placeholder.tags}
-                    onEndEditing={(e) => {
-                        let tagsSplit = e.nativeEvent.text.trim().split(/\s*,\s*/);
-                        let tags = tagsSplit.filter(item => {
-                            return item.length > 0
-                        })
-                        console.log(tags);
-                        if (tags.length === 0 || tags.every((value, index, array) => {
-                            return newProj.stringIsValid(value)
-                        })) {
-                            newProj.tags = tags;
-                        }
-                        else if (tags.length > 0) {
-                            setModalMessage(Strings.alerts.charTags);
-                            setModalButtons([modalokaybtn]);
-                            setmodalVisible(true);
-                        }
-                    }}
+                    onChangeText={text => setTagsValue(text)}
                 />
                 <Text style={styles.labelText}>{Strings.labels.notification}</Text>
                 <View style={styles.row}>
