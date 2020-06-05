@@ -34,7 +34,7 @@ export default ({visible, message, buttons}) => {
                         >
                         
                         <Text style={styles.textStyle}>
-                            {unit._iconName && <Ionicons name={unit._iconName} />}
+                            {unit._iconName && <Ionicons size={18} name={unit._iconName} />}
                             {'  ' + unit._title}
                         </Text>
                     </TouchableHighlight>
@@ -77,10 +77,12 @@ const styles = StyleSheet.create({
     textStyle: {
       color: Colors.navButtonText,
       fontWeight: "bold",
-      textAlign: "center"
+      textAlign: "center",
+      fontSize: 18,
     },
     modalText: {
       marginBottom: 15,
-      textAlign: "center"
+      textAlign: "center",
+      fontSize: 18,
     }
   });

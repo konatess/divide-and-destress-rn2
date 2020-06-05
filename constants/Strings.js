@@ -3,6 +3,9 @@ const purple = '#9200DA';
 export default {
     headers: {
         home:'Your Projects',
+        create: 'New Project',
+        edit: 'Edit ',
+        settings: 'Settings',
     },
     buttons: {
         home: 'Home',
@@ -14,7 +17,8 @@ export default {
         edit: 'Edit',
         cancel: 'Cancel',
         done: 'Done',
-        okay: 'Okay'
+        okay: 'Okay',
+        setToDefault: 'Default Notifications'
     },
     routes: {
         home: 'Home',
@@ -32,8 +36,8 @@ export default {
         startUnit: 'First ', 
         endUnit: 'Last ', 
         total: 'Total ',
-        tags: 'Tags, e.g. class or genre:',
-        notification: 'Notification settings:',
+        tags: 'Tags, e.g. class or genre (optional):',
+        notification: 'Notifications:',
         frequency: 'Freq:',
         time: 'Time:',
         toggle: 'First and last page vs. total number of pages:'

@@ -21,7 +21,7 @@ export default {
     delete: '#DE0000',
     create: '#138A36',
     edit: purple,
-    cancel: '#888',
+    cancel: '#aaa',
     done: '#888',
     inputBorder: '#ddd',
     mainbackground: 'pink',

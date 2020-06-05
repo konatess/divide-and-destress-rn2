@@ -1,6 +1,14 @@
 import * as React from 'react';
-import { StyleSheet, Text, TextInput, View, Picker, Switch, Keyboard } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import { 
+    Keyboard, 
+    Picker, 
+    StyleSheet, 
+    Switch, 
+    Text, 
+    TextInput, 
+    TouchableHighlight, 
+    View 
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar';
@@ -41,9 +49,7 @@ export default function CreateScreen({ route, navigation}) {
     // project to save
     const newProj = new Project();
     const saveProj = () => {
-        console.log("tagsValue: " + tagsValue)
-        console.log("not tagsAreValid: " + !newProj.tagsAreValid(tagsValue))
-        console.log('tags length: ' + tagsValue.length)
+        console.log('MARK')
         if (titleValue.trim() === "") {
             setModalMessage(Strings.alerts.title.blank);
             setModalButtons([modalokaybtn]);
@@ -84,20 +90,21 @@ export default function CreateScreen({ route, navigation}) {
                     return item.length > 0
                 })
             }
-            newProj.title = titleValue;
+            newProj.title = titleValue.trim();
             newProj.startDate = Moment().toDate();
             newProj.dueDate = dateValue;
             newProj.startUnit = parseInt(startValue);
             newProj.endUnit = parseInt(endValue);
             newProj.currentUnit = parseInt(startValue);
             newProj.unitName = unitValue;
-            newProj.isTotal = isTotal;
+            newProj.totalVsRange = isTotal;
             newProj.tags = tags;
             newProj.freq = freqValue;
             newProj.time = timeValue;
             console.log(newProj);
             console.log('Save Project');
-        // Storage.createProj(newProj);
+            Storage.createProj(newProj);
+            navigation.navigate(Strings.routes.home)
         }
     };
     const deletebtn = AllButtons.delete;
@@ -125,32 +132,12 @@ export default function CreateScreen({ route, navigation}) {
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
                 />
-                <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
-                    <TextInput 
-                        style={styles.inputField} 
-                        value={Moment(dateValue).format(settings.dateFormat)}
-                        onFocus={() => {
-                            setShowDate(true);
-                            setDateMode('date');
-                        }}
-                    />
-                </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings.labels.unitName}</Text>
-                    <Picker 
-                        selectedValue={unitValue}
-                        style={{ flexGrow: 1 }}
-                        onValueChange={(itemValue, itemIndex) => setUnitValue(itemValue)}
-                    >
-                        {Strings.units.map((unit, index) => {
-                            return (
-                                <Picker.Item key={index} label={unit} value={index} />
-                            )
-                        })}
-                    </Picker>
-                </View>
-                
+                <Text style={styles.labelText}>{Strings.labels.tags}</Text>
+                <TextInput
+                    style={[styles.inputField, {marginBottom: 10}]}
+                    placeholder={Strings.placeholder.tags}
+                    onChangeText={text => setTagsValue(text)}
+                />
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings.labels.startUnit + Strings.units[unitValue] + ': '}</Text>
                     <TextInput
@@ -168,13 +155,46 @@ export default function CreateScreen({ route, navigation}) {
                         onChangeText={text => setEndValue(text)}
                     />
                 </View>
-                <Text style={styles.labelText}>{Strings.labels.tags}</Text>
-                <TextInput
-                    style={[styles.inputField, {marginBottom: 10}]}
-                    placeholder={Strings.placeholder.tags}
-                    onChangeText={text => setTagsValue(text)}
-                />
-                <Text style={styles.labelText}>{Strings.labels.notification}</Text>
+                <View style={styles.row}>
+                    <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
+                    <TextInput 
+                        style={styles.inputField} 
+                        value={Moment(dateValue).format(settings.dateFormat)}
+                        onFocus={() => {
+                            setShowDate(true);
+                            setDateMode('date');
+                        }}
+                    />
+                </View>
+                <View style={styles.row}>
+                    <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings.labels.unitName}</Text>
+                    <Picker 
+                        selectedValue={unitValue}
+                        style={{ flexGrow: 1 }}
+                        text
+                        onValueChange={(itemValue, itemIndex) => setUnitValue(itemValue)}
+                    >
+                        {Strings.units.map((unit, index) => {
+                            return (
+                                <Picker.Item key={index} label={unit} value={index} />
+                            )
+                        })}
+                    </Picker>
+                </View>
+                <View style={styles.row}>
+                    <Text style={styles.labelText}>{Strings.labels.notification}</Text>
+                    <TouchableHighlight
+                        style={styles.defaultsButton}
+                        onPress={() => {
+                            setTimeValue('default');
+                            setFreqValue(0);
+                        }}
+                        >
+                        <Text style={styles.buttonText}>
+                            {Strings.buttons.setToDefault}
+                        </Text>
+                    </TouchableHighlight>
+                </View>
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings.labels.time}</Text>
                     <TextInput
@@ -218,20 +238,14 @@ export default function CreateScreen({ route, navigation}) {
                         if (dateMode === 'date' && date !== undefined) {
                             setDateValue(date); 
                         }
-                        if (dateMode === 'time' && date !== undefined) {
+                        else if (dateMode === 'time' && date !== undefined) {
                             setTimeValue(Moment(date).format('h:mm a'));
                             setDateValue(date);
-                        }
-                        if (dateMode === 'time' && date === undefined) {
-                            setTimeValue('default');
                         }
                     }}
                 />}
             </View>
-            <ButtonBar 
-                b1= {deletebtn}
-                b2= {savebtn}
-            />
+            <ButtonBar buttons={[ savebtn ]} />
         </View>
     )
 };
@@ -262,4 +276,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         fontSize: 18,
     }, 
+    defaultsButton: {
+        backgroundColor: Colors.cancel,
+        borderRadius: 20,
+        padding: 10,
+        elevation: 0
+    },
+    buttonText: {
+        color: Colors.navButtonText,
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: 14,
+      },
 });
