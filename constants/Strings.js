@@ -30,21 +30,25 @@ export default {
         display: 'Display'
     },
     labels: {
-        title: 'Project Title:',
-        dueDate: 'Project Due Date:',
-        unitName: 'Unit Name:',
-        startUnit: 'First ', 
+        title: 'Project Title: ',
+        dueDate: 'Project Due Date: ',
+        startDate: 'Project Start Date: ',
+        unitName: 'Unit Name: ',
+        startUnit: 'First ',
+        currentUnit: 'Current ', 
         endUnit: 'Last ', 
         total: 'Total ',
-        tags: 'Tags, e.g. class or genre (optional):',
-        notification: 'Notifications:',
+        tags: 'Tags, e.g. class or genre (optional): ',
+        tagsDisplay: 'Tags: ',
+        notification: 'Notifications: ',
         frequency: 'Freq:',
-        time: 'Time:',
-        toggle: 'First and last page vs. total number of pages:'
+        time: '  Time:',
+        toggle: 'First and last page vs. total number of pages: '
     },
     placeholder: {
         title: 'Title of your project...',
         tags: 'Chemistry, English, Nonfiction, Sci-Fi...',
+        noTags: 'no tags...'
     },
     units: ['word', 'page', 'chapter'],
     frequencyWords: ['default', 'daily', '2 days', '3 days', '4 days', '5 days', '6 days', 'weekly'],

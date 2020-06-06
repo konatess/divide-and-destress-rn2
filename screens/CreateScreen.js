@@ -49,7 +49,6 @@ export default function CreateScreen({ route, navigation}) {
     // project to save
     const newProj = new Project();
     const saveProj = () => {
-        console.log('MARK')
         if (titleValue.trim() === "") {
             setModalMessage(Strings.alerts.title.blank);
             setModalButtons([modalokaybtn]);
@@ -101,8 +100,6 @@ export default function CreateScreen({ route, navigation}) {
             newProj.tags = tags;
             newProj.freq = freqValue;
             newProj.time = timeValue;
-            console.log(newProj);
-            console.log('Save Project');
             Storage.createProj(newProj);
             navigation.push(Strings.routes.home)
         }
@@ -283,5 +280,5 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         fontSize: 14,
-      },
+    },
 });
