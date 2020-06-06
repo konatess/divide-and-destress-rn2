@@ -9,7 +9,6 @@ import AllButtons from '../constants/ButtonClass';
 import CustModal from '../components/Modal';
 import Moment from 'moment';
 import Storage from '../storage/Async';
-import Async from '../storage/Async';
 
 
 export default function HomeScreen({ route, navigation }) {
@@ -18,7 +17,7 @@ export default function HomeScreen({ route, navigation }) {
 	const [projArr, setProjArr] = React.useState([{ obj: { _title: 'bob'} }])
 	const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy']);
 	const project2 = new Project('King of Anything', 20200501, 20200520, 4, 90, 6, 'page', false, ['Music', 'Anthem']);
-	const titles = [project1._title, project2._title];
+	const [titles, setTitles] = React.useState([]);
 	const settingsbtn = AllButtons.settings;
 	settingsbtn.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings});
 	const orderbtn = AllButtons.order;
@@ -28,16 +27,17 @@ export default function HomeScreen({ route, navigation }) {
 	const modalDonebtn = AllButtons.done;
 	modalDonebtn.onPress = () => setModalVisible(false);
 	React.useEffect(() => {
-		// Create an scoped async function in the hook
 		async function projFromStorage() {
-			let storedProjArr = await Async.getAllProj();
+			let storedProjArr = await Storage.getAllProj();
 			if (storedProjArr) {
 				setProjArr(storedProjArr);
+				setTitles(storedProjArr.map((item) => {
+					return item.obj._title
+				}))
 			}
 		}
-		// Execute the created function directly
 		projFromStorage();
-	  }, []);
+	}, []);
 	return (
 		<View style={styles.container}>
 		<FlatList 
@@ -50,6 +50,7 @@ export default function HomeScreen({ route, navigation }) {
 				onPress={() => navigation.navigate(Strings.routes.display, {
 					project: item.obj, 
 					key: item.key, 
+					knowntitles: titles,
 					settings: settings
 				})}
 			></ProjectButton>}
@@ -69,9 +70,9 @@ HomeScreen.navigationOptions = {
 	header: null,
 };
 
-function ProjectButton({ title, due, onPress, settings, isLastOption }) {
+function ProjectButton({ title, due, onPress, settings }) {
 	return (
-		<RectButton style={[styles.project, isLastOption && styles.lastOption]} onPress={onPress}>
+		<RectButton style={ styles.project } onPress={onPress}>
 			<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 				<View style={styles.projectLabelTextContainer} accessible>
 				<Text style={styles.labelText}>{title}</Text>
@@ -87,28 +88,22 @@ function ProjectButton({ title, due, onPress, settings, isLastOption }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: Colors.mainbackground,
 	},
 	project: {
 		padding: 10,
-		backgroundColor: 'pink',
 	},
 	projectLabelTextContainer: {
 		flexShrink: 1,
-		backgroundColor: 'green',
 		paddingRight: 10,
 	},
 	labelText: {
 		fontSize: 22,
-		backgroundColor: 'white',
 	},
 	projectDueTextContainer: {
-		backgroundColor: 'blue',
 		paddingLeft: 5,
 		justifyContent: 'center',
 	},
 	dueText: {
 		fontSize: 18,
-		backgroundColor: 'white',
 	},
 });

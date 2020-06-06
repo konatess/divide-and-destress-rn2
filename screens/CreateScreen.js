@@ -104,17 +104,13 @@ export default function CreateScreen({ route, navigation}) {
             console.log(newProj);
             console.log('Save Project');
             Storage.createProj(newProj);
-            navigation.navigate(Strings.routes.home)
+            navigation.push(Strings.routes.home)
         }
     };
-    const deletebtn = AllButtons.delete;
     const savebtn = AllButtons.save;
-    const modaldonebtn =AllButtons.done;
     const modalokaybtn = AllButtons.okay;
 
-    // deletebtn.onPress = () => navigation.navigate(Strings.routes.settings);
     savebtn.onPress = () => saveProj();
-    modaldonebtn.onPress = () => setmodalVisible(false);
     modalokaybtn.onPress = () => setmodalVisible(false);
     
     return (
