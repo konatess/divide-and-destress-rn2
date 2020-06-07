@@ -40,7 +40,7 @@ export default {
         try {
             let keys = await AsyncStorage.getAllKeys();
             let allKeys = await AsyncStorage.multiGet(keys, (err, stores) => {
-                console.log(err);
+                err && console.log(err);
             });
             let filterProj = allKeys.filter((result, i, store) => {
                 // get at each store's key/value so you can work with it
@@ -52,7 +52,6 @@ export default {
                 let value = JSON.parse(store[i][1]);
                 return {key: key, obj: value}
             });
-            // console.log(projArr);
             return projArr;
         }
         catch (error) {
@@ -66,7 +65,7 @@ export default {
     },
     createProj: async (projobj) => {
         AsyncStorage.setItem(Strings.keys.projPrefix + projobj.title, JSON.stringify(projobj), (err) => {
-            console.log(err);
+            err && console.log(err);
         });
     },
     readProj: async (projkey) => {
@@ -81,11 +80,13 @@ export default {
         }
     },
     updateProj: async (projkey, projobj) => {
-
+        AsyncStorage.mergeItem(projkey, JSON.stringify(projobj), (err) => {
+            err && console.log(err);
+        })
     },
     deleteProj: async (projkey) => {
         AsyncStorage.removeItem(projkey, (err) => {
-            console.log(err);
+            err && console.log(err);
         });
     }
 };

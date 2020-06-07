@@ -6,7 +6,7 @@ import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import Storage from '../storage/Async';
 
 export default function SettingsScreen( {route, navigation} ) {
-	let {settings} = route.params
+	const {settings} = route.params
 	return (
 		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
 		<OptionButton

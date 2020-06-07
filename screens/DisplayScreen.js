@@ -16,7 +16,7 @@ export default function DisplayScreen({ route, navigation }) {
     const { key } = route.params;
     const deleteProj = async (projKey) => {
         await Storage.deleteProj(projKey);
-        navigation.push(Strings.routes.home); 
+        navigation.navigate(Strings.routes.home); 
     }
     const deletebtn = AllButtons.delete;
     const editbtn = AllButtons.edit;
@@ -34,7 +34,7 @@ export default function DisplayScreen({ route, navigation }) {
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings.labels.title + project._title}</Text>
                 <Text style={styles.labelText}>
-                    {Strings.labels.currentUnit + Strings.units[project._unitName] + ': ' + project._currentUnit}
+                    {Strings.labels.currentUnit.replace(/unit/g, Strings.units[project._unitName]) + project._currentUnit}
                 </Text>
                 <Text style={styles.labelText}>
                     {Strings.labels.dueDate + Moment(project._dueDate).format(settings.dateFormat)}
@@ -44,10 +44,10 @@ export default function DisplayScreen({ route, navigation }) {
                 </Text>
                 <View style={styles.row}>
                     <Text style={styles.labelText}>
-                        {Strings.labels.startUnit + Strings.units[project._unitName] + ': ' + project._startUnit}
+                        {Strings.labels.startUnit.replace(/unit/g, Strings.units[project._unitName]) + project._startUnit}
                     </Text>
                     <Text style={styles.labelText}>
-                        {Strings.labels.endUnit + Strings.units[project._unitName] + ': ' + project._endUnit}
+                        {Strings.labels.endUnit.replace(/unit/g, Strings.units[project._unitName]) + project._endUnit}
                     </Text>
                 </View>
                 <Text style={styles.labelText}>{Strings.labels.tagsDisplay + (project._tags.length ? project._tags.join(', ') : Strings.placeholder.noTags)}</Text>

@@ -76,6 +76,11 @@ export default function CreateScreen({ route, navigation}) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
+        else if (startValue >= endValue) {
+            setModalMessage(Strings.alerts.firstSmaller.replace(/unit/g, Strings.units[unitValue]));
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
         else if (tagsValue && !newProj.tagsAreValid(tagsValue)) {
             setModalMessage(Strings.alerts.charTags);
             setModalButtons([modalokaybtn]);
@@ -101,7 +106,7 @@ export default function CreateScreen({ route, navigation}) {
             newProj.freq = freqValue;
             newProj.time = timeValue;
             Storage.createProj(newProj);
-            navigation.push(Strings.routes.home)
+            navigation.navigate(Strings.routes.home)
         }
     };
     const savebtn = AllButtons.save;
@@ -132,7 +137,7 @@ export default function CreateScreen({ route, navigation}) {
                     onChangeText={text => setTagsValue(text)}
                 />
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.startUnit + Strings.units[unitValue] + ': '}</Text>
+                    <Text style={styles.labelText}>{Strings.labels.startUnit.replace(/unit/g, Strings.units[unitValue])}</Text>
                     <TextInput
                         style={styles.inputField}
                         defaultValue={'1'}
@@ -140,7 +145,7 @@ export default function CreateScreen({ route, navigation}) {
                         keyboardType={'number-pad'}
                         onChangeText={text => setStartValue(text)}
                     />
-                    <Text style={styles.labelText}>{Strings.labels.endUnit + Strings.units[unitValue] + ': '}</Text>
+                    <Text style={styles.labelText}>{Strings.labels.endUnit.replace(/unit/g, Strings.units[unitValue])}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
@@ -212,7 +217,7 @@ export default function CreateScreen({ route, navigation}) {
                     </Picker>
                 </View>
                 <View style={styles.row}>
-                    <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings.labels.toggle}</Text>
+                    <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings.labels.toggle.replace(/unit/g, Strings.units[unitValue])}</Text>
                     <Switch
                         trackColor={{ false: Colors.toggle.trackfalse, true: Colors.toggle.tracktrue }}
                         thumbColor={isTotal ? Colors.toggle.thumbtrue : Colors.toggle.thumbfalse}
