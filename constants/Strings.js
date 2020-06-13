@@ -68,6 +68,7 @@ export default {
         loading: 'Loading...'
     },
     units: ['word', 'page', 'chapter'],
+    dateFormats: ['MM/DD', 'DD/MM', 'MM-DD', 'DD-MM', 'YY/MM/DD', 'DD/MM/YY', 'MM/DD/YY'],
     frequencyWords: ['default', 'daily', 'every 2 days', 'every 3 days', 'every 4 days', 'every 5 days', 'every 6 days', 'weekly'],
     keys: {
         settings: 'USER_SETTINGS',
@@ -84,5 +85,13 @@ export default {
         charTitle: 'Title can only contain letters, numbers, spaces, apostrophes, dashes and underscores.',
         charTags: 'Tags can only contain letters, numbers, spaces, apostrophes, dashes and underscores. Use commas to separate.',
         confirmDelete: 'Are you sure you want to delete this project?',
+        settings: {
+            language: 'Please select a language below. \n We would love to add more languages. If you would like to translate, please use the Feedback button to send us an email.',
+            dateFormat: 'Please select a date format below:',
+            notify: '',
+            total: '',
+            unit: '',
+            deleteAll: 'Are you sure you want to delete all of your projects? This cannot be undone.',
+        }
     }
 };

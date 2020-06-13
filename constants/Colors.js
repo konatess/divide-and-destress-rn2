@@ -24,7 +24,10 @@ export default {
     cancel: '#aaa',
     done: '#888',
     inputBorder: '#ddd',
-    mainbackground: 'pink',
+    mainbackground: '#fff',
+    maintext: '#111',
+    modalbackground: '#fff',
+    settingsIcons: '#888',
     toggle: {
         trackfalse: '#888', 
         tracktrue: '#0090FF',
@@ -32,4 +35,8 @@ export default {
         thumbtrue: purple,
         ios_backgroundColor: "#3e3e3e"
     },
+    darkmode: {
+        background: '#222',
+        text: '#eee'
+    }
 };

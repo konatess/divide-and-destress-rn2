@@ -3,16 +3,37 @@ import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
-import AllButtons from '../constants/ButtonClass.js';
+import AllButtons from '../constants/ButtonClass';
+import CustModal from '../components/Modal';
+import Colors from '../constants/Colors';
+import Strings from '../constants/Strings';
 import Storage from '../storage/Async';
+import ButtonClass from '../constants/ButtonClass';
 
 export default function SettingsScreen( {route, navigation} ) {
 	const {settings} = route.params
 	const buttons = AllButtons.settingsList
-	buttons.darkMode.onPress = () => console.log(settings.darkmode);
+	const [darkMode, setDarkMode] = React.useState(settings.darkMode);
+	// modal
+    const [modalVisible, setmodalVisible] = React.useState(false);
+    const [modalMessage, setModalMessage] = React.useState();
+	const [modalButtons, setModalButtons] = React.useState([]);
+	const dateFormatBtns = Strings.dateFormats.map((string) => {
+		return ({_title: string, _color: Colors.done, _iconName: '', onPress: () => {
+			setmodalVisible(false);
+			settings.dateFormat = string;
+			console.log(settings.dateFormat);
+		}})
+	});
+	buttons.darkMode.onPress = () => setDarkMode(!darkMode);
 	buttons.language.onPress = () => console.log(settings.language);
 	buttons.dayChange.onPress = () => console.log(settings.dayChange);
-	buttons.dateFormat.onPress = () => console.log(settings.dateFormat);
+	buttons.dateFormat.onPress = () => {
+		console.log(settings.dateFormat);
+		setmodalVisible(true);
+		setModalMessage(Strings.alerts.settings.dateFormat);
+		setModalButtons(dateFormatBtns);
+	};
 	buttons.notifications.onPress = () => console.log(settings.notifications);
 	buttons.startVsTotal.onPress = () => console.log(settings.total);
 	buttons.unit.onPress = () => console.log(settings.unit);
@@ -21,8 +42,8 @@ export default function SettingsScreen( {route, navigation} ) {
 	buttons.feedback.onPress = () => console.log('clicked Feedback');
 	const buttonsArr = [
 		buttons.darkMode,
-		// buttons.language,
-        buttons.dayChange,
+		buttons.language,
+        // buttons.dayChange,
         buttons.dateFormat,
         buttons.notifications,
         buttons.startVsTotal,
@@ -32,54 +53,45 @@ export default function SettingsScreen( {route, navigation} ) {
         buttons.feedback,
 	]
 	return (
-		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+		<ScrollView style={[styles.container, {backgroundColor: darkMode ? Colors.darkmode.background : Colors.mainbackground} ]} contentContainerStyle={styles.contentContainer}>
 		{buttonsArr.map((unit, index) => {
                 return (
-					<OptionButton
-						key={index}
-						icon={unit._iconName}
-						label={unit._title}
-						onPress={unit.onPress}
-						isLastOption={index === buttonsArr.length - 1}
-				/>)
+					<RectButton style={[styles.option, (index === buttonsArr.length - 1) && styles.lastOption]} onPress={unit.onPress} key={unit._title}>
+						<View style={{ flexDirection: 'row' }}>
+							<View style={styles.optionIconContainer}>
+								<Ionicons name={unit._iconName} size={22} color={Colors.settingsIcons} />
+							</View>
+							<View style={styles.optionTextContainer}>
+								<Text style={[styles.optionText, {color: darkMode ? Colors.darkmode.text : Colors.maintext}]}>{unit._title}</Text>
+							</View>
+						</View>
+					</RectButton>
+				)
 		})}
+		<CustModal 
+            visible={modalVisible} 
+            message={modalMessage} 
+            buttons={modalButtons} 
+            />
 		</ScrollView>
 	);
-}
-
-function OptionButton({ icon, label, onPress, isLastOption }) {
-  return (
-    <RectButton style={[styles.option, isLastOption && styles.lastOption]} onPress={onPress}>
-      <View style={{ flexDirection: 'row' }}>
-        <View style={styles.optionIconContainer}>
-          <Ionicons name={icon} size={22} color="rgba(0,0,0,0.35)" />
-        </View>
-        <View style={styles.optionTextContainer}>
-          <Text style={styles.optionText}>{label}</Text>
-        </View>
-      </View>
-    </RectButton>
-  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fafafa',
   },
   contentContainer: {
     paddingTop: 15,
   },
   optionIconContainer: {
-    marginRight: 12,
+	marginRight: 12,
   },
   option: {
-    backgroundColor: '#fdfdfd',
     paddingHorizontal: 15,
     paddingVertical: 15,
     borderWidth: StyleSheet.hairlineWidth,
     borderBottomWidth: 0,
-    borderColor: '#ededed',
   },
   lastOption: {
     borderBottomWidth: StyleSheet.hairlineWidth,
