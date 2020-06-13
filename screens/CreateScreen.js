@@ -1,6 +1,14 @@
 import * as React from 'react';
-import { StyleSheet, Text, TextInput, View, Picker, Switch, Keyboard } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import { 
+    Keyboard, 
+    Picker, 
+    StyleSheet, 
+    Switch, 
+    Text, 
+    TextInput, 
+    TouchableHighlight, 
+    View 
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar';
@@ -28,21 +36,26 @@ export default function CreateScreen({ route, navigation}) {
     // Frequency picker
     const [freqValue, setFreqValue] = React.useState(0);
     // total units vs start and end
-    const [isTotal, setisTotal] = React.useState(false);
-    const toggleSwitch = () => setisTotal(previousState => !previousState);
+    const [isTotal, setIsTotal] = React.useState(false);
+    const toggleSwitch = () => setIsTotal(previousState => !previousState);
+    // the following state values are purely for retrieval
+    // title value
+    const [titleValue, setTitleValue] = React.useState("");
+    // tags value
+    const [tagsValue, setTagsValue] = React.useState("");
+    // start and end values
+    const [startValue, setStartValue] = React.useState(1);
+    const [endValue, setEndValue] = React.useState(0);
     // project to save
     const newProj = new Project();
     const saveProj = () => {
-        newProj.dueDate = dateValue;
-        newProj.startDate = Moment().toDate();
-        newProj.unitName = unitValue;
-        newProj.freq = freqValue;
-        newProj.time = timeValue;
-        newProj.isTotal = isTotal;
-        console.log(newProj);
-        console.log(!newProj.title)
-        if (!newProj.title) {
+        if (titleValue.trim() === "") {
             setModalMessage(Strings.alerts.title.blank);
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
+        else if (!newProj.titleIsValid(titleValue)) {
+            setModalMessage(Strings.alerts.charTitle);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
@@ -53,29 +66,53 @@ export default function CreateScreen({ route, navigation}) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!newProj.startUnit) {
+        else if (!startValue) {
             setModalMessage(Strings.alerts.first);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!newProj.endUnit) {
+        else if (!endValue) {
             setModalMessage(Strings.alerts.last);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
+        else if (startValue >= endValue) {
+            setModalMessage(Strings.alerts.firstSmaller.replace(/unit/g, Strings.units[unitValue]));
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
+        else if (tagsValue && !newProj.tagsAreValid(tagsValue)) {
+            setModalMessage(Strings.alerts.charTags);
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
         else {
-            console.log('Save Project');
-        // Storage.createProj(newProj);
+            let tags = [];
+            if (tagsValue) {
+                let tagsSplit = tagsValue.trim().split(/\s*,\s*/);
+                tags = tagsSplit.filter(item => {
+                    return item.length > 0
+                })
+            }
+            newProj.title = titleValue.trim();
+            newProj.startDate = Moment().toDate();
+            newProj.dueDate = dateValue;
+            newProj.startUnit = parseInt(startValue);
+            newProj.endUnit = parseInt(endValue);
+            newProj.currentUnit = parseInt(startValue);
+            newProj.unitName = unitValue;
+            newProj.totalVsRange = isTotal;
+            newProj.tags = tags;
+            newProj.freq = freqValue;
+            newProj.time = timeValue;
+            Storage.createProj(newProj);
+            navigation.navigate(Strings.routes.home)
         }
     };
-    const deletebtn = AllButtons.delete;
     const savebtn = AllButtons.save;
-    const modaldonebtn =AllButtons.done;
     const modalokaybtn = AllButtons.okay;
 
-    // deletebtn.onPress = () => navigation.navigate(Strings.routes.settings);
     savebtn.onPress = () => saveProj();
-    modaldonebtn.onPress = () => setmodalVisible(false);
     modalokaybtn.onPress = () => setmodalVisible(false);
     
     return (
@@ -84,6 +121,7 @@ export default function CreateScreen({ route, navigation}) {
             visible={modalVisible} 
             message={modalMessage} 
             buttons={modalButtons} 
+			darkmode={settings.darkmode}
             />
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings.labels.title}</Text>
@@ -91,17 +129,31 @@ export default function CreateScreen({ route, navigation}) {
                     style={[styles.inputField, {marginBottom: 10}]}
                     placeholder={Strings.placeholder.title}
                     autoCapitalize={'words'}
-                    onEndEditing={(e) => {
-                        if (newProj.stringIsValid(e.nativeEvent.text)) {
-                            newProj.title = e.nativeEvent.text;
-                        }
-                        else {
-                            setModalMessage(Strings.alerts.charTitle);
-                            setModalButtons([modalokaybtn]);
-                            setmodalVisible(true);
-                        }
-                    }}
+                    onChangeText={text => setTitleValue(text)}
                 />
+                <Text style={styles.labelText}>{Strings.labels.tags}</Text>
+                <TextInput
+                    style={[styles.inputField, {marginBottom: 10}]}
+                    placeholder={Strings.placeholder.tags}
+                    onChangeText={text => setTagsValue(text)}
+                />
+                <View style={styles.row}>
+                    <Text style={styles.labelText}>{Strings.labels.startUnit.replace(/unit/g, Strings.units[unitValue])}</Text>
+                    <TextInput
+                        style={styles.inputField}
+                        defaultValue={'1'}
+                        placeholder={'1'}
+                        keyboardType={'number-pad'}
+                        onChangeText={text => setStartValue(text)}
+                    />
+                    <Text style={styles.labelText}>{Strings.labels.endUnit.replace(/unit/g, Strings.units[unitValue])}</Text>
+                    <TextInput
+                        style={styles.inputField}
+                        placeholder={'42'}
+                        keyboardType={'number-pad'}
+                        onChangeText={text => setEndValue(text)}
+                    />
+                </View>
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
                     <TextInput 
@@ -118,6 +170,7 @@ export default function CreateScreen({ route, navigation}) {
                     <Picker 
                         selectedValue={unitValue}
                         style={{ flexGrow: 1 }}
+                        text
                         onValueChange={(itemValue, itemIndex) => setUnitValue(itemValue)}
                     >
                         {Strings.units.map((unit, index) => {
@@ -127,51 +180,20 @@ export default function CreateScreen({ route, navigation}) {
                         })}
                     </Picker>
                 </View>
-                
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.startUnit + Strings.units[unitValue] + ': '}</Text>
-                    <TextInput
-                        style={styles.inputField}
-                        defaultValue={'1'}
-                        keyboardType={'number-pad'}
-                        onEndEditing={(e) => {
-                            newProj.startUnit = parseInt(e.nativeEvent.text);
-                            newProj.currentUnit = parseInt(e.nativeEvent.text);
+                    <Text style={styles.labelText}>{Strings.labels.notification}</Text>
+                    <TouchableHighlight
+                        style={styles.defaultsButton}
+                        onPress={() => {
+                            setTimeValue('default');
+                            setFreqValue(0);
                         }}
-                    />
-                    <Text style={styles.labelText}>{Strings.labels.endUnit + Strings.units[unitValue] + ': '}</Text>
-                    <TextInput
-                        style={styles.inputField}
-                        placeholder={'42'}
-                        keyboardType={'number-pad'}
-                        onEndEditing={(e) => {
-                            newProj.endUnit = parseInt(e.nativeEvent.text);
-                        }}
-                    />
+                        >
+                        <Text style={styles.buttonText}>
+                            {Strings.buttons.setToDefault}
+                        </Text>
+                    </TouchableHighlight>
                 </View>
-                <Text style={styles.labelText}>{Strings.labels.tags}</Text>
-                <TextInput
-                    style={[styles.inputField, {marginBottom: 10}]}
-                    placeholder={Strings.placeholder.tags}
-                    onEndEditing={(e) => {
-                        let tagsSplit = e.nativeEvent.text.trim().split(/\s*,\s*/);
-                        let tags = tagsSplit.filter(item => {
-                            return item.length > 0
-                        })
-                        console.log(tags);
-                        if (tags.length === 0 || tags.every((value, index, array) => {
-                            return newProj.stringIsValid(value)
-                        })) {
-                            newProj.tags = tags;
-                        }
-                        else if (tags.length > 0) {
-                            setModalMessage(Strings.alerts.charTags);
-                            setModalButtons([modalokaybtn]);
-                            setmodalVisible(true);
-                        }
-                    }}
-                />
-                <Text style={styles.labelText}>{Strings.labels.notification}</Text>
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings.labels.time}</Text>
                     <TextInput
@@ -196,7 +218,7 @@ export default function CreateScreen({ route, navigation}) {
                     </Picker>
                 </View>
                 <View style={styles.row}>
-                    <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings.labels.toggle}</Text>
+                    <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings.labels.toggle.replace(/unit/g, Strings.units[unitValue])}</Text>
                     <Switch
                         trackColor={{ false: Colors.toggle.trackfalse, true: Colors.toggle.tracktrue }}
                         thumbColor={isTotal ? Colors.toggle.thumbtrue : Colors.toggle.thumbfalse}
@@ -215,20 +237,14 @@ export default function CreateScreen({ route, navigation}) {
                         if (dateMode === 'date' && date !== undefined) {
                             setDateValue(date); 
                         }
-                        if (dateMode === 'time' && date !== undefined) {
+                        else if (dateMode === 'time' && date !== undefined) {
                             setTimeValue(Moment(date).format('h:mm a'));
                             setDateValue(date);
-                        }
-                        if (dateMode === 'time' && date === undefined) {
-                            setTimeValue('default');
                         }
                     }}
                 />}
             </View>
-            <ButtonBar 
-                b1= {deletebtn}
-                b2= {savebtn}
-            />
+            <ButtonBar buttons={[ savebtn ]} />
         </View>
     )
 };
@@ -236,7 +252,7 @@ export default function CreateScreen({ route, navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.mainbackground,
       },
     mainview: {
         flex: 1,
@@ -259,4 +275,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         fontSize: 18,
     }, 
+    defaultsButton: {
+        backgroundColor: Colors.cancel,
+        borderRadius: 20,
+        padding: 10,
+        elevation: 0
+    },
+    buttonText: {
+        color: Colors.navButtonText,
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: 14,
+    },
 });

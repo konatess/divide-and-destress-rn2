@@ -78,7 +78,10 @@ export class Project {
     set time(timestring) {
         this._time = timestring;
     }
-    stringIsValid(string) {
+    titleIsValid(string) {
         return /([\w'\- _/])/g.test(string);
+    }
+    tagsAreValid(string){
+        return /([\w'\- ,_/])/g.test(string);
     }
 }

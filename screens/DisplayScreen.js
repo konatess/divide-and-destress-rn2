@@ -3,40 +3,135 @@ import { StyleSheet, Text, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
+import CustModal from '../components/Modal';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass.js';
+import Storage from '../storage/Async';
+import Moment from 'moment';
 
-export default function DisplayScreen({ navigation }) {
-    const button1 = AllButtons.delete;
-    const button2 = AllButtons.edit;
-    const button3 = AllButtons.home;
-    // button1.onPress = () => navigation.navigate(Strings.routes.settings);
-    button2.onPress = () => navigation.navigate(Strings.routes.edit);
-    button3.onPress = () => navigation.navigate(Strings.routes.home);
-    const project1 = new Project('Title of the Song', 20200501, 20200525, 1, 90, 1, 'page', false, ['Music', 'Comedy'], {'freq':'daily', 'time':'8pm'});
+export default function DisplayScreen({ route, navigation }) {
+    const { knowntitles } = route.params;
+    const { settings } = route.params;
+    const { project } = route.params;
+    const { key } = route.params;
+    const [perOrDue, setPerOrDue] = React.useState('Loading...');
+    // modal
+    const [modalVisible, setmodalVisible] = React.useState(false);
+    const [modalMessage, setModalMessage] = React.useState();
+    const [modalButtons, setModalButtons] = React.useState([]);
+    React.useEffect(() => {
+        const getPerDay = () => {
+            // units remaining
+            let units = project._endUnit - project._currentUnit;
+            // days remaining
+            let days = Moment().diff(project._dueDate, 'days')*-1
+            if (days === 0) {
+                return setPerOrDue(Strings.labels.dueToday)
+            } else if (days < 0) {
+                return setPerOrDue(Strings.labels.overDue)
+            } else {
+                // days/frequency or default frequency
+                let periods = days/(project._frequency || settings.notifications.freq);
+                // units remaining/freq periods remaining
+                return setPerOrDue(Strings.labels.perDay.replace(/unit/g, Strings.units[project._unitName])
+                .replace(/num/g, (units/periods).toFixed(1))
+                .replace(/freq/g, Strings.frequencyWords[project._frequency || settings.notifications.freq]))
+            }
+        };
+        getPerDay();
+    }, [])
+    // const [days, setDays] = React.useState(getPerDay());
+    const deleteProj = async (projKey) => {
+        await Storage.deleteProj(projKey);
+        navigation.navigate(Strings.routes.home); 
+    }
+    const deletebtn = AllButtons.delete;
+    const editbtn = AllButtons.edit;
+    const homebtn = AllButtons.home;
+    const modalDeleteBtn = AllButtons.delete2;
+    const modalCancelBtn = AllButtons.cancel;
+    editbtn.onPress = () => navigation.navigate(Strings.routes.edit, {
+        project: project, 
+        key: key, 
+        knowntitles: knowntitles,
+        settings: settings
+    });
+    homebtn.onPress = () => navigation.navigate(Strings.routes.home);
+    modalDeleteBtn.onPress = () => {
+        setmodalVisible(false);
+        deleteProj(key);
+    };
+    modalCancelBtn.onPress = () => {
+        setmodalVisible(false)
+    };
+    deletebtn.onPress = () => {
+        setModalMessage(Strings.alerts.confirmDelete);
+        setModalButtons([modalDeleteBtn, modalCancelBtn]);
+        setmodalVisible(true);
+    };
     return (
         <View style={styles.container}>
-            <Text>DisplayScreen</Text>
             <View style={styles.mainview}>
-
+                <Text style={styles.labelText}>{Strings.labels.title + project._title}</Text>
+                <Text style={styles.labelText}>{perOrDue}</Text>
+                <Text style={styles.labelText}>
+                    {Strings.labels.currentUnit.replace(/unit/g, Strings.units[project._unitName]) + project._currentUnit}
+                </Text>
+                <Text style={styles.labelText}>
+                    {Strings.labels.dueDate + Moment(project._dueDate).format(settings.dateFormat)}
+                </Text>
+                <Text style={styles.labelText}>
+                    {Strings.labels.startDate + Moment(project._startDate).format(settings.dateFormat)}
+                </Text>
+                <View style={styles.row}>
+                    <Text style={styles.labelText}>
+                        {Strings.labels.startUnit.replace(/unit/g, Strings.units[project._unitName]) + project._startUnit}
+                    </Text>
+                    <Text style={styles.labelText}>
+                        {Strings.labels.endUnit.replace(/unit/g, Strings.units[project._unitName]) + project._endUnit}
+                    </Text>
+                </View>
+                <Text style={styles.labelText}>{Strings.labels.tagsDisplay + (project._tags.length ? project._tags.join(', ') : Strings.placeholder.noTags)}</Text>
+                <Text style={styles.labelText}>{Strings.labels.notification}</Text>
+                <View style={styles.row}>
+                    <Text style={styles.labelText}>{Strings.labels.time + '  ' + project._time}</Text>
+                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings.labels.frequency + '  ' + Strings.frequencyWords[project._frequency]}</Text>
+                </View>
             </View>
-            <ButtonBar 
-                b1= {button1}
-                b2= {button2}
-                b3= {button3}
+            <ButtonBar buttons={[ deletebtn, editbtn, homebtn ]} />
+            <CustModal 
+            visible={modalVisible} 
+            message={modalMessage} 
+            buttons={modalButtons} 
+			darkmode={settings.darkmode}
             />
         </View>
     )
 };
 
+DisplayScreen.navigationOptions = {
+	header: null,
+};
+
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: Colors.mainbackground,
-    },
+        flex: 1,
+        backgroundColor: Colors.mainbackground,
+      },
     mainview: {
         flex: 1,
-        padding: 10
-    }
+        padding: 10,
+    }, 
+    row: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between',
+        paddingRight: 10
+    },
+    labelText: {
+        fontSize: 20,
+        paddingRight: 5,
+        textAlignVertical: 'center',
+        marginBottom: 15
+    }, 
 });

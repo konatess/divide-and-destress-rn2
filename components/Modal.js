@@ -11,7 +11,7 @@ import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import { Ionicons } from '@expo/vector-icons';
 
-export default ({visible, message, buttons}) => {
+export default ({visible, message, buttons, darkmode}) => {
     return (
         <Modal
         animationType="slide"
@@ -22,8 +22,8 @@ export default ({visible, message, buttons}) => {
         }}
       >
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            {message && <Text style={styles.modalText}>{message}</Text>}
+          <View style={[styles.modalView, {backgroundColor: darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
+            {message && <Text style={[styles.modalText, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}>{message}</Text>}
 
             {buttons.map((unit, index) => {
                 return (
@@ -34,7 +34,7 @@ export default ({visible, message, buttons}) => {
                         >
                         
                         <Text style={styles.textStyle}>
-                            {unit._iconName && <Ionicons name={unit._iconName} />}
+                            {unit._iconName && <Ionicons size={18} name={unit._iconName} />}
                             {'  ' + unit._title}
                         </Text>
                     </TouchableHighlight>
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
       margin: 20,
-      backgroundColor: "white",
+      // backgroundColor: Colors.modalbackground,
       borderRadius: 20,
       padding: 35,
       alignItems: "center",
@@ -69,18 +69,20 @@ const styles = StyleSheet.create({
       elevation: 5
     },
     openButton: {
-      backgroundColor: "#F194FF",
       borderRadius: 20,
       padding: 10,
-      elevation: 2
+      elevation: 2,
+      marginBottom: 5
     },
     textStyle: {
       color: Colors.navButtonText,
       fontWeight: "bold",
-      textAlign: "center"
+      textAlign: "center",
+      fontSize: 18,
     },
     modalText: {
       marginBottom: 15,
-      textAlign: "center"
+      textAlign: "center",
+      fontSize: 18,
     }
   });
