@@ -42,7 +42,7 @@ export default function HomeScreen({ route, navigation }) {
 		return refreshData;
 	}, [navigation])
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, {backgroundColor: settings.darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
 			<FlatList 
 				data={projArr}
 				renderItem={({ item }) => <ProjectButton
@@ -79,10 +79,10 @@ function ProjectButton({ passKey, title, due, onPress, settings }) {
 		<RectButton key={passKey} style={ styles.project } onPress={onPress}>
 			<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 				<View style={styles.projectLabelTextContainer} accessible>
-				<Text style={styles.labelText}>{title}</Text>
+				<Text style={[styles.labelText, {color: settings.darkmode ? Colors.darkmode.text : Colors.maintext}]}>{title}</Text>
 				</View>
 				<View style={styles.projectDueTextContainer} accessible>
-				<Text style={styles.dueText}>{Moment(due).format(settings.dateFormat)}</Text>
+				<Text style={[styles.dueText, {color: settings.darkmode ? Colors.darkmode.text : Colors.maintext}]}>{Moment(due).format(settings.dateFormat)}</Text>
 				</View>
 			</View>
 		</RectButton>
