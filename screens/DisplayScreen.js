@@ -104,6 +104,7 @@ export default function DisplayScreen({ route, navigation }) {
             visible={modalVisible} 
             message={modalMessage} 
             buttons={modalButtons} 
+			darkmode={settings.darkmode}
             />
         </View>
     )

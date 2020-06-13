@@ -121,6 +121,7 @@ export default function CreateScreen({ route, navigation}) {
             visible={modalVisible} 
             message={modalMessage} 
             buttons={modalButtons} 
+			darkmode={settings.darkmode}
             />
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings.labels.title}</Text>

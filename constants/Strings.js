@@ -67,6 +67,7 @@ export default {
         noTags: 'no tags...',
         loading: 'Loading...'
     },
+    languages: ['English', 'Español',],
     units: ['word', 'page', 'chapter'],
     dateFormats: ['MM/DD', 'DD/MM', 'MM-DD', 'DD-MM', 'YY/MM/DD', 'DD/MM/YY', 'MM/DD/YY'],
     frequencyWords: ['default', 'daily', 'every 2 days', 'every 3 days', 'every 4 days', 'every 5 days', 'every 6 days', 'weekly'],
