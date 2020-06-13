@@ -15,6 +15,7 @@ const home= new ButtonObj(Strings.buttons.home, Colors.home, 'md-home');
 const order= new ButtonObj(Strings.buttons.order, Colors.order, 'md-reorder');
 const save= new ButtonObj(Strings.buttons.save, Colors.save, 'md-save');
 const trash= new ButtonObj(Strings.buttons.delete, Colors.delete, 'md-trash');
+const trash2= new ButtonObj(Strings.buttons.delete, Colors.delete, 'md-trash');
 const create= new ButtonObj(Strings.buttons.create, Colors.create, 'md-add');
 const edit= new ButtonObj(Strings.buttons.edit, Colors.edit, 'md-create');
 const cancel= new ButtonObj(Strings.buttons.cancel, Colors.cancel, 'md-close');
@@ -36,6 +37,7 @@ export default {
     home: home,
     order: order,
     delete: trash,
+    delete2: trash2,
     create: create,
     edit: edit,
     save: save,

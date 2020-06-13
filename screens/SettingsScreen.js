@@ -3,72 +3,46 @@ import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
+import AllButtons from '../constants/ButtonClass.js';
 import Storage from '../storage/Async';
 
 export default function SettingsScreen( {route, navigation} ) {
 	const {settings} = route.params
+	const buttons = AllButtons.settingsList
+	buttons.darkMode.onPress = () => console.log(settings.darkmode);
+	buttons.language.onPress = () => console.log(settings.language);
+	buttons.dayChange.onPress = () => console.log(settings.dayChange);
+	buttons.dateFormat.onPress = () => console.log(settings.dateFormat);
+	buttons.notifications.onPress = () => console.log(settings.notifications);
+	buttons.startVsTotal.onPress = () => console.log(settings.total);
+	buttons.unit.onPress = () => console.log(settings.unit);
+	buttons.tags.onPress = () => console.log(settings.tags);
+	buttons.deleteAll.onPress = () => console.log('clicked Delete All');
+	buttons.feedback.onPress = () => console.log('clicked Feedback');
+	const buttonsArr = [
+		buttons.darkMode,
+		// buttons.language,
+        buttons.dayChange,
+        buttons.dateFormat,
+        buttons.notifications,
+        buttons.startVsTotal,
+        buttons.unit,
+        buttons.tags,
+        buttons.deleteAll,
+        buttons.feedback,
+	]
 	return (
 		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-		<OptionButton
-			icon="md-contrast"
-			label="Dark Mode On/Off"
-			onPress={() => console.log(settings.darkmode)}
-		/>
-
-		<OptionButton
-			icon="md-globe"
-			label="Language"
-			onPress={() => console.log(settings.language)}
-		/>
-
-		<OptionButton
-			icon="md-bed"
-			label="Day Change"
-			onPress={() => console.log(settings.dayChange)}
-		/>
-
-		<OptionButton
-			icon="md-calendar"
-			label="Date Format"
-			onPress={() => console.log(settings.dateFormat)}
-		/>
-
-		<OptionButton
-			icon="md-notifications"
-			label="Default Notification Preferences"
-			onPress={() => console.log(settings.notifications)}
-		/>
-
-		<OptionButton
-			icon="md-swap"
-			label="Set Default Count to Total or Start/End"
-			onPress={() => console.log(settings.total)}
-		/>
-
-		<OptionButton
-			icon="md-list"
-			label="Set Default Unit"
-			onPress={() => console.log(settings.unit)}
-		/>
-
-		<OptionButton
-			icon="ios-pricetags"
-			label="Edit Your Tags"
-			onPress={() => console.log(settings.tags)}
-		/>
-
-		<OptionButton
-			icon="md-trash"
-			label="Start Fresh - Delete All Projects"
-			onPress={() => console.log('clicked Delete All')}
-		/>
-
-		<OptionButton
-			icon="md-chatbubbles"
-			label="Send Us Your Feedback"
-			onPress={() => console.log('clicked Feedback')}
-			isLastOption
-		/>
+		{buttonsArr.map((unit, index) => {
+                return (
+					<OptionButton
+						key={index}
+						icon={unit._iconName}
+						label={unit._title}
+						onPress={unit.onPress}
+						isLastOption={index === buttonsArr.length - 1}
+				/>)
+		})}
 		</ScrollView>
 	);
 }

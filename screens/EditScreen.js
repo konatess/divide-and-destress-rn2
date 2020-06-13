@@ -113,7 +113,19 @@ export default function EditScreen({ route, navigation }) {
     };
     const deletebtn = AllButtons.delete;
     const savebtn = AllButtons.save;
-    deletebtn.onPress = () => deleteProj(key);
+    const modalDeleteBtn = AllButtons.delete2;
+    const modalCancelBtn = AllButtons.cancel;modalDeleteBtn.onPress = () => {
+        setmodalVisible(false);
+        deleteProj(key);
+    };
+    modalCancelBtn.onPress = () => {
+        setmodalVisible(false)
+    };
+    deletebtn.onPress = () => {
+        setModalMessage(Strings.alerts.confirmDelete);
+        setModalButtons([modalDeleteBtn, modalCancelBtn]);
+        setmodalVisible(true);
+    };
     savebtn.onPress = () => updateProj();
     return (
         <View style={styles.container}>
@@ -232,7 +244,7 @@ export default function EditScreen({ route, navigation }) {
                 { showDate && <DateTimePicker 
                     value={dateValue}
                     mode={dateMode}
-                    minimumDate={Moment().add(2, 'days').toDate()}
+                    minimumDate={Moment().toDate()}
                     onChange={(event, date) => {
                         Keyboard.dismiss();
                         setShowDate(false);

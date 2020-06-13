@@ -69,10 +69,10 @@ const styles = StyleSheet.create({
       elevation: 5
     },
     openButton: {
-      backgroundColor: "#F194FF",
       borderRadius: 20,
       padding: 10,
-      elevation: 2
+      elevation: 2,
+      marginBottom: 5
     },
     textStyle: {
       color: Colors.navButtonText,
