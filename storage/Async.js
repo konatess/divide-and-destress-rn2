@@ -10,7 +10,7 @@ export default {
             }
             else {
                 return {
-                    darkmode: false,
+                    darkmode: true,
                     language: 'English',
                     dayChange: '00:00',
                     dateFormat: 'MM/DD',

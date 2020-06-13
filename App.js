@@ -13,72 +13,84 @@ import DisplayScreen from './screens/DisplayScreen';
 import CreateScreen from './screens/CreateScreen';
 import EditScreen from './screens/EditScreen';
 import Strings from './constants/Strings';
+import Colors from './constants/Colors';
 import Storage from './storage/Async';
 
 const Stack = createStackNavigator();
 
 export default function App(props) {
-  const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-  const [initialNavigationState, setInitialNavigationState] = React.useState();
-  const [settingsObj, fetchSettingsObj] = React.useState();
-  const containerRef = React.useRef();
-  const { getInitialState } = useLinking(containerRef);
+	const [isLoadingComplete, setLoadingComplete] = React.useState(false);
+	const [initialNavigationState, setInitialNavigationState] = React.useState();
+	const [settingsObj, fetchSettingsObj] = React.useState();
+	const containerRef = React.useRef();
+	const { getInitialState } = useLinking(containerRef);
 
-  // Load any resources or data that we need prior to rendering the app
-  React.useEffect(() => {
-    async function loadResourcesAndDataAsync() {
-      try {
-        SplashScreen.preventAutoHide();
+	// Load any resources or data that we need prior to rendering the app
+	React.useEffect(() => {
+		async function loadResourcesAndDataAsync() {
+		try {
+			SplashScreen.preventAutoHide();
 
-        // Load our initial navigation state
-        setInitialNavigationState(await getInitialState());
-        fetchSettingsObj(await Storage.getSettings());
+			// Load our initial navigation state
+			setInitialNavigationState(await getInitialState());
+			fetchSettingsObj(await Storage.getSettings());
 
-        // Load fonts
-        await Font.loadAsync({
-          ...Ionicons.font,
-          'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
-        });
-      } catch (e) {
-        // We might want to provide this error information to an error reporting service
-        console.warn(e);
-      } finally {
-        setLoadingComplete(true);
-        SplashScreen.hide();
-      }
-    }
+			// Load fonts
+			await Font.loadAsync({
+			...Ionicons.font,
+			'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+			});
+		} catch (e) {
+			// We might want to provide this error information to an error reporting service
+			console.warn(e);
+		} finally {
+			setLoadingComplete(true);
+			SplashScreen.hide();
+		}
+		}
 
-    loadResourcesAndDataAsync();
-  }, []);
+		loadResourcesAndDataAsync();
+	}, []);
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
-    return null;
-  } else {
-    return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-          <Stack.Navigator initialRouteName={Strings.routes.home}>
-            <Stack.Screen name={Strings.routes.home} 
-            component={HomeScreen}
-            options={{title: Strings.headers.home}}
-            initialParams={{settings: settingsObj}} />
-            <Stack.Screen name={Strings.routes.settings} 
-            component={SettingsScreen}
-            options={{title: Strings.headers.settings}} />
-            <Stack.Screen name={Strings.routes.create} component={CreateScreen} />
-            <Stack.Screen name={Strings.routes.display} component={DisplayScreen} />
-            <Stack.Screen name={Strings.routes.edit} component={EditScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </View>
-    );
-  }
+	if (!isLoadingComplete && !props.skipLoadingScreen) {
+		return null;
+	} else {
+		return (
+		<View style={styles.container}>
+			{Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+			<NavigationContainer ref={containerRef} initialState={initialNavigationState}>
+				<Stack.Navigator 
+					initialRouteName={Strings.routes.home}
+					screenOptions={{
+						headerStyle: {
+							backgroundColor: settingsObj.darkmode ? Colors.darkmode.background : Colors.mainbackground,
+						},
+						headerTitleStyle: {
+							color: settingsObj.darkmode ? Colors.darkmode.text : Colors.maintext,
+						},
+						headerTintColor: settingsObj.darkmode ? Colors.darkmode.text : Colors.maintext,
+					}}
+				>
+					<Stack.Screen name={Strings.routes.home} 
+					component={HomeScreen}
+					options={{title: Strings.headers.home}}
+					initialParams={{settings: settingsObj}} />
+					<Stack.Screen name={Strings.routes.settings} 
+					component={SettingsScreen}
+					options={{title: Strings.headers.settings}} />
+					<Stack.Screen name={Strings.routes.create} component={CreateScreen} />
+					<Stack.Screen name={Strings.routes.display} component={DisplayScreen} />
+					<Stack.Screen name={Strings.routes.edit} component={EditScreen} />
+				</Stack.Navigator>
+			</NavigationContainer>
+		</View>
+		);
+	}
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
+	container: {
+		flex: 1,
+		backgroundColor: '#000',
+	},
 });

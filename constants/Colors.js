@@ -17,7 +17,7 @@ export default {
     settings: '#CC9A34',
     home: '#0090FF',
     order: purple,
-    save: '#0DD435',
+    save: '#219738',
     delete: '#DE0000',
     create: '#138A36',
     edit: purple,
