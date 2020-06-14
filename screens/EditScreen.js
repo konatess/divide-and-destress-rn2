@@ -267,7 +267,7 @@ export default function EditScreen({ route, navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.mainbackground,
+        paddingTop: 10,
       },
     mainview: {
         flex: 1,

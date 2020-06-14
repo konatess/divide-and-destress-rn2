@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { StyleSheet, Text, View} from 'react-native';
+import { StatusBar, StyleSheet, Text, View} from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import AllButtons from '../constants/ButtonClass';
 import ButtonBar from '../components/ButtonBar';
@@ -9,31 +9,47 @@ import CustModal from '../components/Modal';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import Storage from '../storage/Async';
-import ButtonClass from '../constants/ButtonClass';
 
 export default function SettingsScreen( {route, navigation} ) {
 	const {settings} = route.params
 	const buttons = AllButtons.settingsList
-	const [darkMode, setDarkMode] = React.useState(settings.darkMode);
+	// settings object
+	const [darkMode, setDarkMode] = React.useState(settings.darkmode);
+	const [language, setLanguage] = React.useState(settings.language);
+	const [dateFormat, setDateFormat] = React.useState(settings.dateFormat);
+	const [notifications, setNotifications] = React.useState(settings.notifications);
+	const [total, setTotal] = React.useState(settings.total);
+	const [unit, setUnit] = React.useState(settings.unit);
+	const [allUnits, setAllUnits] = React.useState(settings.allUnits);
+	const [tags, setTags] = React.useState(settings.tags);
 	// modal
     const [modalVisible, setmodalVisible] = React.useState(false);
     const [modalMessage, setModalMessage] = React.useState();
 	const [modalButtons, setModalButtons] = React.useState([]);
+	const modalCancelbtn = AllButtons.cancel2;
+	modalCancelbtn.onPress = () => setmodalVisible(false);
+	const savebtn = AllButtons.save;
+	savebtn.onPress = () => {
+		console.log(settings);
+	};
+	const cancelbtn = AllButtons.cancel;
+	cancelbtn.onPress = () => {
+		navigation.navigate(Strings.routes.home); 
+	};
 	const dateFormatBtns = Strings.dateFormats.map((string) => {
-		return ({_title: string, _color: Colors.done, _iconName: '', onPress: () => {
+		return ({_title: string + '  ', _color: Colors.edit, _iconName: '', onPress: () => {
 			setmodalVisible(false);
 			settings.dateFormat = string;
 			console.log(settings.dateFormat);
 		}})
 	});
 	const languageBtns = Strings.languages.map((string) => {
-		return ({_title: string, _color: Colors.done, _iconName: '', onPress: () => {
+		return ({_title: string + '  ', _color: Colors.edit, _iconName: '', onPress: () => {
 			setmodalVisible(false);
 			settings.language = string;
 			console.log(settings.language);
 		}})
 	});
-	const savebtn = AllButtons.save;
 	buttons.darkMode.onPress = () => setDarkMode(!darkMode);
 	buttons.language.onPress = () => {
 		console.log(settings.language);
@@ -46,17 +62,16 @@ export default function SettingsScreen( {route, navigation} ) {
 		console.log(settings.dateFormat);
 		setmodalVisible(true);
 		setModalMessage(Strings.alerts.settings.dateFormat);
+		dateFormatBtns.push(modalCancelbtn);
 		setModalButtons(dateFormatBtns);
 	};
 	buttons.notifications.onPress = () => console.log(settings.notifications);
 	buttons.startVsTotal.onPress = () => console.log(settings.total);
-	buttons.unit.onPress = () => console.log(settings.unit);
+	buttons.defaultUnit.onPress = () => console.log(settings.unit);
+	buttons.editUnit.onPress = () => console.log(settings.unit);
 	buttons.tags.onPress = () => console.log(settings.tags);
 	buttons.deleteAll.onPress = () => console.log('clicked Delete All');
 	buttons.feedback.onPress = () => console.log('clicked Feedback');
-	savebtn.onPress = () => {
-		console.log(settings);
-	};
 	const buttonsArr = [
 		buttons.darkMode,
 		buttons.language,
@@ -64,13 +79,18 @@ export default function SettingsScreen( {route, navigation} ) {
         buttons.dateFormat,
         buttons.notifications,
         buttons.startVsTotal,
-        buttons.unit,
+		buttons.defaultUnit,
+		buttons.editUnit,
         buttons.tags,
         buttons.deleteAll,
         buttons.feedback,
 	]
 	return (
 		<View style={[styles.container, {backgroundColor: darkMode ? Colors.darkmode.background : Colors.mainbackground} ]} contentContainerStyle={styles.contentContainer}>
+			<StatusBar 
+				barStyle={darkMode ? "light-content" : "dark-content"} 
+				backgroundColor={darkMode ? Colors.darkmode.background : Colors.mainbackground} 
+			/>
 			<View style={styles.container}>
 				{buttonsArr.map((unit, index) => {
 						return (
@@ -94,7 +114,7 @@ export default function SettingsScreen( {route, navigation} ) {
 				darkmode={darkMode}
 				/>
 			
-			<ButtonBar buttons={[ savebtn ]} />
+			<ButtonBar buttons={[ cancelbtn, savebtn ]} />
 		</View>
 	);
 }
@@ -102,6 +122,7 @@ export default function SettingsScreen( {route, navigation} ) {
 const styles = StyleSheet.create({
   container: {
 	flex: 1,
+	paddingTop: 10
   },
   contentContainer: {
     paddingTop: 15,

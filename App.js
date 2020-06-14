@@ -61,15 +61,7 @@ export default function App(props) {
 			<NavigationContainer ref={containerRef} initialState={initialNavigationState}>
 				<Stack.Navigator 
 					initialRouteName={Strings.routes.home}
-					screenOptions={{
-						headerStyle: {
-							backgroundColor: settingsObj.darkmode ? Colors.darkmode.background : Colors.mainbackground,
-						},
-						headerTitleStyle: {
-							color: settingsObj.darkmode ? Colors.darkmode.text : Colors.maintext,
-						},
-						headerTintColor: settingsObj.darkmode ? Colors.darkmode.text : Colors.maintext,
-					}}
+					headerMode={'none'}
 				>
 					<Stack.Screen name={Strings.routes.home} 
 					component={HomeScreen}

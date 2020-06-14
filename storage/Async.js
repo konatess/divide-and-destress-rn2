@@ -10,7 +10,7 @@ export default {
             }
             else {
                 return {
-                    darkmode: true,
+                    darkmode: false,
                     language: 'English',
                     dayChange: '00:00',
                     dateFormat: 'MM/DD',
@@ -20,6 +20,7 @@ export default {
                     },
                     total: false,
                     unit: 1,
+                    allUnits: [],
                     tags: []
                 };
             }

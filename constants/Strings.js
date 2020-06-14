@@ -27,6 +27,7 @@ export default {
             notifications: 'Default Notification Preferences',
             startVsTotal: 'Set Default Count to Total or Start/End',
             unit: 'Set Default Unit',
+            editUnit: 'Edit or Add Unit Names',
             tags: 'Edit Your Tags',
             deleteAll: 'Start Fresh - Delete All Projects',
             feedback: 'Send Us Your Feedback'
@@ -69,7 +70,7 @@ export default {
     },
     languages: ['English', 'Español',],
     units: ['word', 'page', 'chapter'],
-    dateFormats: ['MM/DD', 'DD/MM', 'MM-DD', 'DD-MM', 'YY/MM/DD', 'DD/MM/YY', 'MM/DD/YY'],
+    dateFormats: ['MM/DD', 'DD/MM', 'MM-DD', 'DD-MM', 'YY/MM/DD', 'DD/MM/YY', 'MM/DD/YY', 'YY-MM-DD', 'DD-MM-YY', 'MM-DD-YY'],
     frequencyWords: ['default', 'daily', 'every 2 days', 'every 3 days', 'every 4 days', 'every 5 days', 'every 6 days', 'weekly'],
     keys: {
         settings: 'USER_SETTINGS',

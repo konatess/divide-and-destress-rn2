@@ -110,14 +110,10 @@ export default function DisplayScreen({ route, navigation }) {
     )
 };
 
-DisplayScreen.navigationOptions = {
-	header: null,
-};
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.mainbackground,
+        paddingTop: 10,
       },
     mainview: {
         flex: 1,

@@ -110,9 +110,11 @@ export default function CreateScreen({ route, navigation}) {
         }
     };
     const savebtn = AllButtons.save;
+	const cancelbtn = AllButtons.cancel;
     const modalokaybtn = AllButtons.okay;
 
     savebtn.onPress = () => saveProj();
+	cancelbtn.onPress = () => navigation.navigate(Strings.routes.home);
     modalokaybtn.onPress = () => setmodalVisible(false);
     
     return (
@@ -244,7 +246,7 @@ export default function CreateScreen({ route, navigation}) {
                     }}
                 />}
             </View>
-            <ButtonBar buttons={[ savebtn ]} />
+            <ButtonBar buttons={[ cancelbtn, savebtn ]} />
         </View>
     )
 };
@@ -252,7 +254,7 @@ export default function CreateScreen({ route, navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.mainbackground,
+        paddingTop: 10,
       },
     mainview: {
         flex: 1,
