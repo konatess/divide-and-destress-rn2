@@ -18,12 +18,16 @@ export default function HomeScreen({ route, navigation }) {
 	const [projArr, setProjArr] = React.useState([])
 	const [titles, setTitles] = React.useState([]);
 	const settingsbtn = AllButtons.settings;
+	settingsbtn._title = Strings[settings.language].buttons.settings
 	settingsbtn.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings, knowntitles: titles, projects: projArr});
 	const orderbtn = AllButtons.order;
+	orderbtn._title = Strings[settings.language].buttons.order;
 	orderbtn.onPress = () => setModalVisible(true);
 	const createbtn = AllButtons.create;
+	createbtn._title = Strings[settings.language].buttons.create;
 	createbtn.onPress = () => navigation.navigate(Strings.routes.create, {knowntitles: titles, settings: settings});
 	const modalDonebtn = AllButtons.done;
+	modalDonebtn._title = Strings[settings.language].buttons.done;
 	modalDonebtn.onPress = () => setModalVisible(false);
 	React.useEffect(() => {
 		const projFromStorage = async () => {

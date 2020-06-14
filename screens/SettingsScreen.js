@@ -27,50 +27,63 @@ export default function SettingsScreen( {route, navigation} ) {
     const [modalMessage, setModalMessage] = React.useState();
 	const [modalButtons, setModalButtons] = React.useState([]);
 	const modalCancelbtn = AllButtons.cancel2;
+	modalCancelbtn._title = Strings[language].buttons.cancel;
 	modalCancelbtn.onPress = () => setmodalVisible(false);
 	const savebtn = AllButtons.save;
+	savebtn._title = Strings[language].buttons.save;
 	savebtn.onPress = () => {
 		console.log(settings);
 	};
 	const cancelbtn = AllButtons.cancel;
+	cancelbtn._title = Strings[language].buttons.cancel;
 	cancelbtn.onPress = () => {
 		navigation.navigate(Strings.routes.home); 
 	};
 	const dateFormatBtns = Strings.dateFormats.map((string) => {
 		return ({_title: string + '  ', _color: Colors.edit, _iconName: '', onPress: () => {
 			setmodalVisible(false);
-			settings.dateFormat = string;
-			console.log(settings.dateFormat);
+			setDateFormat(string);
 		}})
 	});
 	const languageBtns = Strings.languages.map((string) => {
 		return ({_title: string + '  ', _color: Colors.edit, _iconName: '', onPress: () => {
 			setmodalVisible(false);
-			settings.language = string;
-			console.log(settings.language);
+			setLanguage(string);
 		}})
 	});
+	buttons.darkMode._title = Strings[language].buttons.allSettings.darkMode;
 	buttons.darkMode.onPress = () => setDarkMode(!darkMode);
+	buttons.language._title = Strings[language].buttons.allSettings.language;
 	buttons.language.onPress = () => {
 		console.log(settings.language);
 		setmodalVisible(true);
-		setModalMessage(Strings.alerts.settings.language);
+		setModalMessage(Strings[language].alerts.settings.language);
+		languageBtns.push(modalCancelbtn);
 		setModalButtons(languageBtns);
 	};
-	buttons.dayChange.onPress = () => console.log(settings.dayChange);
+	// buttons.dayChange._title = Strings[language].buttons.allSettings.dayChange;
+	// buttons.dayChange.onPress = () => console.log(settings.dayChange);
+	buttons.dateFormat._title = Strings[language].buttons.allSettings.dateFormat;
 	buttons.dateFormat.onPress = () => {
 		console.log(settings.dateFormat);
 		setmodalVisible(true);
-		setModalMessage(Strings.alerts.settings.dateFormat);
+		setModalMessage(Strings[language].alerts.settings.dateFormat);
 		dateFormatBtns.push(modalCancelbtn);
 		setModalButtons(dateFormatBtns);
 	};
+	buttons.notifications._title = Strings[language].buttons.allSettings.notifications;
 	buttons.notifications.onPress = () => console.log(settings.notifications);
+	buttons.startVsTotal._title = Strings[language].buttons.allSettings.startVsTotal;
 	buttons.startVsTotal.onPress = () => console.log(settings.total);
+	buttons.defaultUnit._title = Strings[language].buttons.allSettings.unit;
 	buttons.defaultUnit.onPress = () => console.log(settings.unit);
+	buttons.editUnit._title = Strings[language].buttons.allSettings.editUnit;
 	buttons.editUnit.onPress = () => console.log(settings.unit);
+	buttons.tags._title = Strings[language].buttons.allSettings.tags;
 	buttons.tags.onPress = () => console.log(settings.tags);
+	buttons.deleteAll._title = Strings[language].buttons.allSettings.deleteAll;
 	buttons.deleteAll.onPress = () => console.log('clicked Delete All');
+	buttons.feedback._title = Strings[language].buttons.allSettings.feedback;
 	buttons.feedback.onPress = () => console.log('clicked Feedback');
 	const buttonsArr = [
 		buttons.darkMode,

@@ -50,39 +50,39 @@ export default function CreateScreen({ route, navigation}) {
     const newProj = new Project();
     const saveProj = () => {
         if (titleValue.trim() === "") {
-            setModalMessage(Strings.alerts.title.blank);
+            setModalMessage(Strings[settings.language].alerts.title.blank);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!newProj.titleIsValid(titleValue)) {
-            setModalMessage(Strings.alerts.charTitle);
+            setModalMessage(Strings[settings.language].alerts.charTitle);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (knowntitles.some((value) => {
             return value === newProj.title
         })) {
-            setModalMessage(Strings.alerts.title.exists);
+            setModalMessage(Strings[settings.language].alerts.title.exists);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!startValue) {
-            setModalMessage(Strings.alerts.first);
+            setModalMessage(Strings[settings.language].alerts.first);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!endValue) {
-            setModalMessage(Strings.alerts.last);
+            setModalMessage(Strings[settings.language].alerts.last);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (startValue >= endValue) {
-            setModalMessage(Strings.alerts.firstSmaller.replace(/unit/g, Strings.units[unitValue]));
+            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/unit/g, Strings[settings.language].units[unitValue]));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (tagsValue && !newProj.tagsAreValid(tagsValue)) {
-            setModalMessage(Strings.alerts.charTags);
+            setModalMessage(Strings[settings.language].alerts.charTags);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
@@ -110,9 +110,11 @@ export default function CreateScreen({ route, navigation}) {
         }
     };
     const savebtn = AllButtons.save;
-	const cancelbtn = AllButtons.cancel;
+    savebtn._title = Strings[settings.language].buttons.save
+    const cancelbtn = AllButtons.cancel;
+    cancelbtn._title = Strings[settings.language].buttons.cancel;
     const modalokaybtn = AllButtons.okay;
-
+    modalokaybtn._title = Strings[settings.language].buttons.okay;
     savebtn.onPress = () => saveProj();
 	cancelbtn.onPress = () => navigation.navigate(Strings.routes.home);
     modalokaybtn.onPress = () => setmodalVisible(false);
@@ -126,21 +128,21 @@ export default function CreateScreen({ route, navigation}) {
 			darkmode={settings.darkmode}
             />
             <View style={styles.mainview}>
-                <Text style={styles.labelText}>{Strings.labels.title}</Text>
+                <Text style={styles.labelText}>{Strings[settings.language].labels.title}</Text>
                 <TextInput
                     style={[styles.inputField, {marginBottom: 10}]}
-                    placeholder={Strings.placeholder.title}
+                    placeholder={Strings[settings.language].placeholder.title}
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
                 />
-                <Text style={styles.labelText}>{Strings.labels.tags}</Text>
+                <Text style={styles.labelText}>{Strings[settings.language].labels.tags}</Text>
                 <TextInput
                     style={[styles.inputField, {marginBottom: 10}]}
-                    placeholder={Strings.placeholder.tags}
+                    placeholder={Strings[settings.language].placeholder.tags}
                     onChangeText={text => setTagsValue(text)}
                 />
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.startUnit.replace(/unit/g, Strings.units[unitValue])}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
                     <TextInput
                         style={styles.inputField}
                         defaultValue={'1'}
@@ -148,7 +150,7 @@ export default function CreateScreen({ route, navigation}) {
                         keyboardType={'number-pad'}
                         onChangeText={text => setStartValue(text)}
                     />
-                    <Text style={styles.labelText}>{Strings.labels.endUnit.replace(/unit/g, Strings.units[unitValue])}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
@@ -157,7 +159,7 @@ export default function CreateScreen({ route, navigation}) {
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.dueDate}</Text>
                     <TextInput 
                         style={styles.inputField} 
                         value={Moment(dateValue).format(settings.dateFormat)}
@@ -168,14 +170,14 @@ export default function CreateScreen({ route, navigation}) {
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings.labels.unitName}</Text>
+                    <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings[settings.language].labels.unitName}</Text>
                     <Picker 
                         selectedValue={unitValue}
                         style={{ flexGrow: 1 }}
                         text
                         onValueChange={(itemValue, itemIndex) => setUnitValue(itemValue)}
                     >
-                        {Strings.units.map((unit, index) => {
+                        {Strings[settings.language].units.map((unit, index) => {
                             return (
                                 <Picker.Item key={index} label={unit} value={index} />
                             )
@@ -183,7 +185,7 @@ export default function CreateScreen({ route, navigation}) {
                     </Picker>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.notification}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
                     <TouchableHighlight
                         style={styles.defaultsButton}
                         onPress={() => {
@@ -192,12 +194,12 @@ export default function CreateScreen({ route, navigation}) {
                         }}
                         >
                         <Text style={styles.buttonText}>
-                            {Strings.buttons.setToDefault}
+                            {Strings[settings.language].buttons.setToDefault}
                         </Text>
                     </TouchableHighlight>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.time}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.time}</Text>
                     <TextInput
                         style={styles.inputField}
                         value={timeValue}
@@ -206,13 +208,13 @@ export default function CreateScreen({ route, navigation}) {
                             setDateMode('time');
                         }}
                     />
-                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings.labels.frequency}</Text>
+                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings[settings.language].labels.frequency}</Text>
                     <Picker 
                         selectedValue={freqValue}
                         style={{ flexGrow: 1 }}
                         onValueChange={(itemValue, itemIndex) => setFreqValue(itemValue)}
                     >
-                        {Strings.frequencyWords.map((unit, index) => {
+                        {Strings[settings.language].frequencyWords.map((unit, index) => {
                             return (
                                 <Picker.Item key={index} label={unit} value={index} />
                             )
@@ -220,7 +222,7 @@ export default function CreateScreen({ route, navigation}) {
                     </Picker>
                 </View>
                 <View style={styles.row}>
-                    <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings.labels.toggle.replace(/unit/g, Strings.units[unitValue])}</Text>
+                    <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings[settings.language].labels.toggle.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
                     <Switch
                         trackColor={{ false: Colors.toggle.trackfalse, true: Colors.toggle.tracktrue }}
                         thumbColor={isTotal ? Colors.toggle.thumbtrue : Colors.toggle.thumbfalse}

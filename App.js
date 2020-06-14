@@ -64,12 +64,10 @@ export default function App(props) {
 					headerMode={'none'}
 				>
 					<Stack.Screen name={Strings.routes.home} 
-					component={HomeScreen}
-					options={{title: Strings.headers.home}}
-					initialParams={{settings: settingsObj}} />
-					<Stack.Screen name={Strings.routes.settings} 
-					component={SettingsScreen}
-					options={{title: Strings.headers.settings}} />
+						component={HomeScreen}
+						initialParams={{settings: settingsObj}} 
+					/>
+					<Stack.Screen name={Strings.routes.settings} component={SettingsScreen} />
 					<Stack.Screen name={Strings.routes.create} component={CreateScreen} />
 					<Stack.Screen name={Strings.routes.display} component={DisplayScreen} />
 					<Stack.Screen name={Strings.routes.edit} component={EditScreen} />
