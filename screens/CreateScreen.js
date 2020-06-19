@@ -35,14 +35,9 @@ export default function CreateScreen({ route, navigation}) {
     const [timeValue, setTimeValue] = React.useState('default');
     // Frequency picker
     const [freqValue, setFreqValue] = React.useState(0);
-    // total units vs start and end
-    const [isTotal, setIsTotal] = React.useState(false);
-    const toggleSwitch = () => setIsTotal(previousState => !previousState);
     // the following state values are purely for retrieval
     // title value
     const [titleValue, setTitleValue] = React.useState("");
-    // tags value
-    const [tagsValue, setTagsValue] = React.useState("");
     // start and end values
     const [startValue, setStartValue] = React.useState(1);
     const [endValue, setEndValue] = React.useState(0);
@@ -81,19 +76,7 @@ export default function CreateScreen({ route, navigation}) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (tagsValue && !newProj.tagsAreValid(tagsValue)) {
-            setModalMessage(Strings[settings.language].alerts.charTags);
-            setModalButtons([modalokaybtn]);
-            setmodalVisible(true);
-        }
         else {
-            let tags = [];
-            if (tagsValue) {
-                let tagsSplit = tagsValue.trim().split(/\s*,\s*/);
-                tags = tagsSplit.filter(item => {
-                    return item.length > 0
-                })
-            }
             newProj.title = titleValue.trim();
             newProj.startDate = Moment().toDate();
             newProj.dueDate = dateValue;
@@ -101,8 +84,6 @@ export default function CreateScreen({ route, navigation}) {
             newProj.endUnit = parseInt(endValue);
             newProj.currentUnit = parseInt(startValue);
             newProj.unitName = unitValue;
-            newProj.totalVsRange = isTotal;
-            newProj.tags = tags;
             newProj.freq = freqValue;
             newProj.time = timeValue;
             Storage.createProj(newProj);
@@ -118,9 +99,13 @@ export default function CreateScreen({ route, navigation}) {
     savebtn.onPress = () => saveProj();
 	cancelbtn.onPress = () => navigation.navigate(Strings.routes.home);
     modalokaybtn.onPress = () => setmodalVisible(false);
+
+    const getTextColor = () => {
+        return settings.darkmode ? Colors.darkmode.text : Colors.maintext
+    };
     
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: settings.darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
             <CustModal 
             visible={modalVisible} 
             message={modalMessage} 
@@ -128,40 +113,38 @@ export default function CreateScreen({ route, navigation}) {
 			darkmode={settings.darkmode}
             />
             <View style={styles.mainview}>
-                <Text style={styles.labelText}>{Strings[settings.language].labels.title}</Text>
+                <Text style={[styles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.title}</Text>
                 <TextInput
-                    style={[styles.inputField, {marginBottom: 10}]}
+                    style={[styles.inputField, {marginBottom: 10}, {color: getTextColor()}]}
                     placeholder={Strings[settings.language].placeholder.title}
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
                 />
-                <Text style={styles.labelText}>{Strings[settings.language].labels.tags}</Text>
-                <TextInput
-                    style={[styles.inputField, {marginBottom: 10}]}
-                    placeholder={Strings[settings.language].placeholder.tags}
-                    onChangeText={text => setTagsValue(text)}
-                />
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>
+                        {Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}
+                    </Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={[styles.inputField, {color: getTextColor()}]}
                         defaultValue={'1'}
                         placeholder={'1'}
                         keyboardType={'number-pad'}
                         onChangeText={text => setStartValue(text)}
                     />
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>
+                        {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}
+                    </Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={[styles.inputField, {color: getTextColor()}]}
                         placeholder={'42'}
                         keyboardType={'number-pad'}
                         onChangeText={text => setEndValue(text)}
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.dueDate}</Text>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.dueDate}</Text>
                     <TextInput 
-                        style={styles.inputField} 
+                        style={[styles.inputField, {color: getTextColor()}]} 
                         value={Moment(dateValue).format(settings.dateFormat)}
                         onFocus={() => {
                             setShowDate(true);
@@ -170,22 +153,21 @@ export default function CreateScreen({ route, navigation}) {
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings[settings.language].labels.unitName}</Text>
+                    <Text style={[styles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
                     <Picker 
                         selectedValue={unitValue}
-                        style={{ flexGrow: 1 }}
-                        text
-                        onValueChange={(itemValue, itemIndex) => setUnitValue(itemValue)}
+                        style={[{ flexGrow: 1 }, {color: getTextColor()}]}
+                        onValueChange={(itemValue) => setUnitValue(itemValue)}
                     >
                         {Strings[settings.language].units.map((unit, index) => {
                             return (
-                                <Picker.Item key={index} label={unit} value={index} />
+                                <Picker.Item key={index} textStyle={{color: getTextColor()}} label={unit} value={index} />
                             )
                         })}
                     </Picker>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.notification}</Text>
                     <TouchableHighlight
                         style={styles.defaultsButton}
                         onPress={() => {
@@ -199,16 +181,16 @@ export default function CreateScreen({ route, navigation}) {
                     </TouchableHighlight>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.time}</Text>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.time}</Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={[styles.inputField, {color: getTextColor()}]}
                         value={timeValue}
                         onFocus={() => {
                             setShowDate(true);
                             setDateMode('time');
                         }}
                     />
-                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings[settings.language].labels.frequency}</Text>
+                    <Text style={[styles.labelText, {paddingLeft: 5}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
                     <Picker 
                         selectedValue={freqValue}
                         style={{ flexGrow: 1 }}
@@ -220,16 +202,6 @@ export default function CreateScreen({ route, navigation}) {
                             )
                         })}
                     </Picker>
-                </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings[settings.language].labels.toggle.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
-                    <Switch
-                        trackColor={{ false: Colors.toggle.trackfalse, true: Colors.toggle.tracktrue }}
-                        thumbColor={isTotal ? Colors.toggle.thumbtrue : Colors.toggle.thumbfalse}
-                        ios_backgroundColor={Colors.toggle.ios_backgroundColor}
-                        onValueChange={toggleSwitch}
-                        value={isTotal}
-                    />
                 </View>
                 { showDate && <DateTimePicker 
                     value={dateValue}

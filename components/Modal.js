@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import Colors from '../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, FlatList } from "react-native-gesture-handler";
 
 export default ({visible, message, buttons, darkmode}) => {
     return (
@@ -23,7 +23,7 @@ export default ({visible, message, buttons, darkmode}) => {
         <View style={styles.centeredView}>
           	<View style={[styles.modalView, {backgroundColor: darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
 				{message && <Text style={[styles.modalText, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}>{message}</Text>}
-				<ScrollView>
+				{buttons.length > 3 && <ScrollView>
 					{buttons.map((unit, index) => {
 						return (
 							<TouchableHighlight
@@ -39,7 +39,22 @@ export default ({visible, message, buttons, darkmode}) => {
 							</TouchableHighlight>
 						)
 					})}
-				</ScrollView>
+				</ScrollView>}
+				{buttons.length <= 3 && buttons.map((unit, index) => {
+						return (
+							<TouchableHighlight
+								key={index}
+								style={{ ...styles.openButton, backgroundColor: unit._color}}
+								onPress={unit.onPress}
+								>
+								
+								<Text style={styles.textStyle}>
+									{unit._iconName && <Ionicons size={18} name={unit._iconName} />}
+									{'  ' + unit._title}
+								</Text>
+							</TouchableHighlight>
+						)
+					})}
           	</View>
         </View>
       </Modal>

@@ -17,7 +17,7 @@ export default {
     settings: '#A27900', // '#CC9A34',
     home: '#006EC3', // '#0090FF',
     order: purple,
-    save: '#145A1B', // '#219738',
+    save: '#176E5E', // '#145A1B', // '#219738',
     delete: '#A10000', // '#DE0000',
     create: '#0A5120', // '#138A36',
     edit: purple,
@@ -30,7 +30,7 @@ export default {
     settingsIcons: '#888',
     toggle: {
         trackfalse: '#888', 
-        tracktrue: '#0090FF',
+        tracktrue: '#006EC3', // '#0090FF',
         thumbfalse: "#aaa",
         thumbtrue: purple,
         ios_backgroundColor: "#3e3e3e"

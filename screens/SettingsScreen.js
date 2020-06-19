@@ -18,10 +18,8 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [language, setLanguage] = React.useState(settings.language);
 	const [dateFormat, setDateFormat] = React.useState(settings.dateFormat);
 	const [notifications, setNotifications] = React.useState(settings.notifications);
-	const [total, setTotal] = React.useState(settings.total);
 	const [unit, setUnit] = React.useState(settings.unit);
 	const [allUnits, setAllUnits] = React.useState(settings.allUnits);
-	const [tags, setTags] = React.useState(settings.tags);
 	// modal
     const [modalVisible, setmodalVisible] = React.useState(false);
     const [modalMessage, setModalMessage] = React.useState();
@@ -32,6 +30,7 @@ export default function SettingsScreen( {route, navigation} ) {
 	const savebtn = AllButtons.save;
 	savebtn._title = Strings[language].buttons.save;
 	savebtn.onPress = () => {
+		settings.darkmode = darkMode;
 		console.log(settings);
 	};
 	const cancelbtn = AllButtons.cancel;
@@ -52,10 +51,11 @@ export default function SettingsScreen( {route, navigation} ) {
 		}})
 	});
 	buttons.darkMode._title = Strings[language].buttons.allSettings.darkMode;
-	buttons.darkMode.onPress = () => setDarkMode(!darkMode);
+	buttons.darkMode.onPress = () => {
+		setDarkMode(!darkMode);
+	}
 	buttons.language._title = Strings[language].buttons.allSettings.language;
 	buttons.language.onPress = () => {
-		console.log(settings.language);
 		setmodalVisible(true);
 		setModalMessage(Strings[language].alerts.settings.language);
 		languageBtns.push(modalCancelbtn);
@@ -65,7 +65,6 @@ export default function SettingsScreen( {route, navigation} ) {
 	// buttons.dayChange.onPress = () => console.log(settings.dayChange);
 	buttons.dateFormat._title = Strings[language].buttons.allSettings.dateFormat;
 	buttons.dateFormat.onPress = () => {
-		console.log(settings.dateFormat);
 		setmodalVisible(true);
 		setModalMessage(Strings[language].alerts.settings.dateFormat);
 		dateFormatBtns.push(modalCancelbtn);
@@ -73,14 +72,10 @@ export default function SettingsScreen( {route, navigation} ) {
 	};
 	buttons.notifications._title = Strings[language].buttons.allSettings.notifications;
 	buttons.notifications.onPress = () => console.log(settings.notifications);
-	buttons.startVsTotal._title = Strings[language].buttons.allSettings.startVsTotal;
-	buttons.startVsTotal.onPress = () => console.log(settings.total);
 	buttons.defaultUnit._title = Strings[language].buttons.allSettings.unit;
 	buttons.defaultUnit.onPress = () => console.log(settings.unit);
 	buttons.editUnit._title = Strings[language].buttons.allSettings.editUnit;
 	buttons.editUnit.onPress = () => console.log(settings.unit);
-	buttons.tags._title = Strings[language].buttons.allSettings.tags;
-	buttons.tags.onPress = () => console.log(settings.tags);
 	buttons.deleteAll._title = Strings[language].buttons.allSettings.deleteAll;
 	buttons.deleteAll.onPress = () => console.log('clicked Delete All');
 	buttons.feedback._title = Strings[language].buttons.allSettings.feedback;
@@ -88,13 +83,10 @@ export default function SettingsScreen( {route, navigation} ) {
 	const buttonsArr = [
 		buttons.darkMode,
 		buttons.language,
-        // buttons.dayChange,
         buttons.dateFormat,
         buttons.notifications,
-        buttons.startVsTotal,
 		buttons.defaultUnit,
 		buttons.editUnit,
-        buttons.tags,
         buttons.deleteAll,
         buttons.feedback,
 	]

@@ -1,5 +1,5 @@
 export class Project {
-    constructor(ti, sD, dD, sU, eU, cU, uN, tR, tag, freq, time) {
+    constructor(ti, sD, dD, sU, eU, cU, uN, freq, time) {
         this._title = ti;
         this._startDate = sD;
         this._dueDate = dD;
@@ -7,8 +7,6 @@ export class Project {
         this._endUnit = eU;
         this._currentUnit = cU || 1;
         this._unitName = uN || 1;
-        this._totalVsRange = tR || false;
-        this._tags = tag || [];
         this._frequency = freq || 0;
         this._time = time || 'default';
     }  
@@ -54,18 +52,6 @@ export class Project {
     set unitName(unit) {
         this._unitName = unit;
     }
-    get totalVsRange() {
-        return this._totalVsRange;
-    }
-    set totalVsRange(boolean) {
-        this._totalVsRange = boolean;
-    }
-    get tags() {
-        return this._tags;
-    }
-    set tags(tagsArr) {
-        this._tags = tagsArr;
-    }
     get freq() {
         return this._frequency;
     }
@@ -80,8 +66,5 @@ export class Project {
     }
     titleIsValid(string) {
         return /([\w'\- _/])/g.test(string);
-    }
-    tagsAreValid(string){
-        return /([\w'\- ,_/])/g.test(string);
     }
 }

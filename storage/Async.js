@@ -18,10 +18,8 @@ export default {
                         freq: 1,
                         time: '20:00'
                     },
-                    total: false,
                     unit: 1,
                     allUnits: [],
-                    tags: []
                 };
             }
         }

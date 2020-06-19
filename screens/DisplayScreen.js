@@ -97,7 +97,6 @@ export default function DisplayScreen({ route, navigation }) {
                         {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._endUnit}
                     </Text>
                 </View>
-                <Text style={styles.labelText}>{Strings[settings.language].labels.tagsDisplay + (project._tags.length ? project._tags.join(', ') : Strings[settings.language].placeholder.noTags)}</Text>
                 <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings[settings.language].labels.time + '  ' + project._time}</Text>

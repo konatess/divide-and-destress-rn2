@@ -22,13 +22,10 @@ const done= new ButtonObj('', Colors.done, 'md-checkmark');
 const okay= new ButtonObj('', Colors.done, 'md-checkmark');
 const darkMode= new ButtonObj('', Colors.done, 'md-contrast');
 const language= new ButtonObj('', Colors.done, 'md-globe');
-const dayChange= new ButtonObj('', Colors.done, 'md-bed');
 const dateFormat= new ButtonObj('', Colors.done, 'md-calendar');
 const notifications= new ButtonObj('', Colors.done, 'md-notifications');
-const startVsTotal= new ButtonObj('', Colors.done, 'md-swap');
 const unit= new ButtonObj('', Colors.done, 'md-list');
 const editUnit= new ButtonObj('', Colors.edit, 'md-list');
-const tags= new ButtonObj('', Colors.done, 'ios-pricetags');
 const deleteAll= new ButtonObj('', Colors.done, 'md-trash');
 const feedback= new ButtonObj('', Colors.done, 'md-chatbubbles');
 
@@ -48,13 +45,10 @@ export default {
     settingsList: {
         darkMode: darkMode,
         language: language,
-        dayChange: dayChange,
         dateFormat: dateFormat,
         notifications: notifications,
-        startVsTotal: startVsTotal,
         defaultUnit: unit,
         editUnit: editUnit,
-        tags: tags,
         deleteAll: deleteAll,
         feedback: feedback
     }

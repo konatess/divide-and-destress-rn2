@@ -40,8 +40,6 @@ export default function EditScreen({ route, navigation }) {
     const [freqValue, setFreqValue] = React.useState(project._frequency);
     // title value
     const [titleValue, setTitleValue] = React.useState(project._title);
-    // tags value
-    const [tagsValue, setTagsValue] = React.useState(project._tags.length ? project._tags.join(', ') : '');
     // start and end units
     const [startValue, setStartValue] = React.useState(project._startUnit);
     const [currentValue, setCurrentValue] = React.useState(project._currentUnit);
@@ -85,53 +83,25 @@ export default function EditScreen({ route, navigation }) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (tagsValue && !newProj.tagsAreValid(tagsValue)) {
-            setModalMessage(Strings[settings.language].alerts.charTags);
-            setModalButtons([modalokaybtn]);
-            setmodalVisible(true);
-        }
         else {
-            let tags = [];
-            if (tagsValue) {
-                let tagsSplit = tagsValue.trim().split(/\s*,\s*/);
-                tags = tagsSplit.filter(item => {
-                    return item.length > 0
-                })
-            }
             newProj.title = titleValue.trim();
             newProj.dueDate = dateValue;
             newProj.startUnit = parseInt(startValue);
             newProj.endUnit = parseInt(endValue);
             newProj.currentUnit = parseInt(currentValue);
             newProj.unitName = unitValue;
-            newProj.tags = tags;
             newProj.freq = freqValue;
             newProj.time = timeValue;
             Storage.updateProj(key, newProj);
             navigation.navigate(Strings.routes.home)
         }
     };
-    const deletebtn = AllButtons.delete;
-    deletebtn._title = Strings[settings.language].buttons.delete;
     const savebtn = AllButtons.save;
     savebtn._title = Strings[settings.language].buttons.save;
-    const modalDeleteBtn = AllButtons.delete2;
-    modalDeleteBtn._title = Strings[settings.language].buttons.delete;
-    const modalCancelBtn = AllButtons.cancel;
-    modalCancelBtn._title = Strings[settings.language].buttons.cancel;
-    modalDeleteBtn.onPress = () => {
-        setmodalVisible(false);
-        deleteProj(key);
-    };
-    modalCancelBtn.onPress = () => {
-        setmodalVisible(false)
-    };
-    deletebtn.onPress = () => {
-        setModalMessage(Strings[settings.language].alerts.confirmDelete);
-        setModalButtons([modalDeleteBtn, modalCancelBtn]);
-        setmodalVisible(true);
-    };
+    const cancelbtn = AllButtons.cancel;
+    cancelbtn._title = Strings[settings.language].buttons.cancel;
     savebtn.onPress = () => updateProj();
+	cancelbtn.onPress = () => navigation.navigate(Strings.routes.display);
     return (
         <View style={styles.container}>
             <CustModal 
@@ -148,13 +118,6 @@ export default function EditScreen({ route, navigation }) {
                     value={titleValue}
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
-                />
-                <Text style={styles.labelText}>{Strings[settings.language].labels.tags}</Text>
-                <TextInput
-                    style={[styles.inputField, {marginBottom: 10}]}
-                    placeholder={Strings[settings.language].placeholder.tags}
-                    value={tagsValue}
-                    onChangeText={text => setTagsValue(text)}
                 />
                 <View style={[styles.row, {justifyContent: 'flex-start'}]}>
                     <Text style={styles.labelText}>{Strings[settings.language].labels.currentUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
@@ -264,7 +227,7 @@ export default function EditScreen({ route, navigation }) {
                     }}
                 />}
             </View>
-            <ButtonBar buttons={[ deletebtn, savebtn ]}/>
+            <ButtonBar buttons={[ cancelbtn, savebtn ]}/>
         </View>
     )
 };
