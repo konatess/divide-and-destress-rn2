@@ -10,17 +10,15 @@ export default {
             }
             else {
                 return {
-                    darkmode: true,
+                    darkmode: false,
                     language: 'English',
-                    dayChange: '00:00',
                     dateFormat: 'MM/DD',
                     notifications: {
                         freq: 1,
                         time: '20:00'
                     },
-                    total: false,
                     unit: 1,
-                    tags: []
+                    userUnits: [],
                 };
             }
         }
@@ -28,9 +26,9 @@ export default {
             return console.log(error);
         }
     },
-    updateSettings: async (settingsobj) => {
+    saveSettings: async (settingsobj) => {
         try {
-            await AsyncStorage.mergeItem(Strings.keys.settings, JSON.stringify(settingsobj))
+            await AsyncStorage.setItem(Strings.keys.settings, JSON.stringify(settingsobj))
         }
         catch (error) {
             return console.log(error);

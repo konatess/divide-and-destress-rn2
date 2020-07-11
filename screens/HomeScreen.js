@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, FlatList, Modal } from 'react-native';
+import { StyleSheet, Text, View, FlatList, StatusBar } from 'react-native';
 import { NavigationEvents } from '@react-navigation/native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Project } from '../constants/ProjectClass';
@@ -18,12 +18,16 @@ export default function HomeScreen({ route, navigation }) {
 	const [projArr, setProjArr] = React.useState([])
 	const [titles, setTitles] = React.useState([]);
 	const settingsbtn = AllButtons.settings;
-	settingsbtn.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings, knowntitles: titles});
+	settingsbtn._title = Strings[settings.language].buttons.settings
+	settingsbtn.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings, knowntitles: titles, projects: projArr});
 	const orderbtn = AllButtons.order;
+	orderbtn._title = Strings[settings.language].buttons.order;
 	orderbtn.onPress = () => setModalVisible(true);
 	const createbtn = AllButtons.create;
+	createbtn._title = Strings[settings.language].buttons.create;
 	createbtn.onPress = () => navigation.navigate(Strings.routes.create, {knowntitles: titles, settings: settings});
 	const modalDonebtn = AllButtons.done;
+	modalDonebtn._title = Strings[settings.language].buttons.done;
 	modalDonebtn.onPress = () => setModalVisible(false);
 	React.useEffect(() => {
 		const projFromStorage = async () => {
@@ -43,6 +47,10 @@ export default function HomeScreen({ route, navigation }) {
 	}, [navigation])
 	return (
 		<View style={[styles.container, {backgroundColor: settings.darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
+			<StatusBar 
+				barStyle={settings.darkmode ? "light-content" : "dark-content"} 
+				backgroundColor={settings.darkmode ? Colors.darkmode.background : Colors.mainbackground} 
+			/>
 			<FlatList 
 				data={projArr}
 				renderItem={({ item }) => <ProjectButton
@@ -70,10 +78,6 @@ export default function HomeScreen({ route, navigation }) {
 	);
 }
 
-HomeScreen.navigationOptions = {
-	header: null,
-};
-
 function ProjectButton({ passKey, title, due, onPress, settings }) {
 	return (
 		<RectButton key={passKey} style={ styles.project } onPress={onPress}>
@@ -92,6 +96,7 @@ function ProjectButton({ passKey, title, due, onPress, settings }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		paddingTop: 10
 	},
 	project: {
 		padding: 10,

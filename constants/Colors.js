@@ -1,5 +1,5 @@
 const tintColor = '#2f95dc';
-const purple = '#9200DA';
+const purple = '#580084' // '#9200DA';
 
 export default {
     tintColor,
@@ -12,25 +12,25 @@ export default {
     warningText: '#666804',
     noticeBackground: tintColor,
     noticeText: '#fff',
-    navButtonText: '#fff',
-    navButtonIcon: '#fff',
-    settings: '#CC9A34',
-    home: '#0090FF',
+    navButtonText: '#eee',
+    navButtonIcon: '#eee',
+    settings: '#A27900', // '#CC9A34',
+    home: '#006EC3', // '#0090FF',
     order: purple,
-    save: '#219738',
-    delete: '#DE0000',
-    create: '#138A36',
+    save: '#176E5E', // '#145A1B', // '#219738',
+    delete: '#A10000', // '#DE0000',
+    create: '#0A5120', // '#138A36',
     edit: purple,
-    cancel: '#aaa',
-    done: '#888',
+    cancel: '#888',
+    done: '#777',
     inputBorder: '#ddd',
-    mainbackground: '#fff',
+    mainbackground: '#eee',
     maintext: '#111',
-    modalbackground: '#fff',
+    modalbackground: '#eee',
     settingsIcons: '#888',
     toggle: {
         trackfalse: '#888', 
-        tracktrue: '#0090FF',
+        tracktrue: '#006EC3', // '#0090FF',
         thumbfalse: "#aaa",
         thumbtrue: purple,
         ios_backgroundColor: "#3e3e3e"

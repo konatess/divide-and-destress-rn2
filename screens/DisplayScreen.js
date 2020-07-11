@@ -27,30 +27,34 @@ export default function DisplayScreen({ route, navigation }) {
             // days remaining
             let days = Moment().diff(project._dueDate, 'days')*-1
             if (days === 0) {
-                return setPerOrDue(Strings.labels.dueToday)
+                return setPerOrDue(Strings[settings.language].labels.dueToday)
             } else if (days < 0) {
-                return setPerOrDue(Strings.labels.overDue)
+                return setPerOrDue(Strings[settings.language].labels.overDue)
             } else {
                 // days/frequency or default frequency
                 let periods = days/(project._frequency || settings.notifications.freq);
                 // units remaining/freq periods remaining
-                return setPerOrDue(Strings.labels.perDay.replace(/unit/g, Strings.units[project._unitName])
+                return setPerOrDue(Strings[settings.language].labels.perDay.replace(/unit/g, Strings[settings.language].units[project._unitName])
                 .replace(/num/g, (units/periods).toFixed(1))
-                .replace(/freq/g, Strings.frequencyWords[project._frequency || settings.notifications.freq]))
+                .replace(/freq/g, Strings[settings.language].frequencyWords[project._frequency || settings.notifications.freq]))
             }
         };
         getPerDay();
-    }, [])
-    // const [days, setDays] = React.useState(getPerDay());
+    }, []);
     const deleteProj = async (projKey) => {
         await Storage.deleteProj(projKey);
         navigation.navigate(Strings.routes.home); 
     }
     const deletebtn = AllButtons.delete;
+    deletebtn._title = Strings[settings.language].buttons.delete;
     const editbtn = AllButtons.edit;
+    editbtn._title = Strings[settings.language].buttons.edit;
     const homebtn = AllButtons.home;
+    homebtn._title = Strings[settings.language].buttons.home
     const modalDeleteBtn = AllButtons.delete2;
+    modalDeleteBtn._title = Strings[settings.language].buttons.delete;
     const modalCancelBtn = AllButtons.cancel;
+    modalCancelBtn._title = Strings[settings.language].buttons.cancel;
     editbtn.onPress = () => navigation.navigate(Strings.routes.edit, {
         project: project, 
         key: key, 
@@ -66,37 +70,36 @@ export default function DisplayScreen({ route, navigation }) {
         setmodalVisible(false)
     };
     deletebtn.onPress = () => {
-        setModalMessage(Strings.alerts.confirmDelete);
+        setModalMessage(Strings[settings.language].alerts.confirmDelete);
         setModalButtons([modalDeleteBtn, modalCancelBtn]);
         setmodalVisible(true);
     };
     return (
         <View style={styles.container}>
             <View style={styles.mainview}>
-                <Text style={styles.labelText}>{Strings.labels.title + project._title}</Text>
+                <Text style={styles.labelText}>{Strings[settings.language].labels.title + project._title}</Text>
                 <Text style={styles.labelText}>{perOrDue}</Text>
                 <Text style={styles.labelText}>
-                    {Strings.labels.currentUnit.replace(/unit/g, Strings.units[project._unitName]) + project._currentUnit}
+                    {Strings[settings.language].labels.currentUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._currentUnit}
                 </Text>
                 <Text style={styles.labelText}>
-                    {Strings.labels.dueDate + Moment(project._dueDate).format(settings.dateFormat)}
+                    {Strings[settings.language].labels.dueDate + Moment(project._dueDate).format(settings.dateFormat)}
                 </Text>
                 <Text style={styles.labelText}>
-                    {Strings.labels.startDate + Moment(project._startDate).format(settings.dateFormat)}
+                    {Strings[settings.language].labels.startDate + Moment(project._startDate).format(settings.dateFormat)}
                 </Text>
                 <View style={styles.row}>
                     <Text style={styles.labelText}>
-                        {Strings.labels.startUnit.replace(/unit/g, Strings.units[project._unitName]) + project._startUnit}
+                        {Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._startUnit}
                     </Text>
                     <Text style={styles.labelText}>
-                        {Strings.labels.endUnit.replace(/unit/g, Strings.units[project._unitName]) + project._endUnit}
+                        {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._endUnit}
                     </Text>
                 </View>
-                <Text style={styles.labelText}>{Strings.labels.tagsDisplay + (project._tags.length ? project._tags.join(', ') : Strings.placeholder.noTags)}</Text>
-                <Text style={styles.labelText}>{Strings.labels.notification}</Text>
+                <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.time + '  ' + project._time}</Text>
-                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings.labels.frequency + '  ' + Strings.frequencyWords[project._frequency]}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.time + '  ' + project._time}</Text>
+                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings[settings.language].labels.frequency + '  ' + Strings[settings.language].frequencyWords[project._frequency]}</Text>
                 </View>
             </View>
             <ButtonBar buttons={[ deletebtn, editbtn, homebtn ]} />
@@ -110,14 +113,10 @@ export default function DisplayScreen({ route, navigation }) {
     )
 };
 
-DisplayScreen.navigationOptions = {
-	header: null,
-};
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.mainbackground,
+        paddingTop: 10,
       },
     mainview: {
         flex: 1,

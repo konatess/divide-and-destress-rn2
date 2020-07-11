@@ -40,8 +40,6 @@ export default function EditScreen({ route, navigation }) {
     const [freqValue, setFreqValue] = React.useState(project._frequency);
     // title value
     const [titleValue, setTitleValue] = React.useState(project._title);
-    // tags value
-    const [tagsValue, setTagsValue] = React.useState(project._tags.length ? project._tags.join(', ') : '');
     // start and end units
     const [startValue, setStartValue] = React.useState(project._startUnit);
     const [currentValue, setCurrentValue] = React.useState(project._currentUnit);
@@ -54,79 +52,56 @@ export default function EditScreen({ route, navigation }) {
     const newProj = new Project();
     const updateProj = () => {
         if (titleValue.trim() === "") {
-            setModalMessage(Strings.alerts.title.blank);
+            setModalMessage(Strings[settings.language].alerts.title.blank);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!newProj.titleIsValid(titleValue)) {
-            setModalMessage(Strings.alerts.charTitle);
+            setModalMessage(Strings[settings.language].alerts.charTitle);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (cleanedTitles.some((value) => {
             return value === newProj.title
         })) {
-            setModalMessage(Strings.alerts.title.exists);
+            setModalMessage(Strings[settings.language].alerts.title.exists);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!startValue) {
-            setModalMessage(Strings.alerts.first);
+            setModalMessage(Strings[settings.language].alerts.first);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!endValue) {
-            setModalMessage(Strings.alerts.last);
+            setModalMessage(Strings[settings.language].alerts.last);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (startValue >= endValue) {
-            setModalMessage(Strings.alerts.firstSmaller.replace(/unit/g, Strings.units[unitValue]));
-            setModalButtons([modalokaybtn]);
-            setmodalVisible(true);
-        }
-        else if (tagsValue && !newProj.tagsAreValid(tagsValue)) {
-            setModalMessage(Strings.alerts.charTags);
+            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/unit/g, Strings[settings.language].units[unitValue]));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else {
-            let tags = [];
-            if (tagsValue) {
-                let tagsSplit = tagsValue.trim().split(/\s*,\s*/);
-                tags = tagsSplit.filter(item => {
-                    return item.length > 0
-                })
-            }
             newProj.title = titleValue.trim();
             newProj.dueDate = dateValue;
             newProj.startUnit = parseInt(startValue);
             newProj.endUnit = parseInt(endValue);
             newProj.currentUnit = parseInt(currentValue);
             newProj.unitName = unitValue;
-            newProj.tags = tags;
             newProj.freq = freqValue;
             newProj.time = timeValue;
             Storage.updateProj(key, newProj);
             navigation.navigate(Strings.routes.home)
         }
     };
-    const deletebtn = AllButtons.delete;
     const savebtn = AllButtons.save;
-    const modalDeleteBtn = AllButtons.delete2;
-    const modalCancelBtn = AllButtons.cancel;modalDeleteBtn.onPress = () => {
-        setmodalVisible(false);
-        deleteProj(key);
-    };
-    modalCancelBtn.onPress = () => {
-        setmodalVisible(false)
-    };
-    deletebtn.onPress = () => {
-        setModalMessage(Strings.alerts.confirmDelete);
-        setModalButtons([modalDeleteBtn, modalCancelBtn]);
-        setmodalVisible(true);
-    };
+    savebtn._title = Strings[settings.language].buttons.save;
+    const cancelbtn = AllButtons.cancel;
+    cancelbtn._title = Strings[settings.language].buttons.cancel;
     savebtn.onPress = () => updateProj();
+	cancelbtn.onPress = () => navigation.navigate(Strings.routes.display);
     return (
         <View style={styles.container}>
             <CustModal 
@@ -136,23 +111,16 @@ export default function EditScreen({ route, navigation }) {
 			darkmode={settings.darkmode}
             />
             <View style={styles.mainview}>
-                <Text style={styles.labelText}>{Strings.labels.title}</Text>
+                <Text style={styles.labelText}>{Strings[settings.language].labels.title}</Text>
                 <TextInput
                     style={[styles.inputField, {marginBottom: 10}]}
-                    placeholder={Strings.placeholder.title}
+                    placeholder={Strings[settings.language].placeholder.title}
                     value={titleValue}
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
                 />
-                <Text style={styles.labelText}>{Strings.labels.tags}</Text>
-                <TextInput
-                    style={[styles.inputField, {marginBottom: 10}]}
-                    placeholder={Strings.placeholder.tags}
-                    value={tagsValue}
-                    onChangeText={text => setTagsValue(text)}
-                />
                 <View style={[styles.row, {justifyContent: 'flex-start'}]}>
-                    <Text style={styles.labelText}>{Strings.labels.currentUnit.replace(/unit/g, Strings.units[unitValue])}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.currentUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
@@ -162,7 +130,7 @@ export default function EditScreen({ route, navigation }) {
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.startUnit.replace(/unit/g, Strings.units[unitValue])}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'1'}
@@ -170,7 +138,7 @@ export default function EditScreen({ route, navigation }) {
                         keyboardType={'number-pad'}
                         onChangeText={text => setStartValue(text)}
                     />
-                    <Text style={styles.labelText}>{Strings.labels.endUnit.replace(/unit/g, Strings.units[unitValue])}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
@@ -180,7 +148,7 @@ export default function EditScreen({ route, navigation }) {
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.dueDate}</Text>
                     <TextInput 
                         style={styles.inputField} 
                         value={Moment(dateValue).format(settings.dateFormat)}
@@ -191,14 +159,14 @@ export default function EditScreen({ route, navigation }) {
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings.labels.unitName}</Text>
+                    <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings[settings.language].labels.unitName}</Text>
                     <Picker 
                         selectedValue={unitValue}
                         style={{ flexGrow: 1 }}
                         text
                         onValueChange={(itemValue, itemIndex) => setUnitValue(itemValue)}
                     >
-                        {Strings.units.map((unit, index) => {
+                        {Strings[settings.language].units.map((unit, index) => {
                             return (
                                 <Picker.Item key={index} label={unit} value={index} />
                             )
@@ -206,7 +174,7 @@ export default function EditScreen({ route, navigation }) {
                     </Picker>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.notification}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
                     <TouchableHighlight
                         style={styles.defaultsButton}
                         onPress={() => {
@@ -215,12 +183,12 @@ export default function EditScreen({ route, navigation }) {
                         }}
                         >
                         <Text style={styles.buttonText}>
-                            {Strings.buttons.setToDefault}
+                            {Strings[settings.language].buttons.setToDefault}
                         </Text>
                     </TouchableHighlight>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.time}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.time}</Text>
                     <TextInput
                         style={styles.inputField}
                         value={timeValue}
@@ -229,13 +197,13 @@ export default function EditScreen({ route, navigation }) {
                             setDateMode('time');
                         }}
                     />
-                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings.labels.frequency}</Text>
+                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings[settings.language].labels.frequency}</Text>
                     <Picker 
                         selectedValue={freqValue}
                         style={{ flexGrow: 1 }}
                         onValueChange={(itemValue) => setFreqValue(itemValue)}
                     >
-                        {Strings.frequencyWords.map((unit, index) => {
+                        {Strings[settings.language].frequencyWords.map((unit, index) => {
                             return (
                                 <Picker.Item key={index} label={unit} value={index} />
                             )
@@ -259,7 +227,7 @@ export default function EditScreen({ route, navigation }) {
                     }}
                 />}
             </View>
-            <ButtonBar buttons={[ deletebtn, savebtn ]}/>
+            <ButtonBar buttons={[ cancelbtn, savebtn ]}/>
         </View>
     )
 };
@@ -267,7 +235,7 @@ export default function EditScreen({ route, navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.mainbackground,
+        paddingTop: 10,
       },
     mainview: {
         flex: 1,

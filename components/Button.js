@@ -21,5 +21,6 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: Colors.navButtonText,
+        fontSize: 18
     },
 });

@@ -22,7 +22,7 @@ export default function ButtonBar({buttons}) {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        height: 50,
+        height: 55,
         padding: 0,
     },
 });

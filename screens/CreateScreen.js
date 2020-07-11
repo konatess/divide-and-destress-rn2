@@ -35,14 +35,9 @@ export default function CreateScreen({ route, navigation}) {
     const [timeValue, setTimeValue] = React.useState('default');
     // Frequency picker
     const [freqValue, setFreqValue] = React.useState(0);
-    // total units vs start and end
-    const [isTotal, setIsTotal] = React.useState(false);
-    const toggleSwitch = () => setIsTotal(previousState => !previousState);
     // the following state values are purely for retrieval
     // title value
     const [titleValue, setTitleValue] = React.useState("");
-    // tags value
-    const [tagsValue, setTagsValue] = React.useState("");
     // start and end values
     const [startValue, setStartValue] = React.useState(1);
     const [endValue, setEndValue] = React.useState(0);
@@ -50,50 +45,38 @@ export default function CreateScreen({ route, navigation}) {
     const newProj = new Project();
     const saveProj = () => {
         if (titleValue.trim() === "") {
-            setModalMessage(Strings.alerts.title.blank);
+            setModalMessage(Strings[settings.language].alerts.title.blank);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!newProj.titleIsValid(titleValue)) {
-            setModalMessage(Strings.alerts.charTitle);
+            setModalMessage(Strings[settings.language].alerts.charTitle);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (knowntitles.some((value) => {
             return value === newProj.title
         })) {
-            setModalMessage(Strings.alerts.title.exists);
+            setModalMessage(Strings[settings.language].alerts.title.exists);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!startValue) {
-            setModalMessage(Strings.alerts.first);
+            setModalMessage(Strings[settings.language].alerts.first);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!endValue) {
-            setModalMessage(Strings.alerts.last);
+            setModalMessage(Strings[settings.language].alerts.last);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (startValue >= endValue) {
-            setModalMessage(Strings.alerts.firstSmaller.replace(/unit/g, Strings.units[unitValue]));
-            setModalButtons([modalokaybtn]);
-            setmodalVisible(true);
-        }
-        else if (tagsValue && !newProj.tagsAreValid(tagsValue)) {
-            setModalMessage(Strings.alerts.charTags);
+            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/unit/g, Strings[settings.language].units[unitValue]));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else {
-            let tags = [];
-            if (tagsValue) {
-                let tagsSplit = tagsValue.trim().split(/\s*,\s*/);
-                tags = tagsSplit.filter(item => {
-                    return item.length > 0
-                })
-            }
             newProj.title = titleValue.trim();
             newProj.startDate = Moment().toDate();
             newProj.dueDate = dateValue;
@@ -101,8 +84,6 @@ export default function CreateScreen({ route, navigation}) {
             newProj.endUnit = parseInt(endValue);
             newProj.currentUnit = parseInt(startValue);
             newProj.unitName = unitValue;
-            newProj.totalVsRange = isTotal;
-            newProj.tags = tags;
             newProj.freq = freqValue;
             newProj.time = timeValue;
             Storage.createProj(newProj);
@@ -110,13 +91,21 @@ export default function CreateScreen({ route, navigation}) {
         }
     };
     const savebtn = AllButtons.save;
+    savebtn._title = Strings[settings.language].buttons.save
+    const cancelbtn = AllButtons.cancel;
+    cancelbtn._title = Strings[settings.language].buttons.cancel;
     const modalokaybtn = AllButtons.okay;
-
+    modalokaybtn._title = Strings[settings.language].buttons.okay;
     savebtn.onPress = () => saveProj();
+	cancelbtn.onPress = () => navigation.navigate(Strings.routes.home);
     modalokaybtn.onPress = () => setmodalVisible(false);
+
+    const getTextColor = () => {
+        return settings.darkmode ? Colors.darkmode.text : Colors.maintext
+    };
     
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: settings.darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
             <CustModal 
             visible={modalVisible} 
             message={modalMessage} 
@@ -124,40 +113,38 @@ export default function CreateScreen({ route, navigation}) {
 			darkmode={settings.darkmode}
             />
             <View style={styles.mainview}>
-                <Text style={styles.labelText}>{Strings.labels.title}</Text>
+                <Text style={[styles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.title}</Text>
                 <TextInput
-                    style={[styles.inputField, {marginBottom: 10}]}
-                    placeholder={Strings.placeholder.title}
+                    style={[styles.inputField, {marginBottom: 10}, {color: getTextColor()}]}
+                    placeholder={Strings[settings.language].placeholder.title}
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
                 />
-                <Text style={styles.labelText}>{Strings.labels.tags}</Text>
-                <TextInput
-                    style={[styles.inputField, {marginBottom: 10}]}
-                    placeholder={Strings.placeholder.tags}
-                    onChangeText={text => setTagsValue(text)}
-                />
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.startUnit.replace(/unit/g, Strings.units[unitValue])}</Text>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>
+                        {Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}
+                    </Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={[styles.inputField, {color: getTextColor()}]}
                         defaultValue={'1'}
                         placeholder={'1'}
                         keyboardType={'number-pad'}
                         onChangeText={text => setStartValue(text)}
                     />
-                    <Text style={styles.labelText}>{Strings.labels.endUnit.replace(/unit/g, Strings.units[unitValue])}</Text>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>
+                        {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}
+                    </Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={[styles.inputField, {color: getTextColor()}]}
                         placeholder={'42'}
                         keyboardType={'number-pad'}
                         onChangeText={text => setEndValue(text)}
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.dueDate}</Text>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.dueDate}</Text>
                     <TextInput 
-                        style={styles.inputField} 
+                        style={[styles.inputField, {color: getTextColor()}]} 
                         value={Moment(dateValue).format(settings.dateFormat)}
                         onFocus={() => {
                             setShowDate(true);
@@ -166,22 +153,21 @@ export default function CreateScreen({ route, navigation}) {
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings.labels.unitName}</Text>
+                    <Text style={[styles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
                     <Picker 
                         selectedValue={unitValue}
-                        style={{ flexGrow: 1 }}
-                        text
-                        onValueChange={(itemValue, itemIndex) => setUnitValue(itemValue)}
+                        style={[{ flexGrow: 1 }, {color: getTextColor()}]}
+                        onValueChange={(itemValue) => setUnitValue(itemValue)}
                     >
-                        {Strings.units.map((unit, index) => {
+                        {Strings[settings.language].units.map((unit, index) => {
                             return (
-                                <Picker.Item key={index} label={unit} value={index} />
+                                <Picker.Item key={index} textStyle={{color: getTextColor()}} label={unit} value={index} />
                             )
                         })}
                     </Picker>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.notification}</Text>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.notification}</Text>
                     <TouchableHighlight
                         style={styles.defaultsButton}
                         onPress={() => {
@@ -190,42 +176,32 @@ export default function CreateScreen({ route, navigation}) {
                         }}
                         >
                         <Text style={styles.buttonText}>
-                            {Strings.buttons.setToDefault}
+                            {Strings[settings.language].buttons.setToDefault}
                         </Text>
                     </TouchableHighlight>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings.labels.time}</Text>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.time}</Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={[styles.inputField, {color: getTextColor()}]}
                         value={timeValue}
                         onFocus={() => {
                             setShowDate(true);
                             setDateMode('time');
                         }}
                     />
-                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings.labels.frequency}</Text>
+                    <Text style={[styles.labelText, {paddingLeft: 5}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
                     <Picker 
                         selectedValue={freqValue}
                         style={{ flexGrow: 1 }}
                         onValueChange={(itemValue, itemIndex) => setFreqValue(itemValue)}
                     >
-                        {Strings.frequencyWords.map((unit, index) => {
+                        {Strings[settings.language].frequencyWords.map((unit, index) => {
                             return (
                                 <Picker.Item key={index} label={unit} value={index} />
                             )
                         })}
                     </Picker>
-                </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {flexShrink: 1}]}>{Strings.labels.toggle.replace(/unit/g, Strings.units[unitValue])}</Text>
-                    <Switch
-                        trackColor={{ false: Colors.toggle.trackfalse, true: Colors.toggle.tracktrue }}
-                        thumbColor={isTotal ? Colors.toggle.thumbtrue : Colors.toggle.thumbfalse}
-                        ios_backgroundColor={Colors.toggle.ios_backgroundColor}
-                        onValueChange={toggleSwitch}
-                        value={isTotal}
-                    />
                 </View>
                 { showDate && <DateTimePicker 
                     value={dateValue}
@@ -238,13 +214,13 @@ export default function CreateScreen({ route, navigation}) {
                             setDateValue(date); 
                         }
                         else if (dateMode === 'time' && date !== undefined) {
-                            setTimeValue(Moment(date).format('h:mm a'));
+                            setTimeValue(Moment(date).format('HH:mm'));
                             setDateValue(date);
                         }
                     }}
                 />}
             </View>
-            <ButtonBar buttons={[ savebtn ]} />
+            <ButtonBar buttons={[ cancelbtn, savebtn ]} />
         </View>
     )
 };
@@ -252,7 +228,7 @@ export default function CreateScreen({ route, navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.mainbackground,
+        paddingTop: 10,
       },
     mainview: {
         flex: 1,
