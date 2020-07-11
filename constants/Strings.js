@@ -1,5 +1,3 @@
-const purple = '#9200DA';
-
 export default {
     routes: {
         home: 'Home',
@@ -32,7 +30,6 @@ export default {
             allSettings: {
                 darkMode: 'Dark Mode On/Off',
                 language: 'Language',
-                dayChange: 'Day Change',
                 dateFormat: 'Date Format',
                 notifications: 'Default Notification Preferences',
                 unit: 'Set Default Unit',
@@ -60,6 +57,7 @@ export default {
             complete: 'This project is completed',
             dueToday: 'This project is due today',
             overDue: 'This project is OVERDUE',
+            new: 'NEW',
         },
         placeholder: {
             title: 'Title of your project...',
@@ -84,8 +82,9 @@ export default {
             settings: {
                 language: 'Please select a language below. \n We would love to add more languages. If you would like to translate, please use the Feedback button to send us an email.',
                 dateFormat: 'Please select a date format below:',
-                notify: '',
-                unit: '',
+                notify: 'These notifications settings are used by all projects set to default. Select below:',
+                defUnit: 'Choose a default unit for your projects:',
+                editUnit:'',
                 deleteAll: 'Are you sure you want to delete all of your projects? This cannot be undone.',
             }
         },
@@ -106,7 +105,6 @@ export default {
             allSettings: {
                 darkMode: 'Dark Mode On/Off',
                 language: 'Idioma',
-                dayChange: 'Day Change',
                 dateFormat: 'Date Format',
                 notifications: 'Default Notification Preferences',
                 unit: 'Set Default Unit',

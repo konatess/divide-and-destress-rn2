@@ -1,8 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
-import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { StatusBar, StyleSheet, Text, View} from 'react-native';
-import { RectButton, ScrollView } from 'react-native-gesture-handler';
+import { RectButton } from 'react-native-gesture-handler';
 import AllButtons from '../constants/ButtonClass';
 import ButtonBar from '../components/ButtonBar';
 import CustModal from '../components/Modal';
@@ -17,16 +16,29 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [darkMode, setDarkMode] = React.useState(settings.darkmode);
 	const [language, setLanguage] = React.useState(settings.language);
 	const [dateFormat, setDateFormat] = React.useState(settings.dateFormat);
-	const [notifications, setNotifications] = React.useState(settings.notifications);
+	const [freq, setFreq] = React.useState(settings.notifications.freq);
+	const [selectedFreq, setSelectedFreq] = React.useState(settings.notifications.freq-1);
+	const [time, setTime] = React.useState(settings.notifications.time);
+	const [selectedHour, setSelectedHour] = React.useState(settings.notifications.time.slice(0,2));
+	const [selectedMin, setSelectedMin] = React.useState(settings.notifications.time.slice(3,6));
 	const [unit, setUnit] = React.useState(settings.unit);
-	const [allUnits, setAllUnits] = React.useState(settings.allUnits);
+	const [userUnits, setuserUnits] = React.useState(settings.userUnits);
 	// modal
+	const timeMsg = `${Strings[language].labels.frequency} ${Strings[language].frequencyWords[selectedFreq+1]}  
+${Strings[language].labels.time} ${selectedHour + ":" + selectedMin} \n
+${Strings[language].alerts.settings.notify}`;
+	React.useEffect(() => {
+		setModalMessage(timeMsg)
+	}, [selectedFreq, selectedHour, selectedMin]);
     const [modalVisible, setmodalVisible] = React.useState(false);
     const [modalMessage, setModalMessage] = React.useState();
 	const [modalButtons, setModalButtons] = React.useState([]);
+	const [modalPickers, setModalPickers] = React.useState([]);
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[language].buttons.cancel;
 	modalCancelbtn.onPress = () => setmodalVisible(false);
+	const modalDonebtn = AllButtons.done;
+	modalDonebtn._title = Strings[language].buttons.done;
 	const savebtn = AllButtons.save;
 	savebtn._title = Strings[language].buttons.save;
 	savebtn.onPress = () => {
@@ -39,15 +51,53 @@ export default function SettingsScreen( {route, navigation} ) {
 		navigation.navigate(Strings.routes.home); 
 	};
 	const dateFormatBtns = Strings.dateFormats.map((string) => {
-		return ({_title: string + '  ', _color: Colors.edit, _iconName: '', onPress: () => {
+		return ({_title: string, _color: Colors.edit, onPress: () => {
 			setmodalVisible(false);
 			setDateFormat(string);
 		}})
 	});
 	const languageBtns = Strings.languages.map((string) => {
-		return ({_title: string + '  ', _color: Colors.edit, _iconName: '', onPress: () => {
+		return ({_title: string, _color: Colors.edit, onPress: () => {
 			setmodalVisible(false);
 			setLanguage(string);
+		}})
+	});
+	const freqWords = Strings[language].frequencyWords.slice(1, Strings[language].frequencyWords.length)
+	const freqBtns = freqWords.map((string, index) => {
+		return ({_title: string, onPress: () => {
+			setSelectedFreq(index);
+		}})
+	});
+	const hours = [];
+	for (var i = 0; i < 24; i++) {
+		let s = i.toString();
+		hours.push(s.length > 1 ? s : "0" + s);
+	};
+	const hoursBtns = hours.map((string, index) => {
+		return ({_title: string, _color: Colors.edit, onPress: () => {
+			setSelectedHour(string);
+		}})
+	});
+	const minutes = [];
+	for (var i = 0; i <= 55; i = i+5) {
+		let s = i.toString();
+		minutes.push(s.length > 1 ? s : "0" + s);
+	};
+	const minutesBtns = minutes.map((string, index) => {
+		return ({_title: string, _color: Colors.edit, onPress: () => {
+			setSelectedMin(string);
+		}})
+	});
+	const unitBtns = Strings[language].units.concat(userUnits).map((string, index) => {
+		return ({_title: string, onPress: () => {
+			setmodalVisible(false)
+			setUnit(index);
+		}})
+	});
+	const editUnitBtns = [Strings[language].labels.new].concat(userUnits).map((string, index) => {
+		return ({_title: string, onPress: () => {
+			setmodalVisible(false)
+			
 		}})
 	});
 	buttons.darkMode._title = Strings[language].buttons.allSettings.darkMode;
@@ -58,22 +108,35 @@ export default function SettingsScreen( {route, navigation} ) {
 	buttons.language.onPress = () => {
 		setmodalVisible(true);
 		setModalMessage(Strings[language].alerts.settings.language);
-		languageBtns.push(modalCancelbtn);
-		setModalButtons(languageBtns);
+		setModalPickers([languageBtns]);
+		setModalButtons([modalCancelbtn]);
 	};
-	// buttons.dayChange._title = Strings[language].buttons.allSettings.dayChange;
-	// buttons.dayChange.onPress = () => console.log(settings.dayChange);
-	buttons.dateFormat._title = Strings[language].buttons.allSettings.dateFormat;
+	buttons.dateFormat._title = Strings[language].buttons.allSettings.dateFormat + ":     " + dateFormat;
 	buttons.dateFormat.onPress = () => {
 		setmodalVisible(true);
 		setModalMessage(Strings[language].alerts.settings.dateFormat);
-		dateFormatBtns.push(modalCancelbtn);
-		setModalButtons(dateFormatBtns);
+		setModalPickers([dateFormatBtns]);
+		setModalButtons([modalCancelbtn]);
 	};
 	buttons.notifications._title = Strings[language].buttons.allSettings.notifications;
-	buttons.notifications.onPress = () => console.log(settings.notifications);
-	buttons.defaultUnit._title = Strings[language].buttons.allSettings.unit;
-	buttons.defaultUnit.onPress = () => console.log(settings.unit);
+	buttons.notifications.onPress = () => {
+		modalDonebtn.onPress = () => {
+			setmodalVisible(false);
+			setTime(selectedHour + ":" + selectedMin);
+			setFreq(selectedFreq+1);
+		};
+		setmodalVisible(true);
+		setModalMessage(timeMsg);
+		setModalPickers([freqBtns, hoursBtns, minutesBtns]);
+		setModalButtons([modalCancelbtn, modalDonebtn]);
+	};
+	buttons.defaultUnit._title = Strings[language].buttons.allSettings.unit + ":     " + Strings[language].units.concat(userUnits)[unit];
+	buttons.defaultUnit.onPress = () => {
+		setmodalVisible(true);
+		setModalMessage(Strings[language].alerts.settings.defUnit);
+		setModalPickers([unitBtns]);
+		setModalButtons([modalCancelbtn]);
+	};
 	buttons.editUnit._title = Strings[language].buttons.allSettings.editUnit;
 	buttons.editUnit.onPress = () => console.log(settings.unit);
 	buttons.deleteAll._title = Strings[language].buttons.allSettings.deleteAll;
@@ -115,6 +178,7 @@ export default function SettingsScreen( {route, navigation} ) {
 			<CustModal 
 				visible={modalVisible} 
 				message={modalMessage} 
+				pickers={modalPickers}
 				buttons={modalButtons} 
 				darkmode={darkMode}
 				/>

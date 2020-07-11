@@ -214,7 +214,7 @@ export default function CreateScreen({ route, navigation}) {
                             setDateValue(date); 
                         }
                         else if (dateMode === 'time' && date !== undefined) {
-                            setTimeValue(Moment(date).format('h:mm a'));
+                            setTimeValue(Moment(date).format('HH:mm'));
                             setDateValue(date);
                         }
                     }}

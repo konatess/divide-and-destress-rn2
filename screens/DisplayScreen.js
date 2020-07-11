@@ -40,8 +40,7 @@ export default function DisplayScreen({ route, navigation }) {
             }
         };
         getPerDay();
-    }, [])
-    // const [days, setDays] = React.useState(getPerDay());
+    }, []);
     const deleteProj = async (projKey) => {
         await Storage.deleteProj(projKey);
         navigation.navigate(Strings.routes.home); 
