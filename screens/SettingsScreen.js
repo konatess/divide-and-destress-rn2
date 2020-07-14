@@ -24,16 +24,16 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [unit, setUnit] = React.useState(settings.unit);
 	const [userUnits, setuserUnits] = React.useState(settings.userUnits);
 	// modal
+    const [modalVisible, setmodalVisible] = React.useState(false);
+    const [modalMessage, setModalMessage] = React.useState();
+	const [modalButtons, setModalButtons] = React.useState([]);
+	const [modalPickers, setModalPickers] = React.useState([]);
 	const timeMsg = `${Strings[language].labels.frequency} ${Strings[language].frequencyWords[selectedFreq+1]}  
 ${Strings[language].labels.time} ${selectedHour + ":" + selectedMin} \n
 ${Strings[language].alerts.settings.notify}`;
 	React.useEffect(() => {
 		setModalMessage(timeMsg)
 	}, [selectedFreq, selectedHour, selectedMin]);
-    const [modalVisible, setmodalVisible] = React.useState(false);
-    const [modalMessage, setModalMessage] = React.useState();
-	const [modalButtons, setModalButtons] = React.useState([]);
-	const [modalPickers, setModalPickers] = React.useState([]);
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[language].buttons.cancel;
 	modalCancelbtn.onPress = () => setmodalVisible(false);
@@ -51,13 +51,13 @@ ${Strings[language].alerts.settings.notify}`;
 		navigation.navigate(Strings.routes.home); 
 	};
 	const dateFormatBtns = Strings.dateFormats.map((string) => {
-		return ({_title: string, _color: Colors.edit, onPress: () => {
+		return ({_title: string, onPress: () => {
 			setmodalVisible(false);
 			setDateFormat(string);
 		}})
 	});
 	const languageBtns = Strings.languages.map((string) => {
-		return ({_title: string, _color: Colors.edit, onPress: () => {
+		return ({_title: string, onPress: () => {
 			setmodalVisible(false);
 			setLanguage(string);
 		}})
@@ -88,13 +88,13 @@ ${Strings[language].alerts.settings.notify}`;
 			setSelectedMin(string);
 		}})
 	});
-	const unitBtns = Strings[language].units.concat(userUnits).map((string, index) => {
+	const unitBtns = Strings[language].units.concat(userUnits.s).map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setmodalVisible(false)
 			setUnit(index);
 		}})
 	});
-	const editUnitBtns = [Strings[language].labels.new].concat(userUnits).map((string, index) => {
+	const editUnitBtns = [Strings[language].labels.new].concat(userUnits.s).map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setmodalVisible(false)
 			
@@ -181,8 +181,7 @@ ${Strings[language].alerts.settings.notify}`;
 				pickers={modalPickers}
 				buttons={modalButtons} 
 				darkmode={darkMode}
-				/>
-			
+			/>
 			<ButtonBar buttons={[ cancelbtn, savebtn ]} />
 		</View>
 	);

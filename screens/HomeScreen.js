@@ -15,20 +15,36 @@ import Storage from '../storage/Async';
 export default function HomeScreen({ route, navigation }) {
 	const { settings } = route.params;
 	const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalMessage, setModalMessage] = React.useState();
+	const [modalPickers, setModalPickers] = React.useState([]);
 	const [projArr, setProjArr] = React.useState([])
 	const [titles, setTitles] = React.useState([]);
+	const [order, setOrder] = React.useState();
 	const settingsbtn = AllButtons.settings;
 	settingsbtn._title = Strings[settings.language].buttons.settings
 	settingsbtn.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings, knowntitles: titles, projects: projArr});
 	const orderbtn = AllButtons.order;
 	orderbtn._title = Strings[settings.language].buttons.order;
-	orderbtn.onPress = () => setModalVisible(true);
+	orderbtn.onPress = () => {
+		setModalVisible(true);
+		setModalMessage(Strings[settings.language].alerts.order);
+		setModalPickers([modalOrders])
+	};
 	const createbtn = AllButtons.create;
 	createbtn._title = Strings[settings.language].buttons.create;
 	createbtn.onPress = () => navigation.navigate(Strings.routes.create, {knowntitles: titles, settings: settings});
-	const modalDonebtn = AllButtons.done;
-	modalDonebtn._title = Strings[settings.language].buttons.done;
-	modalDonebtn.onPress = () => setModalVisible(false);
+	// const modalDonebtn = AllButtons.done;
+	// modalDonebtn._title = Strings[settings.language].buttons.done;
+	// modalDonebtn.onPress = () => setModalVisible(false);
+	const modalCancelbtn = AllButtons.cancel2;
+	modalCancelbtn._title = Strings[settings.language].buttons.cancel;
+	modalCancelbtn.onPress = () => setModalVisible(false);
+	const modalOrders = Strings[settings.language].orders.map((string, index) => {
+		return ({_title: string, onPress: () => {
+			setModalVisible(false);
+			setOrder(index);
+		}})
+	})
 	React.useEffect(() => {
 		const projFromStorage = async () => {
 			let storedProjArr = await Storage.getAllProj();
@@ -69,8 +85,9 @@ export default function HomeScreen({ route, navigation }) {
 			<ButtonBar buttons={[settingsbtn, orderbtn, createbtn]} />
 			<CustModal 
 				visible={modalVisible} 
-				message={"I am Groot! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
-				buttons={[ modalDonebtn ]}
+				message={modalMessage}
+				pickers={modalPickers}
+				buttons={[ modalCancelbtn ]}
 				darkmode={settings.darkmode}
 				>
 			</CustModal>

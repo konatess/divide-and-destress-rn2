@@ -26,8 +26,8 @@ export default ({visible, message, pickers, buttons, darkmode}) => {
 				{pickers && <View style={styles.pickerView}>
 					<View style={styles.row}>
 						{pickers.map((picker, index) => {
-							return (<ScrollView>
-								{picker.map((unit, index) => {
+							return (<ScrollView key={"picker" + index}>
+								{picker.map((unit) => {
 									return (<TouchableHighlight style={styles.pickerButton} onPress={unit.onPress} key={unit._title}>
 												<Text style={[styles.optionText, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}>{unit._title}</Text>
 										</TouchableHighlight>
@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: 22
     },
     modalView: {
 		margin: 20,

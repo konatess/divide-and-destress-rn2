@@ -68,6 +68,7 @@ export default {
         units: ['word', 'page', 'chapter'],
         unitPlurals: ['words', 'pages', 'chapters'],
         frequencyWords: ['default', 'daily', 'every 2 days', 'every 3 days', 'every 4 days', 'every 5 days', 'every 6 days', 'weekly'],
+        orders: ['Title', 'Due Next'],
         alerts: {
             title: {
                 exists: 'Title already exists',
@@ -79,6 +80,12 @@ export default {
             charTitle: 'Title can only contain letters, numbers, spaces, apostrophes, dashes and underscores.',
             charTags: 'Tags can only contain letters, numbers, spaces, apostrophes, dashes and underscores. Use commas to separate.',
             confirmDelete: 'Are you sure you want to delete this project?',
+            order: 'Select below to reorder your projects:',
+            create_edit: {
+                unit: 'Choose a unit below. You can add your own units in Settings.',
+                time: 'Choose a time of day to be notified. You can edit the default time in Settings.',
+                freq: 'Choose how often to receive notifications. You can edit the default frequency in Settings.'
+            },
             settings: {
                 language: 'Please select a language below. \n We would love to add more languages. If you would like to translate, please use the Feedback button to send us an email.',
                 dateFormat: 'Please select a date format below:',

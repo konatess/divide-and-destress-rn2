@@ -18,7 +18,10 @@ export default {
                         time: '20:00'
                     },
                     unit: 1,
-                    userUnits: [],
+                    userUnits: {
+                        s: [],
+                        p: []
+                    },
                 };
             }
         }
