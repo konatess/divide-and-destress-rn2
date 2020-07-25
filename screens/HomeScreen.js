@@ -87,6 +87,7 @@ export default function HomeScreen({ route, navigation }) {
 				visible={modalVisible} 
 				message={modalMessage}
 				pickers={modalPickers}
+				inputs={[]}
 				buttons={[ modalCancelbtn ]}
 				darkmode={settings.darkmode}
 				>

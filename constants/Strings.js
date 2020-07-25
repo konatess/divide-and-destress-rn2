@@ -61,6 +61,8 @@ export default {
             dueToday: 'This project is due today',
             overDue: 'This project is OVERDUE',
             new: 'NEW',
+            sUnit: 'Singular: ',
+            pUnit: 'Plural: ',
         },
         placeholder: {
             title: 'Title of your project...',
@@ -94,6 +96,7 @@ export default {
                 dateFormat: 'Please select a date format below:',
                 notify: 'These notification settings are used by all projects set to default. Select a frequency below:',
                 defUnit: 'Choose a default unit for your projects:',
+                addUnit: 'Enter a singlar and plural form for your unit:',
                 editUnit:'',
                 deleteAll: 'Are you sure you want to delete all of your projects? This cannot be undone.',
             }

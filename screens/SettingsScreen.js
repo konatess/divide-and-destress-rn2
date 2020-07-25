@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import { StatusBar, StyleSheet, Text, View} from 'react-native';
+import { Modal, StatusBar, StyleSheet, Text, View} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AllButtons from '../constants/ButtonClass';
@@ -22,6 +22,8 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [time, setTime] = React.useState(settings.notifications.time);
 	const [unit, setUnit] = React.useState(settings.unit);
 	const [userUnits, setuserUnits] = React.useState(settings.userUnits);
+	const [singUnit, setSingUnit] = React.useState('');
+	const [pluUnit, setPluUnit] = React.useState('');
 	// time picker
 	const [showDate, setShowDate] = React.useState(false);
 	// modal
@@ -29,6 +31,8 @@ export default function SettingsScreen( {route, navigation} ) {
     const [modalMessage, setModalMessage] = React.useState();
 	const [modalButtons, setModalButtons] = React.useState([]);
 	const [modalPickers, setModalPickers] = React.useState([]);
+	const [modalInputs, setModalInputs] = React.useState([]);
+	const [donePush, setDonePush] = React.useState(0);
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[language].buttons.cancel;
 	modalCancelbtn.onPress = () => setmodalVisible(false);
@@ -76,6 +80,23 @@ export default function SettingsScreen( {route, navigation} ) {
 			
 		}})
 	});
+	React.useEffect(() => {
+		setTimeout(() => {
+			console.log(singUnit);
+			console.log(pluUnit);
+			if (singUnit && pluUnit) {
+				let unitLists = userUnits;
+				unitLists.s.push(singUnit);
+				unitLists.p.push(pluUnit);
+				setSingUnit('');
+				setPluUnit('');
+				setuserUnits(unitLists);
+			}
+			else {
+				console.log('failed!')
+			}
+		}, 500);
+	}, [donePush]);
 	// buttons.darkMode._title = Strings[language].buttons.allSettings.darkMode;
 	// buttons.darkMode.onPress = () => {
 	// 	setDarkMode(!darkMode);
@@ -86,6 +107,7 @@ export default function SettingsScreen( {route, navigation} ) {
 		setModalMessage(Strings[language].alerts.settings.language);
 		setModalPickers([languageBtns]);
 		setModalButtons([modalCancelbtn]);
+		setModalInputs([]);
 	};
 	buttons.dateFormat._title = Strings[language].buttons.allSettings.dateFormat + dateFormat;
 	buttons.dateFormat.onPress = () => {
@@ -93,6 +115,7 @@ export default function SettingsScreen( {route, navigation} ) {
 		setModalMessage(Strings[language].alerts.settings.dateFormat);
 		setModalPickers([dateFormatBtns]);
 		setModalButtons([modalCancelbtn]);
+		setModalInputs([]);
 	};
 	buttons.freq._title = Strings[language].buttons.allSettings.freq + Strings[language].frequencyWords[freq];
 	buttons.freq.onPress = () => {
@@ -100,6 +123,7 @@ export default function SettingsScreen( {route, navigation} ) {
 		setModalMessage(Strings[language].alerts.settings.notify);
 		setModalPickers([freqBtns]);
 		setModalButtons([modalCancelbtn]);
+		setModalInputs([]);
 	};
 	buttons.time._title = Strings[language].buttons.allSettings.time + time;
 	buttons.time.onPress = () => {
@@ -111,11 +135,34 @@ export default function SettingsScreen( {route, navigation} ) {
 		setModalMessage(Strings[language].alerts.settings.defUnit);
 		setModalPickers([unitBtns]);
 		setModalButtons([modalCancelbtn]);
+		setModalInputs([]);
 	};
 	buttons.editUnit._title = Strings[language].buttons.allSettings.editUnit;
-	buttons.editUnit.onPress = () => console.log(settings.unit);
+	buttons.editUnit.onPress = () => {
+		setmodalVisible(true);
+		modalDonebtn.onPress = () => {
+			setmodalVisible(false);
+			setDonePush(donePush + 1);
+		};
+		setModalMessage(Strings[language].alerts.settings.addUnit);
+		setModalPickers([]);
+		setModalButtons([modalCancelbtn, modalDonebtn]);
+		setModalInputs([
+			{
+				label: Strings[settings.language].labels.sUnit,
+				placeholder: Strings[settings.language].units[1],
+				// onChange: text => setSingUnit(text)
+				onChange: text => setSingUnit(text)
+			},
+			{
+				label: Strings[settings.language].labels.pUnit,
+				placeholder: Strings[settings.language].unitPlurals[1],
+				onChange: text => setPluUnit(text)
+			},
+		])
+	};
 	buttons.deleteAll._title = Strings[language].buttons.allSettings.deleteAll;
-	buttons.deleteAll.onPress = () => console.log('clicked Delete All');
+	buttons.deleteAll.onPress = () => console.log(singUnit + ' ' + pluUnit);
 	buttons.feedback._title = Strings[language].buttons.allSettings.feedback;
 	buttons.feedback.onPress = () => console.log('clicked Feedback');
 	const buttonsArr = [
@@ -156,6 +203,7 @@ export default function SettingsScreen( {route, navigation} ) {
 				visible={modalVisible} 
 				message={modalMessage} 
 				pickers={modalPickers}
+				inputs={modalInputs}
 				buttons={modalButtons} 
 				darkmode={darkMode}
 			/>
@@ -175,28 +223,47 @@ export default function SettingsScreen( {route, navigation} ) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-	flex: 1,
-	paddingTop: 30
-  },
-  contentContainer: {
-    paddingTop: 15,
-  },
-  optionIconContainer: {
-	marginRight: 12,
-  },
-  option: {
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: 0,
-  },
-  lastOption: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  optionText: {
-    fontSize: 15,
-    alignSelf: 'flex-start',
-    marginTop: 1,
-  },
+  	container: {
+		flex: 1,
+		paddingTop: 30
+  	},
+	contentContainer: {
+		paddingTop: 15,
+	},
+	optionIconContainer: {
+		marginRight: 12,
+	},
+	option: {
+		paddingHorizontal: 15,
+		paddingVertical: 15,
+		borderWidth: StyleSheet.hairlineWidth,
+		borderBottomWidth: 0,
+	},
+	lastOption: {
+		borderBottomWidth: StyleSheet.hairlineWidth,
+	},
+	optionText: {
+		fontSize: 15,
+		alignSelf: 'flex-start',
+		marginTop: 1,
+	},
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	modalView: {
+		margin: 20,
+		borderRadius: 20,
+		padding: 30,
+		alignItems: "center",
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+		elevation: 5
+	},
 });

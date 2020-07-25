@@ -132,6 +132,7 @@ export default function EditScreen({ route, navigation }) {
                 visible={modalVisible} 
                 message={modalMessage} 
 				pickers={modalPickers}
+				inputs={[]}
                 buttons={modalButtons} 
                 darkmode={settings.darkmode}
             />
@@ -230,7 +231,7 @@ export default function EditScreen({ route, navigation }) {
                     <Text style={[styles.labelText, {paddingLeft: 5}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}
-                        value={Strings[language].frequencyWords[freqValue]}
+                        value={Strings[settings.language].frequencyWords[freqValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
                             setModalButtons([modalcancelbtn]);

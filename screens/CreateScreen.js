@@ -127,6 +127,7 @@ export default function CreateScreen({ route, navigation}) {
                 visible={modalVisible} 
                 message={modalMessage} 
 				pickers={modalPickers}
+				inputs={[]}
                 buttons={modalButtons} 
                 darkmode={settings.darkmode}
             />

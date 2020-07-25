@@ -43,6 +43,7 @@ export default function DisplayScreen({ route, navigation }) {
                 .replace(/freq/g, Strings[settings.language].frequencyWords[project._frequency || settings.notifications.freq]))
             }
         };
+        getPerDay();
     }, []);
     const deleteProj = async (projKey) => {
         await Storage.deleteProj(projKey);
@@ -91,14 +92,12 @@ export default function DisplayScreen({ route, navigation }) {
                 <Text style={styles.labelText}>
                     {Strings[settings.language].labels.startDate + Moment(project._startDate).format(settings.dateFormat)}
                 </Text>
-                <View style={styles.row}>
-                    <Text style={styles.labelText}>
-                        {Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._startUnit}
-                    </Text>
-                    <Text style={styles.labelText}>
-                        {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._endUnit}
-                    </Text>
-                </View> 
+                <Text style={styles.labelText}>
+                    {Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._startUnit}
+                </Text>
+                <Text style={styles.labelText}>
+                    {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._endUnit}
+                </Text>
                 <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings[settings.language].labels.time + '  ' + project._time}</Text>
