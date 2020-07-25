@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { 
     Keyboard, 
-    Picker, 
     StyleSheet, 
     Text, 
     TextInput, 
@@ -16,7 +15,7 @@ import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass';
 import Storage from '../storage/Async';
-import Moment from 'moment'
+import Moment from 'moment';
 
 export default function CreateScreen({ route, navigation}) {
     const { knowntitles } = route.params
@@ -34,8 +33,6 @@ export default function CreateScreen({ route, navigation}) {
     const [dateValue, setDateValue] = React.useState(Moment().add(7, 'days').toDate());
     // time picker
     const [timeValue, setTimeValue] = React.useState('default');
-    const [selectedHour, setSelectedHour] = React.useState(settings.notifications.time.slice(0,2));
-	const [selectedMin, setSelectedMin] = React.useState(settings.notifications.time.slice(3,6));
     // Frequency picker
     const [freqValue, setFreqValue] = React.useState(0);
     // the following state values are purely for retrieval
@@ -110,7 +107,7 @@ export default function CreateScreen({ route, navigation}) {
     // modal picker buttons
     const unitBtns = Strings[settings.language].unitPlurals.concat(settings.userUnits.p).map((string, index) => {
 		return ({_title: string, onPress: () => {
-			setUnitValue(index);
+            setUnitValue(index);
 			setmodalVisible(false);
 		}})
 	});
@@ -118,26 +115,6 @@ export default function CreateScreen({ route, navigation}) {
 		return ({_title: string, onPress: () => {
 			setFreqValue(index);
 			setmodalVisible(false);
-		}})
-	});
-	const hours = [];
-	for (var i = 0; i < 24; i++) {
-		let s = i.toString();
-		hours.push(s.length > 1 ? s : "0" + s);
-	};
-	const hoursBtns = hours.map((string, index) => {
-		return ({_title: string, _color: Colors.edit, onPress: () => {
-			setSelectedHour(string);
-		}})
-	});
-	const minutes = [];
-	for (var i = 0; i <= 55; i = i+5) {
-		let s = i.toString();
-		minutes.push(s.length > 1 ? s : "0" + s);
-	};
-	const minutesBtns = minutes.map((string, index) => {
-		return ({_title: string, _color: Colors.edit, onPress: () => {
-			setSelectedMin(string);
 		}})
 	});
     const getTextColor = () => {
@@ -245,17 +222,6 @@ export default function CreateScreen({ route, navigation}) {
                             setmodalVisible(true);
                         }}
                     />
-                    {/* <Picker 
-                        selectedValue={freqValue}
-                        style={{ flexGrow: 1 }}
-                        onValueChange={(itemValue, itemIndex) => setFreqValue(itemValue)}
-                    >
-                        {Strings[settings.language].frequencyWords.map((unit, index) => {
-                            return (
-                                <Picker.Item key={index} label={unit} value={index} />
-                            )
-                        })}
-                    </Picker> */}
                 </View>
                 { showDate && <DateTimePicker 
                     value={dateValue}
@@ -268,7 +234,7 @@ export default function CreateScreen({ route, navigation}) {
                             setDateValue(date); 
                         }
                         else if (dateMode === 'time' && date !== undefined) {
-                            setTimeValue(Moment(date).format('HH:mm'));
+                            setTimeValue(Moment(date).format(Strings.timeFormat));
                             setDateValue(date);
                         }
                     }}

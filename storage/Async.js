@@ -15,7 +15,7 @@ export default {
                     dateFormat: 'MM/DD',
                     notifications: {
                         freq: 1,
-                        time: '20:00'
+                        time: '8:00 pm'
                     },
                     unit: 1,
                     userUnits: {

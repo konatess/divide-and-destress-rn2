@@ -2,12 +2,14 @@ import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
 import { StatusBar, StyleSheet, Text, View} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import AllButtons from '../constants/ButtonClass';
 import ButtonBar from '../components/ButtonBar';
 import CustModal from '../components/Modal';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import Storage from '../storage/Async';
+import Moment from 'moment';
 
 export default function SettingsScreen( {route, navigation} ) {
 	const {settings} = route.params
@@ -17,23 +19,16 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [language, setLanguage] = React.useState(settings.language);
 	const [dateFormat, setDateFormat] = React.useState(settings.dateFormat);
 	const [freq, setFreq] = React.useState(settings.notifications.freq);
-	const [selectedFreq, setSelectedFreq] = React.useState(settings.notifications.freq-1);
 	const [time, setTime] = React.useState(settings.notifications.time);
-	const [selectedHour, setSelectedHour] = React.useState(settings.notifications.time.slice(0,2));
-	const [selectedMin, setSelectedMin] = React.useState(settings.notifications.time.slice(3,6));
 	const [unit, setUnit] = React.useState(settings.unit);
 	const [userUnits, setuserUnits] = React.useState(settings.userUnits);
+	// time picker
+	const [showDate, setShowDate] = React.useState(false);
 	// modal
     const [modalVisible, setmodalVisible] = React.useState(false);
     const [modalMessage, setModalMessage] = React.useState();
 	const [modalButtons, setModalButtons] = React.useState([]);
 	const [modalPickers, setModalPickers] = React.useState([]);
-	const timeMsg = `${Strings[language].labels.frequency} ${Strings[language].frequencyWords[selectedFreq+1]}  
-${Strings[language].labels.time} ${selectedHour + ":" + selectedMin} \n
-${Strings[language].alerts.settings.notify}`;
-	React.useEffect(() => {
-		setModalMessage(timeMsg)
-	}, [selectedFreq, selectedHour, selectedMin]);
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[language].buttons.cancel;
 	modalCancelbtn.onPress = () => setmodalVisible(false);
@@ -42,7 +37,7 @@ ${Strings[language].alerts.settings.notify}`;
 	const savebtn = AllButtons.save;
 	savebtn._title = Strings[language].buttons.save;
 	savebtn.onPress = () => {
-		settings.darkmode = darkMode;
+		// settings.darkmode = darkMode;
 		console.log(settings);
 	};
 	const cancelbtn = AllButtons.cancel;
@@ -65,27 +60,8 @@ ${Strings[language].alerts.settings.notify}`;
 	const freqWords = Strings[language].frequencyWords.slice(1, Strings[language].frequencyWords.length)
 	const freqBtns = freqWords.map((string, index) => {
 		return ({_title: string, onPress: () => {
-			setSelectedFreq(index);
-		}})
-	});
-	const hours = [];
-	for (var i = 0; i < 24; i++) {
-		let s = i.toString();
-		hours.push(s.length > 1 ? s : "0" + s);
-	};
-	const hoursBtns = hours.map((string, index) => {
-		return ({_title: string, _color: Colors.edit, onPress: () => {
-			setSelectedHour(string);
-		}})
-	});
-	const minutes = [];
-	for (var i = 0; i <= 55; i = i+5) {
-		let s = i.toString();
-		minutes.push(s.length > 1 ? s : "0" + s);
-	};
-	const minutesBtns = minutes.map((string, index) => {
-		return ({_title: string, _color: Colors.edit, onPress: () => {
-			setSelectedMin(string);
+			setFreq(index + 1);
+			setmodalVisible(false)
 		}})
 	});
 	const unitBtns = Strings[language].units.concat(userUnits.s).map((string, index) => {
@@ -100,10 +76,10 @@ ${Strings[language].alerts.settings.notify}`;
 			
 		}})
 	});
-	buttons.darkMode._title = Strings[language].buttons.allSettings.darkMode;
-	buttons.darkMode.onPress = () => {
-		setDarkMode(!darkMode);
-	}
+	// buttons.darkMode._title = Strings[language].buttons.allSettings.darkMode;
+	// buttons.darkMode.onPress = () => {
+	// 	setDarkMode(!darkMode);
+	// }
 	buttons.language._title = Strings[language].buttons.allSettings.language;
 	buttons.language.onPress = () => {
 		setmodalVisible(true);
@@ -111,26 +87,25 @@ ${Strings[language].alerts.settings.notify}`;
 		setModalPickers([languageBtns]);
 		setModalButtons([modalCancelbtn]);
 	};
-	buttons.dateFormat._title = Strings[language].buttons.allSettings.dateFormat + ":     " + dateFormat;
+	buttons.dateFormat._title = Strings[language].buttons.allSettings.dateFormat + dateFormat;
 	buttons.dateFormat.onPress = () => {
 		setmodalVisible(true);
 		setModalMessage(Strings[language].alerts.settings.dateFormat);
 		setModalPickers([dateFormatBtns]);
 		setModalButtons([modalCancelbtn]);
 	};
-	buttons.notifications._title = Strings[language].buttons.allSettings.notifications;
-	buttons.notifications.onPress = () => {
-		modalDonebtn.onPress = () => {
-			setmodalVisible(false);
-			setTime(selectedHour + ":" + selectedMin);
-			setFreq(selectedFreq+1);
-		};
+	buttons.freq._title = Strings[language].buttons.allSettings.freq + Strings[language].frequencyWords[freq];
+	buttons.freq.onPress = () => {
 		setmodalVisible(true);
-		setModalMessage(timeMsg);
-		setModalPickers([freqBtns, hoursBtns, minutesBtns]);
-		setModalButtons([modalCancelbtn, modalDonebtn]);
+		setModalMessage(Strings[language].alerts.settings.notify);
+		setModalPickers([freqBtns]);
+		setModalButtons([modalCancelbtn]);
 	};
-	buttons.defaultUnit._title = Strings[language].buttons.allSettings.unit + ":     " + Strings[language].units.concat(userUnits)[unit];
+	buttons.time._title = Strings[language].buttons.allSettings.time + time;
+	buttons.time.onPress = () => {
+		setShowDate(true);
+	};
+	buttons.defaultUnit._title = Strings[language].buttons.allSettings.unit + Strings[language].units.concat(userUnits)[unit];
 	buttons.defaultUnit.onPress = () => {
 		setmodalVisible(true);
 		setModalMessage(Strings[language].alerts.settings.defUnit);
@@ -144,10 +119,12 @@ ${Strings[language].alerts.settings.notify}`;
 	buttons.feedback._title = Strings[language].buttons.allSettings.feedback;
 	buttons.feedback.onPress = () => console.log('clicked Feedback');
 	const buttonsArr = [
-		buttons.darkMode,
+		// buttons.darkMode,
 		buttons.language,
         buttons.dateFormat,
-        buttons.notifications,
+		// buttons.notifications,
+		buttons.freq,
+		buttons.time,
 		buttons.defaultUnit,
 		buttons.editUnit,
         buttons.deleteAll,
@@ -182,6 +159,16 @@ ${Strings[language].alerts.settings.notify}`;
 				buttons={modalButtons} 
 				darkmode={darkMode}
 			/>
+			{ showDate && <DateTimePicker 
+				value={Moment(time, Strings.timeFormat).toDate()}
+				mode={'time'}
+				onChange={(event, date) => {
+					setShowDate(false);
+					if (date !== undefined) {
+						setTime(Moment(date).format(Strings.timeFormat));
+					}
+				}}
+			/>}
 			<ButtonBar buttons={[ cancelbtn, savebtn ]} />
 		</View>
 	);
@@ -190,7 +177,7 @@ ${Strings[language].alerts.settings.notify}`;
 const styles = StyleSheet.create({
   container: {
 	flex: 1,
-	paddingTop: 10
+	paddingTop: 30
   },
   contentContainer: {
     paddingTop: 15,

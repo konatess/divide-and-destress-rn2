@@ -1,5 +1,4 @@
 import Colors from './Colors';
-import Strings from './Strings';
 
 class ButtonObj {
     constructor(t, c, i) {
@@ -24,8 +23,10 @@ const darkMode= new ButtonObj('', Colors.done, 'md-contrast');
 const language= new ButtonObj('', Colors.done, 'md-globe');
 const dateFormat= new ButtonObj('', Colors.done, 'md-calendar');
 const notifications= new ButtonObj('', Colors.done, 'md-notifications');
+const freq= new ButtonObj('', Colors.done, 'md-notifications');
+const time= new ButtonObj('', Colors.done, 'md-notifications');
 const unit= new ButtonObj('', Colors.done, 'md-list');
-const editUnit= new ButtonObj('', Colors.edit, 'md-list');
+const editUnit= new ButtonObj('', Colors.edit, 'md-add');
 const deleteAll= new ButtonObj('', Colors.done, 'md-trash');
 const feedback= new ButtonObj('', Colors.done, 'md-chatbubbles');
 
@@ -47,6 +48,8 @@ export default {
         language: language,
         dateFormat: dateFormat,
         notifications: notifications,
+        freq: freq,
+        time: time,
         defaultUnit: unit,
         editUnit: editUnit,
         deleteAll: deleteAll,

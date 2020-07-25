@@ -28,6 +28,7 @@ export default {
     maintext: '#111',
     modalbackground: '#eee',
     settingsIcons: '#888',
+    transparent: '#0000',
     toggle: {
         trackfalse: '#888', 
         tracktrue: '#006EC3', // '#0090FF',

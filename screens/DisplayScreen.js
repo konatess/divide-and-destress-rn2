@@ -33,13 +33,16 @@ export default function DisplayScreen({ route, navigation }) {
             } else {
                 // days/frequency or default frequency
                 let periods = days/(project._frequency || settings.notifications.freq);
+                // number per day
+                let number = (units/periods).toFixed(1);
+                // singular vs plural
+                let unitLabel = (number === 1) ? "units" : "unitPlurals";
                 // units remaining/freq periods remaining
-                return setPerOrDue(Strings[settings.language].labels.perDay.replace(/unit/g, Strings[settings.language].units[project._unitName])
-                .replace(/num/g, (units/periods).toFixed(1))
+                return setPerOrDue(Strings[settings.language].labels.perDay.replace(/unit/g, Strings[settings.language][unitLabel][project._unitName])
+                .replace(/num/g, number)
                 .replace(/freq/g, Strings[settings.language].frequencyWords[project._frequency || settings.notifications.freq]))
             }
         };
-        getPerDay();
     }, []);
     const deleteProj = async (projKey) => {
         await Storage.deleteProj(projKey);
@@ -95,7 +98,7 @@ export default function DisplayScreen({ route, navigation }) {
                     <Text style={styles.labelText}>
                         {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._endUnit}
                     </Text>
-                </View>
+                </View> 
                 <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings[settings.language].labels.time + '  ' + project._time}</Text>
