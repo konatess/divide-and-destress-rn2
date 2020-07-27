@@ -15,6 +15,10 @@ export default {
     languages: ['English', 'Español',],
     dateFormats: ['MM/DD', 'DD/MM', 'MM-DD', 'DD-MM', 'YY/MM/DD', 'DD/MM/YY', 'MM/DD/YY', 'YY-MM-DD', 'DD-MM-YY', 'MM-DD-YY'],
     timeFormat: 'h:mm a',
+    regex: {
+        titles: /[]/,
+        units: /[^A-Za-z ]/,
+    },
     English: {
         buttons: {
             home: 'Home',
@@ -98,6 +102,8 @@ export default {
                 defUnit: 'Choose a default unit for your projects:',
                 addUnit: 'Enter a singlar and plural form for your unit:',
                 editUnit:'',
+                unitAllow: 'Unit names can only contain letters and spaces!',
+                unitExists: '"unit" already exists!',
                 deleteAll: 'Are you sure you want to delete all of your projects? This cannot be undone.',
             }
         },

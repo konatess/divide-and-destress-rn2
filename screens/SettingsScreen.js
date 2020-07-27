@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import { Modal, StatusBar, StyleSheet, Text, View} from 'react-native';
+import { StatusBar, StyleSheet, Text, View} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AllButtons from '../constants/ButtonClass';
@@ -32,10 +32,14 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [modalButtons, setModalButtons] = React.useState([]);
 	const [modalPickers, setModalPickers] = React.useState([]);
 	const [modalInputs, setModalInputs] = React.useState([]);
-	const [donePush, setDonePush] = React.useState(0);
+	const [donePush, setDonePush] = React.useState(false);
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[language].buttons.cancel;
-	modalCancelbtn.onPress = () => setmodalVisible(false);
+	modalCancelbtn.onPress = () => {
+		setmodalVisible(false)
+		setSingUnit('');
+		setPluUnit('');
+	};
 	const modalDonebtn = AllButtons.done;
 	modalDonebtn._title = Strings[language].buttons.done;
 	const savebtn = AllButtons.save;
@@ -81,22 +85,25 @@ export default function SettingsScreen( {route, navigation} ) {
 		}})
 	});
 	React.useEffect(() => {
-		setTimeout(() => {
-			console.log(singUnit);
-			console.log(pluUnit);
+		const updateUserUnits = () => {
+			let sUnits = userUnits.s.slice()
+			let pUnits = userUnits.p.slice()
 			if (singUnit && pluUnit) {
-				let unitLists = userUnits;
-				unitLists.s.push(singUnit);
-				unitLists.p.push(pluUnit);
+				sUnits.push(singUnit);
+				pUnits.push(pluUnit);
 				setSingUnit('');
 				setPluUnit('');
-				setuserUnits(unitLists);
+				setuserUnits({s: sUnits, p: pUnits});
+				setDonePush(false);
 			}
-			else {
-				console.log('failed!')
-			}
-		}, 500);
+		}
+		updateUserUnits();
 	}, [donePush]);
+	React.useEffect(() => {
+		if (singUnit && pluUnit) {
+			setModalButtons([modalCancelbtn, modalDonebtn]);
+		}
+	}, [singUnit, pluUnit])
 	// buttons.darkMode._title = Strings[language].buttons.allSettings.darkMode;
 	// buttons.darkMode.onPress = () => {
 	// 	setDarkMode(!darkMode);
@@ -142,22 +149,54 @@ export default function SettingsScreen( {route, navigation} ) {
 		setmodalVisible(true);
 		modalDonebtn.onPress = () => {
 			setmodalVisible(false);
-			setDonePush(donePush + 1);
+			setDonePush(true);
 		};
 		setModalMessage(Strings[language].alerts.settings.addUnit);
 		setModalPickers([]);
-		setModalButtons([modalCancelbtn, modalDonebtn]);
+		setModalButtons([modalCancelbtn]);
 		setModalInputs([
 			{
 				label: Strings[settings.language].labels.sUnit,
 				placeholder: Strings[settings.language].units[1],
-				// onChange: text => setSingUnit(text)
-				onChange: text => setSingUnit(text)
+				onChange: text => {
+					let trimmed = text.trim();
+					if (trimmed.length === 0) {
+						setModalButtons([modalCancelbtn]);
+						setSingUnit('');
+					}
+					else if (Strings.regex.units.test(trimmed) ) {
+						setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + Strings[language].alerts.settings.unitAllow);
+						setModalButtons([modalCancelbtn]);
+						setSingUnit('');
+					}
+					else if (userUnits.s.includes(trimmed)) {
+						setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + (Strings[language].alerts.settings.unitExists.replace(/unit/g, trimmed)));
+						setModalButtons([modalCancelbtn]);
+						setSingUnit('');
+					}
+					else {
+						setSingUnit(trimmed)
+					}
+				}
 			},
 			{
 				label: Strings[settings.language].labels.pUnit,
 				placeholder: Strings[settings.language].unitPlurals[1],
-				onChange: text => setPluUnit(text)
+				onChange: text => {
+					let trimmed = text.trim();
+					if (trimmed.length === 0) {
+						setModalButtons([modalCancelbtn]);
+						setPluUnit('');
+					}
+					else if (Strings.regex.units.test(trimmed) ) {
+						setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + Strings[language].alerts.settings.unitAllow);
+						setModalButtons([modalCancelbtn]);
+						setPluUnit('');
+					}
+					else {
+						setPluUnit(trimmed)
+					}
+				}
 			},
 		])
 	};
@@ -169,7 +208,6 @@ export default function SettingsScreen( {route, navigation} ) {
 		// buttons.darkMode,
 		buttons.language,
         buttons.dateFormat,
-		// buttons.notifications,
 		buttons.freq,
 		buttons.time,
 		buttons.defaultUnit,

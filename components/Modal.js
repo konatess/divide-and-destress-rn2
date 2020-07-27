@@ -35,13 +35,14 @@ export default ({visible, message, pickers, inputs, buttons, darkmode}) => {
 							})}
 						</View>
 					</View>}
-					{(inputs.length > 0) && inputs.map((unit) => {
+					{(inputs.length > 0) && inputs.map((unit, index) => {
 							return ( <View style={styles.row}>
 								<Text style={[styles.labelText, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]} key={unit.label}>{unit.label}</Text>
 								<TextInput
 									key={unit.label + '-input'}
 									style={[styles.inputField, {marginBottom: 10}, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}
 									placeholder={unit.placeholder}
+									autoFocus={!index}
 									autoCapitalize={'none'}
 									onChangeText={unit.onChange}
 								/>
