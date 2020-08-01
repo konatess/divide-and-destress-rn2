@@ -40,6 +40,7 @@ export default ({visible, message, pickers, inputs, buttons, darkmode}) => {
 								<Text style={[styles.labelText, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]} key={unit.label}>{unit.label}</Text>
 								<TextInput
 									key={unit.label + '-input'}
+									keyboardType={unit.keyboardType || 'default'}
 									style={[styles.inputField, {marginBottom: 10}, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}
 									placeholder={unit.placeholder}
 									autoFocus={!index}
@@ -52,8 +53,8 @@ export default ({visible, message, pickers, inputs, buttons, darkmode}) => {
 						{buttons.map((unit, index) => {
 							return (
 								<TouchableHighlight
-									key={index}
-									style={{ ...styles.openButton, backgroundColor: unit._color}}
+									key={'mb-' + index}
+									style={[styles.openButton, { backgroundColor: unit._color }]}
 									onPress={unit.onPress}
 									>
 									

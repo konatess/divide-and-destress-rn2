@@ -15,6 +15,7 @@ const trash= new ButtonObj('', Colors.delete, 'md-trash');
 const trash2= new ButtonObj('', Colors.delete, 'md-trash');
 const create= new ButtonObj('', Colors.create, 'md-add');
 const edit= new ButtonObj('', Colors.edit, 'md-create');
+const set= new ButtonObj('', Colors.edit, 'md-create');
 const cancel= new ButtonObj('', Colors.cancel, 'md-close');
 const cancel2= new ButtonObj('', Colors.cancel, 'md-close');
 const done= new ButtonObj('', Colors.done, 'md-checkmark');
@@ -38,6 +39,7 @@ export default {
     delete2: trash2,
     create: create,
     edit: edit,
+    set: set,
     save: save,
     cancel: cancel,
     cancel2: cancel2,
