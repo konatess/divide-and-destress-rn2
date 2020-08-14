@@ -11,7 +11,7 @@ import {
 import Colors from '../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 
-export default ({visible, message, pickers, inputs, buttons, darkmode}) => {
+export default ({visible, message, pickers, inputs, buttons, vertical, darkmode}) => {
     return (
         <Modal
 			animationType="slide"
@@ -43,13 +43,14 @@ export default ({visible, message, pickers, inputs, buttons, darkmode}) => {
 									keyboardType={unit.keyboardType || 'default'}
 									style={[styles.inputField, {marginBottom: 10}, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}
 									placeholder={unit.placeholder}
+									defaultValue={unit.default || ''}
 									autoFocus={!index}
 									autoCapitalize={'none'}
 									onChangeText={unit.onChange}
 								/>
 							</View>	)})
 					}
-					<View style={styles.row}>
+					<View style={vertical ? styles.vertical : styles.row}>
 						{buttons.map((unit, index) => {
 							return (
 								<TouchableHighlight
@@ -134,7 +135,10 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row', 
         justifyContent: 'space-around',
-    },
+	},
+	vertical: {
+		justifyContent: 'flex-start'
+	},
     labelText: {
         fontSize: 20,
         paddingRight: 5,

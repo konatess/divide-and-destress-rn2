@@ -13,6 +13,7 @@ import Moment from 'moment';
 
 export default function SettingsScreen( {route, navigation} ) {
 	const {settings} = route.params
+	const {projects} = route.params
 	const buttons = AllButtons.settingsList
 	// settings object
 	const [darkMode, setDarkMode] = React.useState(settings.darkmode);
@@ -21,6 +22,8 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [freq, setFreq] = React.useState(settings.notifications.freq);
 	const [time, setTime] = React.useState(settings.notifications.time);
 	const [unit, setUnit] = React.useState(settings.unit);
+	const [editUnit, setEditUnit] = React.useState(settings.unit);
+	const [deletableUnits, setDeletableUnits] = React.useState([]);
 	const [userUnits, setuserUnits] = React.useState(settings.userUnits);
 	const [singUnit, setSingUnit] = React.useState('');
 	const [pluUnit, setPluUnit] = React.useState('');
@@ -33,10 +36,43 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [modalPickers, setModalPickers] = React.useState([]);
 	const [modalInputs, setModalInputs] = React.useState([]);
 	const [donePush, setDonePush] = React.useState(false);
+	const [buttonsVertical, setButtonsVertical] = React.useState(false);
+	React.useEffect(() => {
+		const updateUserUnits = () => {
+			let sUnits = userUnits.s.slice()
+			let pUnits = userUnits.p.slice()
+			if (singUnit && pluUnit) {
+				sUnits.push(singUnit);
+				pUnits.push(pluUnit);
+				setSingUnit('');
+				setPluUnit('');
+				setuserUnits({s: sUnits, p: pUnits});
+				setDonePush(false);
+			}
+		}
+		updateUserUnits();
+	}, [donePush]);
+	React.useEffect(() => {
+		if (singUnit && pluUnit) {
+			setModalButtons([modalCancelbtn, modalDonebtn]);
+		}
+	}, [singUnit, pluUnit]);
+	React.useEffect(() => {
+		let inUse = projects.map(project => {
+			return project.obj._unitName
+		})
+		let list = []
+		userUnits.s.filter((item, index) => {
+			let adjustedI = index + Strings[language].units.length
+			return unit === adjustedI || inUse.includes(adjustedI) ? false : list.push(index)
+		})
+		setDeletableUnits(list);
+	}, [userUnits, unit]);
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[language].buttons.cancel;
 	modalCancelbtn.onPress = () => {
-		setmodalVisible(false)
+		setmodalVisible(false);
+		setButtonsVertical(false);
 		setSingUnit('');
 		setPluUnit('');
 	};
@@ -78,75 +114,44 @@ export default function SettingsScreen( {route, navigation} ) {
 			setUnit(index);
 		}})
 	});
-	const editUnitBtns = [Strings[language].labels.new].concat(userUnits.s).map((string, index) => {
+	const editUnitBtns = userUnits.s.map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setmodalVisible(false)
-			
+			let sUnits = userUnits.s.slice();
+			let pUnits = userUnits.p.slice();
+			// sUnits[index] = ;
+			// pUnits[index] = ;
+			// setuserUnits({s: sUnits, p: pUnits});
 		}})
 	});
-	React.useEffect(() => {
-		const updateUserUnits = () => {
-			let sUnits = userUnits.s.slice()
-			let pUnits = userUnits.p.slice()
-			if (singUnit && pluUnit) {
-				sUnits.push(singUnit);
-				pUnits.push(pluUnit);
-				setSingUnit('');
-				setPluUnit('');
-				setuserUnits({s: sUnits, p: pUnits});
-				setDonePush(false);
-			}
-		}
-		updateUserUnits();
-	}, [donePush]);
-	React.useEffect(() => {
-		if (singUnit && pluUnit) {
-			setModalButtons([modalCancelbtn, modalDonebtn]);
-		}
-	}, [singUnit, pluUnit])
-	// buttons.darkMode._title = Strings[language].buttons.allSettings.darkMode;
-	// buttons.darkMode.onPress = () => {
-	// 	setDarkMode(!darkMode);
-	// }
-	buttons.language._title = Strings[language].buttons.allSettings.language;
-	buttons.language.onPress = () => {
-		setmodalVisible(true);
-		setModalMessage(Strings[language].alerts.settings.language);
-		setModalPickers([languageBtns]);
+	const delUnitBtns = deletableUnits.map(num => {
+		return ({_title: userUnits.s[num], onPress: () => {
+			setmodalVisible(false)
+			let sUnits = userUnits.s.slice();
+			let pUnits = userUnits.p.slice();
+			sUnits.splice(num, 1);
+			pUnits.splice(num, 1);
+			setuserUnits({s: sUnits, p: pUnits});
+		}})
+	});
+	const unitDeleteBtn = AllButtons.delete2;
+	unitDeleteBtn._title = Strings[language].buttons.deleteU;
+	unitDeleteBtn.onPress = () => {
+		setButtonsVertical(false);
+		setModalMessage(Strings[language].alerts.settings.delUnit)
+		setModalPickers([delUnitBtns]);
 		setModalButtons([modalCancelbtn]);
-		setModalInputs([]);
 	};
-	buttons.dateFormat._title = Strings[language].buttons.allSettings.dateFormat + dateFormat;
-	buttons.dateFormat.onPress = () => {
-		setmodalVisible(true);
-		setModalMessage(Strings[language].alerts.settings.dateFormat);
-		setModalPickers([dateFormatBtns]);
-		setModalButtons([modalCancelbtn]);
-		setModalInputs([]);
+	const unitEditBtn = AllButtons.edit;
+	unitEditBtn._title = Strings[language].buttons.editU;
+	unitEditBtn.onPress = () => {
+		setButtonsVertical(false);
+		
 	};
-	buttons.freq._title = Strings[language].buttons.allSettings.freq + Strings[language].frequencyWords[freq];
-	buttons.freq.onPress = () => {
-		setmodalVisible(true);
-		setModalMessage(Strings[language].alerts.settings.notify);
-		setModalPickers([freqBtns]);
-		setModalButtons([modalCancelbtn]);
-		setModalInputs([]);
-	};
-	buttons.time._title = Strings[language].buttons.allSettings.time + time;
-	buttons.time.onPress = () => {
-		setShowDate(true);
-	};
-	buttons.defaultUnit._title = Strings[language].buttons.allSettings.unit + Strings[language].units.concat(userUnits)[unit];
-	buttons.defaultUnit.onPress = () => {
-		setmodalVisible(true);
-		setModalMessage(Strings[language].alerts.settings.defUnit);
-		setModalPickers([unitBtns]);
-		setModalButtons([modalCancelbtn]);
-		setModalInputs([]);
-	};
-	buttons.editUnit._title = Strings[language].buttons.allSettings.editUnit;
-	buttons.editUnit.onPress = () => {
-		setmodalVisible(true);
+	const unitAddBtn = AllButtons.create;
+	unitAddBtn._title = Strings[language].buttons.createU;
+	unitAddBtn.onPress = () => {
+		setButtonsVertical(false);
 		modalDonebtn.onPress = () => {
 			setmodalVisible(false);
 			setDonePush(true);
@@ -200,6 +205,55 @@ export default function SettingsScreen( {route, navigation} ) {
 			},
 		])
 	};
+	// buttons.darkMode._title = Strings[language].buttons.allSettings.darkMode;
+	// buttons.darkMode.onPress = () => {
+	// 	setDarkMode(!darkMode);
+	// }
+	buttons.language._title = Strings[language].buttons.allSettings.language;
+	buttons.language.onPress = () => {
+		setmodalVisible(true);
+		setModalMessage(Strings[language].alerts.settings.language);
+		setModalPickers([languageBtns]);
+		setModalButtons([modalCancelbtn]);
+		setModalInputs([]);
+	};
+	buttons.dateFormat._title = Strings[language].buttons.allSettings.dateFormat + dateFormat;
+	buttons.dateFormat.onPress = () => {
+		setmodalVisible(true);
+		setModalMessage(Strings[language].alerts.settings.dateFormat);
+		setModalPickers([dateFormatBtns]);
+		setModalButtons([modalCancelbtn]);
+		setModalInputs([]);
+	};
+	buttons.freq._title = Strings[language].buttons.allSettings.freq + Strings[language].frequencyWords[freq];
+	buttons.freq.onPress = () => {
+		setmodalVisible(true);
+		setModalMessage(Strings[language].alerts.settings.notify);
+		setModalPickers([freqBtns]);
+		setModalButtons([modalCancelbtn]);
+		setModalInputs([]);
+	};
+	buttons.time._title = Strings[language].buttons.allSettings.time + time;
+	buttons.time.onPress = () => {
+		setShowDate(true);
+	};
+	buttons.defaultUnit._title = Strings[language].buttons.allSettings.unit + Strings[language].units.concat(userUnits.s)[unit];
+	buttons.defaultUnit.onPress = () => {
+		setmodalVisible(true);
+		setModalMessage(Strings[language].alerts.settings.defUnit);
+		setModalPickers([unitBtns]);
+		setModalButtons([modalCancelbtn]);
+		setModalInputs([]);
+	};
+	buttons.editUnit._title = Strings[language].buttons.allSettings.editUnit;
+	buttons.editUnit.onPress = () => {
+		setmodalVisible(true);
+		setModalMessage(Strings[language].alerts.settings.chooseEditUnit);
+		setModalPickers([]);
+		setModalInputs([]);
+		setButtonsVertical(true);
+		setModalButtons([unitDeleteBtn, unitEditBtn, unitAddBtn, modalCancelbtn]);
+	};
 	buttons.deleteAll._title = Strings[language].buttons.allSettings.deleteAll;
 	buttons.deleteAll.onPress = () => console.log(singUnit + ' ' + pluUnit);
 	buttons.feedback._title = Strings[language].buttons.allSettings.feedback;
@@ -243,6 +297,7 @@ export default function SettingsScreen( {route, navigation} ) {
 				pickers={modalPickers}
 				inputs={modalInputs}
 				buttons={modalButtons} 
+				vertical={buttonsVertical}
 				darkmode={darkMode}
 			/>
 			{ showDate && <DateTimePicker 
@@ -263,7 +318,6 @@ export default function SettingsScreen( {route, navigation} ) {
 const styles = StyleSheet.create({
   	container: {
 		flex: 1,
-		paddingTop: 30
   	},
 	contentContainer: {
 		paddingTop: 15,
