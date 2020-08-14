@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { 
     Keyboard, 
-    Picker, 
     StyleSheet, 
-    Switch, 
     Text, 
     TextInput, 
     TouchableHighlight, 
@@ -31,6 +29,7 @@ export default function EditScreen({ route, navigation }) {
     const [modalVisible, setmodalVisible] = React.useState(false);
     const [modalMessage, setModalMessage] = React.useState();
     const [modalButtons, setModalButtons] = React.useState([]);
+	const [modalPickers, setModalPickers] = React.useState([]);
     // date/time picker
     const [showDate, setShowDate] = React.useState(false);
     const [dateMode, setDateMode] = React.useState('date');
@@ -100,15 +99,42 @@ export default function EditScreen({ route, navigation }) {
     savebtn._title = Strings[settings.language].buttons.save;
     const cancelbtn = AllButtons.cancel;
     cancelbtn._title = Strings[settings.language].buttons.cancel;
+    const modalokaybtn = AllButtons.okay;
+    modalokaybtn._title = Strings[settings.language].buttons.okay;
+    const modaldonebtn = AllButtons.done;
+    modaldonebtn._title = Strings[settings.language].buttons.done;
+    const modalcancelbtn = AllButtons.cancel2;
+    modalcancelbtn._title = Strings[settings.language].buttons.cancel;
     savebtn.onPress = () => updateProj();
-	cancelbtn.onPress = () => navigation.navigate(Strings.routes.display);
+    cancelbtn.onPress = () => navigation.navigate(Strings.routes.display);
+    modalokaybtn.onPress = () => setmodalVisible(false);
+    modalcancelbtn.onPress = () => setmodalVisible(false);
+    // modal picker buttons
+    const unitBtns = Strings[settings.language].unitPlurals.concat(settings.userUnits.p).map((string, index) => {
+		return ({_title: string, onPress: () => {
+            setUnitValue(index);
+			setmodalVisible(false);
+		}})
+	});
+    const freqBtns = Strings[settings.language].frequencyWords.map((string, index) => {
+		return ({_title: string, onPress: () => {
+			setFreqValue(index);
+			setmodalVisible(false);
+		}})
+    });
+    const getTextColor = () => {
+        return settings.darkmode ? Colors.darkmode.text : Colors.maintext
+    };
+
     return (
         <View style={styles.container}>
             <CustModal 
-            visible={modalVisible} 
-            message={modalMessage} 
-            buttons={modalButtons} 
-			darkmode={settings.darkmode}
+                visible={modalVisible} 
+                message={modalMessage} 
+				pickers={modalPickers}
+				inputs={[]}
+                buttons={modalButtons} 
+                darkmode={settings.darkmode}
             />
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings[settings.language].labels.title}</Text>
@@ -119,7 +145,7 @@ export default function EditScreen({ route, navigation }) {
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
                 />
-                <View style={[styles.row, {justifyContent: 'flex-start'}]}>
+                <View style={[styles.row]}>
                     <Text style={styles.labelText}>{Strings[settings.language].labels.currentUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
                     <TextInput
                         style={styles.inputField}
@@ -130,7 +156,9 @@ export default function EditScreen({ route, navigation }) {
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>
+                        {Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}
+                    </Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'1'}
@@ -138,7 +166,11 @@ export default function EditScreen({ route, navigation }) {
                         keyboardType={'number-pad'}
                         onChangeText={text => setStartValue(text)}
                     />
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
+                </View>
+                <View style={styles.row}>
+                    <Text style={[styles.labelText, {color: getTextColor()}]}>
+                        {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}
+                    </Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
@@ -159,19 +191,18 @@ export default function EditScreen({ route, navigation }) {
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={[styles.labelText, { textAlignVertical: 'center'}]}>{Strings[settings.language].labels.unitName}</Text>
-                    <Picker 
-                        selectedValue={unitValue}
-                        style={{ flexGrow: 1 }}
-                        text
-                        onValueChange={(itemValue, itemIndex) => setUnitValue(itemValue)}
-                    >
-                        {Strings[settings.language].units.map((unit, index) => {
-                            return (
-                                <Picker.Item key={index} label={unit} value={index} />
-                            )
-                        })}
-                    </Picker>
+                    <Text style={[styles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
+                    <TextInput
+                        style={[styles.inputField, {color: getTextColor()}]}
+                        value={Strings[settings.language].unitPlurals.concat(settings.userUnits.p)[unitValue]}
+                        onFocus={() => {
+                            Keyboard.dismiss();
+                            setModalButtons([modalcancelbtn]);
+                            setModalPickers([unitBtns]);
+                            setModalMessage(Strings[settings.language].alerts.create_edit.unit);
+                            setmodalVisible(true);
+                        }}
+                    />
                 </View>
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
@@ -197,18 +228,18 @@ export default function EditScreen({ route, navigation }) {
                             setDateMode('time');
                         }}
                     />
-                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings[settings.language].labels.frequency}</Text>
-                    <Picker 
-                        selectedValue={freqValue}
-                        style={{ flexGrow: 1 }}
-                        onValueChange={(itemValue) => setFreqValue(itemValue)}
-                    >
-                        {Strings[settings.language].frequencyWords.map((unit, index) => {
-                            return (
-                                <Picker.Item key={index} label={unit} value={index} />
-                            )
-                        })}
-                    </Picker>
+                    <Text style={[styles.labelText, {paddingLeft: 5}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
+                    <TextInput
+                        style={[styles.inputField, {color: getTextColor()}]}
+                        value={Strings[settings.language].frequencyWords[freqValue]}
+                        onFocus={() => {
+                            Keyboard.dismiss();
+                            setModalButtons([modalcancelbtn]);
+                            setModalPickers([freqBtns]);
+                            setModalMessage(Strings[settings.language].alerts.create_edit.freq);
+                            setmodalVisible(true);
+                        }}
+                    />
                 </View>
                 { showDate && <DateTimePicker 
                     value={dateValue}
@@ -221,7 +252,7 @@ export default function EditScreen({ route, navigation }) {
                             setDateValue(date); 
                         }
                         else if (dateMode === 'time' && date !== undefined) {
-                            setTimeValue(Moment(date).format('h:mm a'));
+                            setTimeValue(Moment(date).format(Strings.timeFormat));
                             setDateValue(date);
                         }
                     }}
@@ -243,7 +274,6 @@ const styles = StyleSheet.create({
     }, 
     row: {
         flexDirection: 'row', 
-        justifyContent: 'space-between',
         marginBottom: 10
     },
     labelText: {

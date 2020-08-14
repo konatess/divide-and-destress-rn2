@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet,  Text, TouchableHighlight, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
@@ -15,32 +15,42 @@ export default function DisplayScreen({ route, navigation }) {
     const { settings } = route.params;
     const { project } = route.params;
     const { key } = route.params;
+    const [current, setCurrent] = React.useState(project._currentUnit)
     const [perOrDue, setPerOrDue] = React.useState('Loading...');
+    const [updateNum, setUpdateNum] = React.useState(0);
     // modal
     const [modalVisible, setmodalVisible] = React.useState(false);
     const [modalMessage, setModalMessage] = React.useState();
     const [modalButtons, setModalButtons] = React.useState([]);
+    const [modalInputs, setModalInputs] = React.useState([]);
     React.useEffect(() => {
         const getPerDay = () => {
             // units remaining
-            let units = project._endUnit - project._currentUnit;
+            let units = project._endUnit - current;
             // days remaining
             let days = Moment().diff(project._dueDate, 'days')*-1
-            if (days === 0) {
+            if (units === 0) {
+                return setPerOrDue(Strings[settings.language].labels.complete)
+            }
+            else if (days === 0) {
                 return setPerOrDue(Strings[settings.language].labels.dueToday)
             } else if (days < 0) {
                 return setPerOrDue(Strings[settings.language].labels.overDue)
             } else {
                 // days/frequency or default frequency
                 let periods = days/(project._frequency || settings.notifications.freq);
+                // number per day
+                let number = (units/periods).toFixed(1);
+                // singular vs plural
+                let unitLabel = (number === 1) ? "units" : "unitPlurals";
                 // units remaining/freq periods remaining
-                return setPerOrDue(Strings[settings.language].labels.perDay.replace(/unit/g, Strings[settings.language].units[project._unitName])
-                .replace(/num/g, (units/periods).toFixed(1))
+                return setPerOrDue(Strings[settings.language].labels.perDay.replace(/unit/g, Strings[settings.language][unitLabel][project._unitName])
+                .replace(/num/g, number)
                 .replace(/freq/g, Strings[settings.language].frequencyWords[project._frequency || settings.notifications.freq]))
             }
         };
         getPerDay();
-    }, []);
+    }, [current]);
     const deleteProj = async (projKey) => {
         await Storage.deleteProj(projKey);
         navigation.navigate(Strings.routes.home); 
@@ -55,6 +65,12 @@ export default function DisplayScreen({ route, navigation }) {
     modalDeleteBtn._title = Strings[settings.language].buttons.delete;
     const modalCancelBtn = AllButtons.cancel;
     modalCancelBtn._title = Strings[settings.language].buttons.cancel;
+    const modalokaybtn = AllButtons.okay;
+    modalokaybtn._title = Strings[settings.language].buttons.okay;
+    const addbtn = AllButtons.create;
+    addbtn._title = Strings[settings.language].buttons.add;
+    const updatebtn = AllButtons.set;
+    updatebtn._title = Strings[settings.language].buttons.set;
     editbtn.onPress = () => navigation.navigate(Strings.routes.edit, {
         project: project, 
         key: key, 
@@ -74,28 +90,85 @@ export default function DisplayScreen({ route, navigation }) {
         setModalButtons([modalDeleteBtn, modalCancelBtn]);
         setmodalVisible(true);
     };
+    modalokaybtn.onPress = () => setmodalVisible(false);
+    addbtn.onPress = () => {
+        setmodalVisible(false);
+        setModalInputs([]);
+        let sum = current + updateNum
+        if (sum > project._endUnit) {
+            setmodalVisible(true);
+            setModalButtons([modalokaybtn])
+            setModalMessage(Strings[settings.language].alerts.currentBig)
+        }
+        else {
+            setCurrent(sum);
+            project._currentUnit = sum;
+            Storage.updateProj(key, project);
+        }
+    };
+    updatebtn.onPress = () => {
+        setmodalVisible(false);
+        setModalInputs([]);
+        if (updateNum > project._endUnit) {
+            setmodalVisible(true);
+            setModalButtons([modalokaybtn])
+            setModalMessage(Strings[settings.language].alerts.currentBig)
+        }
+        else {
+            setCurrent(updateNum);
+            project._currentUnit = updateNum;
+            Storage.updateProj(key, project);
+        }
+    };
     return (
         <View style={styles.container}>
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings[settings.language].labels.title + project._title}</Text>
                 <Text style={styles.labelText}>{perOrDue}</Text>
-                <Text style={styles.labelText}>
-                    {Strings[settings.language].labels.currentUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._currentUnit}
-                </Text>
+                <View style={[styles.row, {justifyContent: 'flex-start'}]}>
+                    <Text style={[styles.labelText, {marginBottom: 0} ]}>
+                        {Strings[settings.language].labels.currentUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + current}
+                    </Text>
+                    <TouchableHighlight
+                        style={[styles.defaultsButton, {marginLeft: 20}]}
+                        onPress={() => {
+                            setmodalVisible(true)
+                            setModalMessage(Strings[settings.language].alerts.updateCurrent.replace(/units/g, Strings.English.unitPlurals[project._unitName]).replace(/unit/g, Strings[settings.language].units[project._unitName]))
+                            setModalButtons([modalCancelBtn]);
+                            setModalInputs([{
+                                label: '',
+                                keyboardType: 'number-pad',
+                                placeholder: '1',
+                                onChange: async text => {
+                                    if (text.length) {
+                                        await setUpdateNum(parseInt(text));
+                                        setModalButtons([modalCancelBtn, updatebtn, addbtn]);
+                                    }
+                                    else {
+                                        await setUpdateNum(0);
+                                        setModalButtons([modalCancelBtn]);
+                                    }
+                                }
+                            }])
+                        }}
+                        >
+                        <Text style={styles.buttonText}>
+                            {Strings[settings.language].buttons.updateCurrent}
+                        </Text>
+                    </TouchableHighlight>
+                </View>
                 <Text style={styles.labelText}>
                     {Strings[settings.language].labels.dueDate + Moment(project._dueDate).format(settings.dateFormat)}
                 </Text>
                 <Text style={styles.labelText}>
                     {Strings[settings.language].labels.startDate + Moment(project._startDate).format(settings.dateFormat)}
                 </Text>
-                <View style={styles.row}>
-                    <Text style={styles.labelText}>
-                        {Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._startUnit}
-                    </Text>
-                    <Text style={styles.labelText}>
-                        {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._endUnit}
-                    </Text>
-                </View>
+                <Text style={styles.labelText}>
+                    {Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._startUnit}
+                </Text>
+                <Text style={styles.labelText}>
+                    {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._endUnit}
+                </Text>
                 <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings[settings.language].labels.time + '  ' + project._time}</Text>
@@ -106,6 +179,8 @@ export default function DisplayScreen({ route, navigation }) {
             <CustModal 
             visible={modalVisible} 
             message={modalMessage} 
+            pickers={[]}
+			inputs={modalInputs}
             buttons={modalButtons} 
 			darkmode={settings.darkmode}
             />
@@ -125,7 +200,8 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row', 
         justifyContent: 'space-between',
-        paddingRight: 10
+        paddingRight: 10,
+        marginBottom: 15,
     },
     labelText: {
         fontSize: 20,
@@ -133,4 +209,16 @@ const styles = StyleSheet.create({
         textAlignVertical: 'center',
         marginBottom: 15
     }, 
+    defaultsButton: {
+        backgroundColor: Colors.cancel,
+        borderRadius: 20,
+        padding: 10,
+        elevation: 0
+    },
+    buttonText: {
+        color: Colors.navButtonText,
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: 14,
+    },
 });

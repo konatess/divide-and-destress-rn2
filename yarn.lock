@@ -1293,6 +1293,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.6.tgz#c7f2ac187c1f25aa8c30d11baa8f4398eca3bb84"
   integrity sha512-PpMoeXwPUoldCRKDuSi+zK5rT+sJTW6ri6RdGPkSKRzU77Q1d9IaR0O5IKvBj0XSdL3p+dcOa05gk35aGDffBQ==
 
+"@react-native-community/picker@^1.6.5":
+  version "1.6.5"
+  resolved "https://registry.yarnpkg.com/@react-native-community/picker/-/picker-1.6.5.tgz#9489fdb6d0b4b5877491101e0c3185ea9511d1aa"
+  integrity sha512-mwt0sBaFdURJWkq6wFf2BrYh7fzB1CKK4/gx20zmDYDmahvk3CVUQVlkINDDyXE9m0lYZ9V8rBZBBAJy9W3GkQ==
+
 "@react-navigation/bottom-tabs@^5.0.0":
   version "5.2.6"
   resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-5.2.6.tgz#587220a78fdb71c643f2bf1de3d1b9aca669bd37"
@@ -1300,6 +1305,18 @@
   dependencies:
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
+
+"@react-navigation/core@^5.12.0":
+  version "5.12.0"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-5.12.0.tgz#0d3dab1ae8403b83f9387eaaee3f270dd8eadcfa"
+  integrity sha512-CTmYrFXCZwInN40CpEzkPxhrpzujj20qvsUgpH05+oO1flwsnaJsyBfYawIcTS62/1/Z6SAM7iW5PbKk+qw9iQ==
+  dependencies:
+    "@react-navigation/routers" "^5.4.9"
+    escape-string-regexp "^4.0.0"
+    nanoid "^3.1.9"
+    query-string "^6.13.1"
+    react-is "^16.13.0"
+    use-subscription "^1.4.0"
 
 "@react-navigation/core@^5.3.3":
   version "5.3.3"
@@ -1327,6 +1344,13 @@
   dependencies:
     nanoid "^3.0.2"
 
+"@react-navigation/routers@^5.4.9":
+  version "5.4.9"
+  resolved "https://registry.yarnpkg.com/@react-navigation/routers/-/routers-5.4.9.tgz#f2f06ab6d3fc7fa8bf06d1885542cf4e0101141e"
+  integrity sha512-dYD5qrIKUmuBEp+O98hB0tDYpEsGQgCQFQgMEoFKBmVVhx2JnJJ1zxRjU7xWcCU4VdBA8IOowgHQHJsVNKYyrg==
+  dependencies:
+    nanoid "^3.1.9"
+
 "@react-navigation/stack@^5.0.0":
   version "5.2.10"
   resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.2.10.tgz#a2c8ff7f2da8f0d5cb04351379106ee9b8ef7dd8"
@@ -1342,6 +1366,11 @@
   dependencies:
     history "^4.7.2"
     query-string "^6.2.0"
+
+"@rn-components-kit/scroll-picker@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@rn-components-kit/scroll-picker/-/scroll-picker-1.0.0.tgz#0b4dc2c561353bb83bf7f27cc8e7dd8fe28b9594"
+  integrity sha512-sPvnCXXdboubcU9GjPGmPiUKTX+LTjf7d+iv47D+39SoQCxq2bNr1hUpDmFZuMGbSD8K94tA37BUy1ctwLIkFg==
 
 "@types/babel__core@^7.1.0":
   version "7.1.7"
@@ -2696,6 +2725,11 @@ escape-string-regexp@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-2.0.0.tgz#a30304e99daa32e23b2fd20f51babd07cffca344"
   integrity sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==
+
+escape-string-regexp@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
+  integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
 
 escodegen@^1.9.1:
   version "1.14.1"
@@ -4942,6 +4976,11 @@ nanoid@^3.0.2:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.3.tgz#b2bcfcfda4b4d6838bc22a0c8dd3c0a17a204c20"
   integrity sha512-Zw8rTOUfh6FlKgkEbHiB1buOF2zOPOQyGirABUWn+9Z7m9PpyoLVkh6Ksc53vBjndINQ2+9LfRPaHxb/u45EGg==
 
+nanoid@^3.1.9:
+  version "3.1.10"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.10.tgz#69a8a52b77892de0d11cede96bc9762852145bc4"
+  integrity sha512-iZFMXKeXWkxzlfmMfM91gw7YhN2sdJtixY+eZh9V6QWJWTOiurhpKhBMgr82pfzgSqglQgqYSCowEYsz8D++6w==
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -5503,7 +5542,7 @@ prompts@^2.0.1, prompts@^2.2.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -5554,6 +5593,15 @@ query-string@^6.12.0, query-string@^6.2.0:
     split-on-first "^1.0.0"
     strict-uri-encode "^2.0.0"
 
+query-string@^6.13.1:
+  version "6.13.1"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.13.1.tgz#d913ccfce3b4b3a713989fe6d39466d92e71ccad"
+  integrity sha512-RfoButmcK+yCta1+FuU8REvisx1oEzhMKwhLUNcepQTPGcNMp1sIqjnfCtfnvGSQZQEhaBHvccujtWoUV3TTbA==
+  dependencies:
+    decode-uri-component "^0.2.0"
+    split-on-first "^1.0.0"
+    strict-uri-encode "^2.0.0"
+
 querystringify@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.1.1.tgz#60e5a5fd64a7f8bfa4d2ab2ed6fdf4c85bad154e"
@@ -5595,6 +5643,14 @@ react-native-calendar-picker@^6.0.6:
     prop-types "^15.6.0"
     uuid "3.2.1"
 
+react-native-dynamically-selected-picker@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-dynamically-selected-picker/-/react-native-dynamically-selected-picker-2.0.0.tgz#3938a587891d01e007266bfaec8a2f163e47dbaf"
+  integrity sha512-hA6bl2Krzj0Twj8FmDNn+72oreX88JlY7ZwAHnDvGNsbYqXxiKNroC1JlF7HN+j2WI43jPyON9w5gGORzlPabQ==
+  dependencies:
+    prop-types "^15.7.2"
+    react-native-linear-gradient "^2.5.6"
+
 react-native-gesture-handler@~1.6.0:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.6.1.tgz#678e2dce250ed66e93af409759be22cd6375dd17"
@@ -5610,6 +5666,11 @@ react-native-iphone-x-helper@^1.2.1:
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"
   integrity sha512-/VbpIEp8tSNNHIvstuA3Swx610whci1Zpc9mqNkqn14DkMbw+ORviln2u0XyHG1kPvvwTNGZY6QpeFwxYaSdbQ==
 
+react-native-linear-gradient@^2.5.6:
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
+  integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
+
 react-native-safe-area-context@0.7.3:
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-0.7.3.tgz#ad6bd4abbabe195332c53810e4ce5851eb21aa2a"
@@ -5621,6 +5682,13 @@ react-native-screens@~2.2.0:
   integrity sha512-a0VzxOWot7F9B/GQyDSssBRd3jUJazFnTQS61IiyReWB6aHlFhf3Xz10jBRoURXy1EMCDCHgenmTVTkKHpKyqQ==
   dependencies:
     debounce "^1.2.0"
+
+react-native-simple-picker@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-simple-picker/-/react-native-simple-picker-3.1.2.tgz#594713519b7b8fa61ced955adaa71b10e9a97b49"
+  integrity sha512-8Q56gbbwxFkQjDG8HKvmAtvuD2dxnX+DXhBbv/pXwUWyIbVYc8Vqib2Cza6S1vyXbjniwvUCpwA6EysSgaE8sA==
+  dependencies:
+    prop-types "^15.5.10"
 
 react-native-view-shot@3.1.2:
   version "3.1.2"
@@ -5642,6 +5710,11 @@ react-native-web@~0.11.7:
     normalize-css-color "^1.0.2"
     prop-types "^15.6.0"
     react-timer-mixin "^0.13.4"
+
+react-native-wheel-scroll-picker@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-wheel-scroll-picker/-/react-native-wheel-scroll-picker-0.2.4.tgz#d923f17d08334fd16ea01dc4c21d7641888ea55b"
+  integrity sha512-fwHKko8e/FprM6diUa5jTZrajK1oN8YBSqOAMFKrkPtyQGGR/zzv4vJduEQxG396291YsanLM+UM9ejDjzXsow==
 
 "react-native@https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz":
   version "0.61.4"
@@ -6871,6 +6944,11 @@ uuid@^3.3.2, uuid@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+
+v--custom-scrollable-picker@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/v--custom-scrollable-picker/-/v--custom-scrollable-picker-1.0.2.tgz#f3c175a309dc412a3eba5d24c56389354bacb9f0"
+  integrity sha512-8IlQNCFOq7tak0kAzpTzF7ksmLGOakXZZZc1d09m8wg/ccoJJ9XKo2AQLUtpoaxa/yNhhOfEHkrJ7MVL8tcIiw==
 
 validate-npm-package-license@^3.0.1:
   version "3.0.4"

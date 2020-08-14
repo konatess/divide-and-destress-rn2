@@ -1,5 +1,4 @@
 import Colors from './Colors';
-import Strings from './Strings';
 
 class ButtonObj {
     constructor(t, c, i) {
@@ -16,6 +15,7 @@ const trash= new ButtonObj('', Colors.delete, 'md-trash');
 const trash2= new ButtonObj('', Colors.delete, 'md-trash');
 const create= new ButtonObj('', Colors.create, 'md-add');
 const edit= new ButtonObj('', Colors.edit, 'md-create');
+const set= new ButtonObj('', Colors.edit, 'md-create');
 const cancel= new ButtonObj('', Colors.cancel, 'md-close');
 const cancel2= new ButtonObj('', Colors.cancel, 'md-close');
 const done= new ButtonObj('', Colors.done, 'md-checkmark');
@@ -24,8 +24,10 @@ const darkMode= new ButtonObj('', Colors.done, 'md-contrast');
 const language= new ButtonObj('', Colors.done, 'md-globe');
 const dateFormat= new ButtonObj('', Colors.done, 'md-calendar');
 const notifications= new ButtonObj('', Colors.done, 'md-notifications');
+const freq= new ButtonObj('', Colors.done, 'md-notifications');
+const time= new ButtonObj('', Colors.done, 'md-notifications');
 const unit= new ButtonObj('', Colors.done, 'md-list');
-const editUnit= new ButtonObj('', Colors.edit, 'md-list');
+const editUnit= new ButtonObj('', Colors.edit, 'md-add');
 const deleteAll= new ButtonObj('', Colors.done, 'md-trash');
 const feedback= new ButtonObj('', Colors.done, 'md-chatbubbles');
 
@@ -37,6 +39,7 @@ export default {
     delete2: trash2,
     create: create,
     edit: edit,
+    set: set,
     save: save,
     cancel: cancel,
     cancel2: cancel2,
@@ -47,6 +50,8 @@ export default {
         language: language,
         dateFormat: dateFormat,
         notifications: notifications,
+        freq: freq,
+        time: time,
         defaultUnit: unit,
         editUnit: editUnit,
         deleteAll: deleteAll,
