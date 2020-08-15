@@ -12,7 +12,7 @@ export default {
         settings: 'USER_SETTINGS',
         projPrefix: 'PROJ-',
     },
-    mailto: 'mailto:<konatess@gmail.com>?subject=Divide%20%26%20De-Stress',
+    mailto: 'mailto:<admin@buddingapps.com>?subject=Divide%20%26%20De-Stress',
     languages: ['English', 'Español',],
     dateFormats: ['MM/DD', 'DD/MM', 'MM-DD', 'DD-MM', 'YY/MM/DD', 'DD/MM/YY', 'MM/DD/YY', 'YY-MM-DD', 'DD-MM-YY', 'MM-DD-YY'],
     timeFormat: 'h:mm a',
