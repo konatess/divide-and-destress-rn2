@@ -12,9 +12,11 @@ export default {
         settings: 'USER_SETTINGS',
         projPrefix: 'PROJ-',
     },
+    mailto: 'mailto:<konatess@gmail.com>?subject=Divide%20%26%20De-Stress',
     languages: ['English', 'Español',],
     dateFormats: ['MM/DD', 'DD/MM', 'MM-DD', 'DD-MM', 'YY/MM/DD', 'DD/MM/YY', 'MM/DD/YY', 'YY-MM-DD', 'DD-MM-YY', 'MM-DD-YY'],
     timeFormat: 'h:mm a',
+    orderKeys: ['_title', '_dueDate'],
     regex: {
         titles: /[]/,
         units: /[^A-Za-z ]/,
@@ -77,7 +79,8 @@ export default {
             title: 'Title of your project...',
             tags: 'Chemistry, English, Nonfiction, Sci-Fi...',
             noTags: 'no tags...',
-            loading: 'Loading...'
+            loading: 'Loading...',
+            noProj: 'No projects found'
         },
         units: ['word', 'page', 'chapter'],
         unitPlurals: ['words', 'pages', 'chapters'],

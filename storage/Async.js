@@ -59,10 +59,17 @@ export default {
             return console.log('Rejected: ' + error);
         }
     },
-    deleteAllProj: async () => {
-        // get settings, and anything else I need
-        // clear all
-        // resave settings, etc
+    deleteAllProj: async (keys) => {
+        if (keys.length) {
+            try {
+                AsyncStorage.multiRemove(keys, (err) => {
+                    err && console.log(err);
+                });
+            }
+            catch (error) {
+                return console.log(error);
+            }
+        }
     },
     createProj: async (projobj) => {
         AsyncStorage.setItem(Strings.keys.projPrefix + projobj.title, JSON.stringify(projobj), (err) => {

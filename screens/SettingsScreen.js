@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import { StatusBar, StyleSheet, Text, View} from 'react-native';
+import { StatusBar, StyleSheet, Text, View, Linking} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AllButtons from '../constants/ButtonClass';
@@ -23,6 +23,7 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [time, setTime] = React.useState(settings.notifications.time);
 	const [unit, setUnit] = React.useState(settings.unit);
 	const [editUnit, setEditUnit] = React.useState(settings.unit);
+	const [editIndex, setEditIndex] = React.useState(-1);
 	const [deletableUnits, setDeletableUnits] = React.useState([]);
 	const [userUnits, setuserUnits] = React.useState(settings.userUnits);
 	const [singUnit, setSingUnit] = React.useState('');
@@ -42,13 +43,20 @@ export default function SettingsScreen( {route, navigation} ) {
 			let sUnits = userUnits.s.slice()
 			let pUnits = userUnits.p.slice()
 			if (singUnit && pluUnit) {
-				sUnits.push(singUnit);
-				pUnits.push(pluUnit);
+				if (editIndex === -1) {
+					sUnits.push(singUnit);
+					pUnits.push(pluUnit);
+				}
+				else {
+					sUnits[editIndex] = singUnit;
+					pUnits[editIndex] = pluUnit;
+					setEditIndex(-1);
+				}
 				setSingUnit('');
 				setPluUnit('');
 				setuserUnits({s: sUnits, p: pUnits});
-				setDonePush(false);
 			}
+			setDonePush(false);
 		}
 		updateUserUnits();
 	}, [donePush]);
@@ -76,12 +84,31 @@ export default function SettingsScreen( {route, navigation} ) {
 		setSingUnit('');
 		setPluUnit('');
 	};
+	const modalDeletbtn = AllButtons.delete;
+	modalDeletbtn._title = Strings[language].buttons.delete;
+	modalDeletbtn.onPress = () => {
+		setmodalVisible(false);
+		let keys = projects.map(project => {
+			return project.key
+		})
+		Storage.deleteAllProj(keys);
+	};
 	const modalDonebtn = AllButtons.done;
 	modalDonebtn._title = Strings[language].buttons.done;
 	const savebtn = AllButtons.save;
 	savebtn._title = Strings[language].buttons.save;
 	savebtn.onPress = () => {
 		// settings.darkmode = darkMode;
+		settings.language = language;
+		settings.dateFormat = dateFormat;
+		settings.notifications = {
+			freq: freq,
+			time: time
+		};
+		settings.unit = unit;
+		settings.userUnits = userUnits;
+		Storage.saveSettings(settings);
+        navigation.navigate(Strings.routes.home)
 		console.log(settings);
 	};
 	const cancelbtn = AllButtons.cancel;
@@ -116,12 +143,74 @@ export default function SettingsScreen( {route, navigation} ) {
 	});
 	const editUnitBtns = userUnits.s.map((string, index) => {
 		return ({_title: string, onPress: () => {
-			setmodalVisible(false)
-			let sUnits = userUnits.s.slice();
-			let pUnits = userUnits.p.slice();
-			// sUnits[index] = ;
-			// pUnits[index] = ;
-			// setuserUnits({s: sUnits, p: pUnits});
+			modalDonebtn.onPress = () => {
+				setmodalVisible(false);
+				setDonePush(true);
+			};
+			setEditIndex(index);
+			setSingUnit(userUnits.s[index]);
+			setPluUnit(userUnits.p[index]);
+			setModalMessage(Strings[language].alerts.settings.addUnit);
+			setModalPickers([]);
+			setModalButtons([modalCancelbtn]);
+			setModalInputs([
+				{
+					label: Strings[settings.language].labels.sUnit,
+					placeholder: Strings[settings.language].units[1],
+					default: userUnits.s[index],
+					onChange: text => {
+						let trimmed = text.trim();
+						let exists = (txt, num) => {
+							let ind = userUnits.s.findIndex((val) => {
+								return val === txt
+							});
+							if (ind === -1 || ind === num) {
+								return false
+							}
+							else {
+								return true
+							}
+						}
+						if (trimmed.length === 0) {
+							setModalButtons([modalCancelbtn]);
+							setSingUnit('');
+						}
+						else if (Strings.regex.units.test(trimmed) ) {
+							setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + Strings[language].alerts.settings.unitAllow);
+							setModalButtons([modalCancelbtn]);
+							setSingUnit('');
+						}
+						else if (exists(trimmed, index)) {
+							setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + (Strings[language].alerts.settings.unitExists.replace(/unit/g, trimmed)));
+							setModalButtons([modalCancelbtn]);
+							setSingUnit('');
+						}
+						else {
+							setSingUnit(trimmed)
+						}
+					}
+				},
+				{
+					label: Strings[settings.language].labels.pUnit,
+					placeholder: Strings[settings.language].unitPlurals[1],
+					default: userUnits.p[index],
+					onChange: text => {
+						let trimmed = text.trim();
+						if (trimmed.length === 0) {
+							setModalButtons([modalCancelbtn]);
+							setPluUnit('');
+						}
+						else if (Strings.regex.units.test(trimmed) ) {
+							setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + Strings[language].alerts.settings.unitAllow);
+							setModalButtons([modalCancelbtn]);
+							setPluUnit('');
+						}
+						else {
+							setPluUnit(trimmed)
+						}
+					}
+				},
+			])
 		}})
 	});
 	const delUnitBtns = deletableUnits.map(num => {
@@ -146,6 +235,9 @@ export default function SettingsScreen( {route, navigation} ) {
 	unitEditBtn._title = Strings[language].buttons.editU;
 	unitEditBtn.onPress = () => {
 		setButtonsVertical(false);
+		setModalMessage(Strings[language].alerts.settings.editUnit)
+		setModalPickers([editUnitBtns]);
+		setModalButtons([modalCancelbtn]);
 		
 	};
 	const unitAddBtn = AllButtons.create;
@@ -252,12 +344,29 @@ export default function SettingsScreen( {route, navigation} ) {
 		setModalPickers([]);
 		setModalInputs([]);
 		setButtonsVertical(true);
-		setModalButtons([unitDeleteBtn, unitEditBtn, unitAddBtn, modalCancelbtn]);
+		let buttons = [unitAddBtn, modalCancelbtn];
+		userUnits.s.length && buttons.unshift(unitEditBtn);
+		deletableUnits.length && buttons.unshift(unitDeleteBtn);
+		setModalButtons(buttons);
 	};
 	buttons.deleteAll._title = Strings[language].buttons.allSettings.deleteAll;
-	buttons.deleteAll.onPress = () => console.log(singUnit + ' ' + pluUnit);
+	buttons.deleteAll.onPress = () => {
+		setmodalVisible(true);
+		setModalMessage(Strings[language].alerts.settings.deleteAll);
+		setModalPickers([]);
+		setModalInputs([]);
+		setModalButtons([modalCancelbtn, modalDeletbtn]);
+	};
 	buttons.feedback._title = Strings[language].buttons.allSettings.feedback;
-	buttons.feedback.onPress = () => console.log('clicked Feedback');
+	buttons.feedback.onPress = async () => {
+		let supported = await Linking.canOpenURL(Strings.mailto);
+		if (supported) {
+			await Linking.openURL(Strings.mailto)
+		}
+		else {
+			console.log(`Don't know how to open this URL: ${Strings.mailto}`);
+		}
+	};
 	const buttonsArr = [
 		// buttons.darkMode,
 		buttons.language,

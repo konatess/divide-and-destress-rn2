@@ -43,10 +43,8 @@ export default function EditScreen({ route, navigation }) {
     const [startValue, setStartValue] = React.useState(project._startUnit);
     const [currentValue, setCurrentValue] = React.useState(project._currentUnit);
     const [endValue, setEndValue] = React.useState(project._endUnit);
-    const deleteProj = async (projKey) => {
-        await Storage.deleteProj(projKey);
-        navigation.navigate(Strings.routes.home); 
-    }
+    const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s);
+    const allPUnits = Strings[settings.language].unitPlurals.concat(settings.userUnits.p);
     // project to save
     const newProj = new Project();
     const updateProj = () => {
@@ -78,7 +76,7 @@ export default function EditScreen({ route, navigation }) {
             setmodalVisible(true);
         }
         else if (startValue >= endValue) {
-            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/unit/g, Strings[settings.language].units[unitValue]));
+            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/unit/g, allSUnits[unitValue]));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
@@ -110,7 +108,7 @@ export default function EditScreen({ route, navigation }) {
     modalokaybtn.onPress = () => setmodalVisible(false);
     modalcancelbtn.onPress = () => setmodalVisible(false);
     // modal picker buttons
-    const unitBtns = Strings[settings.language].unitPlurals.concat(settings.userUnits.p).map((string, index) => {
+    const unitBtns = allPUnits.map((string, index) => {
 		return ({_title: string, onPress: () => {
             setUnitValue(index);
 			setmodalVisible(false);
@@ -146,7 +144,7 @@ export default function EditScreen({ route, navigation }) {
                     onChangeText={text => setTitleValue(text)}
                 />
                 <View style={[styles.row]}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.currentUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.currentUnit.replace(/unit/g, allSUnits[unitValue])}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
@@ -157,7 +155,7 @@ export default function EditScreen({ route, navigation }) {
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}
+                        {Strings[settings.language].labels.startUnit.replace(/unit/g, allSUnits[unitValue])}
                     </Text>
                     <TextInput
                         style={styles.inputField}
@@ -169,7 +167,7 @@ export default function EditScreen({ route, navigation }) {
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}
+                        {Strings[settings.language].labels.endUnit.replace(/unit/g, allSUnits[unitValue])}
                     </Text>
                     <TextInput
                         style={styles.inputField}
@@ -194,7 +192,7 @@ export default function EditScreen({ route, navigation }) {
                     <Text style={[styles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}
-                        value={Strings[settings.language].unitPlurals.concat(settings.userUnits.p)[unitValue]}
+                        value={allPUnits[unitValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
                             setModalButtons([modalcancelbtn]);

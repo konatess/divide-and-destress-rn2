@@ -19,7 +19,7 @@ export default function HomeScreen({ route, navigation }) {
 	const [modalPickers, setModalPickers] = React.useState([]);
 	const [projArr, setProjArr] = React.useState([])
 	const [titles, setTitles] = React.useState([]);
-	const [order, setOrder] = React.useState();
+	// const [order, setOrder] = React.useState();
 	const settingsbtn = AllButtons.settings;
 	settingsbtn._title = Strings[settings.language].buttons.settings
 	settingsbtn.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings, knowntitles: titles, projects: projArr});
@@ -33,16 +33,19 @@ export default function HomeScreen({ route, navigation }) {
 	const createbtn = AllButtons.create;
 	createbtn._title = Strings[settings.language].buttons.create;
 	createbtn.onPress = () => navigation.navigate(Strings.routes.create, {knowntitles: titles, settings: settings});
-	// const modalDonebtn = AllButtons.done;
-	// modalDonebtn._title = Strings[settings.language].buttons.done;
-	// modalDonebtn.onPress = () => setModalVisible(false);
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[settings.language].buttons.cancel;
 	modalCancelbtn.onPress = () => setModalVisible(false);
 	const modalOrders = Strings[settings.language].orders.map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setModalVisible(false);
-			setOrder(index);
+			let key = Strings.orderKeys[index]
+			if (projArr.obj[Strings.orderKeys[index]].isNaN) {
+				return setProjArr(projArr.sort((a, b) => a.obj[key].localeCompare(b.obj[key])));
+			}
+			else {
+				return setProjArr(projArr.sort((a, b) => a.obj[key] - b.obj[key]));
+			}
 		}})
 	})
 	React.useEffect(() => {
@@ -67,6 +70,9 @@ export default function HomeScreen({ route, navigation }) {
 				barStyle={settings.darkmode ? "light-content" : "dark-content"} 
 				backgroundColor={settings.darkmode ? Colors.darkmode.background : Colors.mainbackground} 
 			/>
+			{!projArr.length && <Text style={styles.labelText}>
+				{Strings[settings.language].placeholder.noProj}
+			</Text>}
 			<FlatList 
 				data={projArr}
 				renderItem={({ item }) => <ProjectButton
