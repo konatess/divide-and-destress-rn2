@@ -352,10 +352,16 @@ export default function SettingsScreen( {route, navigation} ) {
 	buttons.deleteAll._title = Strings[language].buttons.allSettings.deleteAll;
 	buttons.deleteAll.onPress = () => {
 		setmodalVisible(true);
-		setModalMessage(Strings[language].alerts.settings.deleteAll);
 		setModalPickers([]);
 		setModalInputs([]);
-		setModalButtons([modalCancelbtn, modalDeletbtn]);
+		if (projects.length) {
+			setModalMessage(Strings[language].alerts.settings.deleteAll);
+			setModalButtons([modalCancelbtn, modalDeletbtn]);
+		}
+		else {
+			setModalMessage(Strings[language].alerts.settings.noProj);
+			setModalButtons([modalCancelbtn]);
+		}
 	};
 	buttons.feedback._title = Strings[language].buttons.allSettings.feedback;
 	buttons.feedback.onPress = async () => {

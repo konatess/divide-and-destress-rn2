@@ -116,6 +116,7 @@ export default {
                 delUnit: 'Choose a unit to delete:',
                 unitAllow: 'Unit names can only contain letters and spaces!',
                 unitExists: '"unit" already exists!',
+                noProj: 'You have no projects to delete.',
                 deleteAll: 'Are you sure you want to delete all of your projects? This cannot be undone.',
             }
         },
