@@ -45,7 +45,7 @@ export default function HomeScreen({ route, navigation }) {
 	})
 	React.useEffect(() => {
 		const projFromStorage = async () => {
-			let storedProjArr = await Storage.getAllProj();
+			let storedProjArr = await Storage.getAllProj(settings.language);
 			if (storedProjArr) {
 				setProjArr(storedProjArr);
 				setTitles(storedProjArr.map((item) => {

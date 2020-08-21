@@ -86,7 +86,7 @@ export default function CreateScreen({ route, navigation}) {
             newProj.unitName = unitValue;
             newProj.freq = freqValue;
             newProj.time = timeValue;
-            Storage.createProj(newProj);
+            Storage.createProj(newProj, settings.language);
             navigation.navigate(Strings.routes.home)
         }
     };

@@ -104,7 +104,7 @@ export default function EditScreen({ route, navigation }) {
             newProj.unitName = unitValue;
             newProj.freq = freqValue;
             newProj.time = timeValue;
-            Storage.updateProj(key, newProj);
+            Storage.updateProj(key, newProj, settings.language);
             navigation.navigate(Strings.routes.home)
         }
     };

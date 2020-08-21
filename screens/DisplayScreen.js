@@ -52,7 +52,7 @@ export default function DisplayScreen({ route, navigation }) {
         getPerDay();
     }, [current]);
     const deleteProj = async (projKey) => {
-        await Storage.deleteProj(projKey);
+        await Storage.deleteProj(projKey, settings.language);
         navigation.navigate(Strings.routes.home); 
     }
     const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s)
@@ -105,7 +105,7 @@ export default function DisplayScreen({ route, navigation }) {
         else {
             setCurrent(sum);
             project._currentUnit = sum;
-            Storage.updateProj(key, project);
+            Storage.updateProj(key, project, settings.language);
         }
     };
     updatebtn.onPress = () => {
@@ -124,7 +124,7 @@ export default function DisplayScreen({ route, navigation }) {
         else {
             setCurrent(updateNum);
             project._currentUnit = updateNum;
-            Storage.updateProj(key, project);
+            Storage.updateProj(key, project, settings.language);
         }
     };
     return (

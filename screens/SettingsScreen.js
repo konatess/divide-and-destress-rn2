@@ -6,6 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AllButtons from '../constants/ButtonClass';
 import ButtonBar from '../components/ButtonBar';
 import CustModal from '../components/Modal';
+import Notify from '../components/Notify';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import Storage from '../storage/Async';
@@ -91,7 +92,7 @@ export default function SettingsScreen( {route, navigation} ) {
 		let keys = projects.map(project => {
 			return project.key
 		})
-		Storage.deleteAllProj(keys);
+		Storage.deleteAllProj(keys, language);
 	};
 	const modalDonebtn = AllButtons.done;
 	modalDonebtn._title = Strings[language].buttons.done;
@@ -107,9 +108,8 @@ export default function SettingsScreen( {route, navigation} ) {
 		};
 		settings.unit = unit;
 		settings.userUnits = userUnits;
-		Storage.saveSettings(settings);
+		Storage.saveSettings(settings, language);
         navigation.navigate(Strings.routes.home)
-		console.log(settings);
 	};
 	const cancelbtn = AllButtons.cancel;
 	cancelbtn._title = Strings[language].buttons.cancel;
@@ -370,7 +370,7 @@ export default function SettingsScreen( {route, navigation} ) {
 			await Linking.openURL(Strings.mailto)
 		}
 		else {
-			console.log(`Don't know how to open this URL: ${Strings.mailto}`);
+			Notify.showError(language, Strings.mailto);
 		}
 	};
 	const buttonsArr = [
