@@ -181,7 +181,7 @@ export default function SettingsScreen( {route, navigation} ) {
 							setSingUnit('');
 						}
 						else if (exists(trimmed, index)) {
-							setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + (Strings[language].alerts.settings.unitExists.replace(/unit/g, trimmed)));
+							setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + (Strings[language].alerts.settings.unitExists.replace(/\*unit\*/g, trimmed)));
 							setModalButtons([modalCancelbtn]);
 							setSingUnit('');
 						}
@@ -267,7 +267,7 @@ export default function SettingsScreen( {route, navigation} ) {
 						setSingUnit('');
 					}
 					else if (userUnits.s.includes(trimmed)) {
-						setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + (Strings[language].alerts.settings.unitExists.replace(/unit/g, trimmed)));
+						setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + (Strings[language].alerts.settings.unitExists.replace(/\*unit\*/g, trimmed)));
 						setModalButtons([modalCancelbtn]);
 						setSingUnit('');
 					}

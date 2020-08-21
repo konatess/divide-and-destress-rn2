@@ -44,9 +44,9 @@ export default function DisplayScreen({ route, navigation }) {
                 // singular vs plural
                 let unitLabel = (number === 1) ? allSUnits : allPUnits;
                 // units remaining/freq periods remaining
-                return setPerOrDue(Strings[settings.language].labels.perDay.replace(/unit/g, unitLabel[project._unitName])
-                .replace(/num/g, number)
-                .replace(/freq/g, Strings[settings.language].frequencyWords[project._frequency || settings.notifications.freq]))
+                return setPerOrDue(Strings[settings.language].labels.perDay.replace(/\*unit\*/g, unitLabel[project._unitName])
+                .replace(/\*num\*/g, number)
+                .replace(/\*freq\*/g, Strings[settings.language].frequencyWords[project._frequency || settings.notifications.freq]))
             }
         };
         getPerDay();
@@ -114,7 +114,12 @@ export default function DisplayScreen({ route, navigation }) {
         if (updateNum > project._endUnit) {
             setmodalVisible(true);
             setModalButtons([modalokaybtn])
-            setModalMessage(Strings[settings.language].alerts.currentBig)
+            setModalMessage(Strings[settings.language].alerts.currentBig.replace(/\*units\*/g, allPUnits[project._unitName]).replace(/\*unit\*/g, allSUnits[project._unitName]))
+        }
+        else if (updateNum < project._startUnit) {
+            setmodalVisible(true);
+            setModalButtons([modalokaybtn])
+            setModalMessage(Strings[settings.language].alerts.currentSmall.replace(/\*unit\*/g, allSUnits[project._unitName]))
         }
         else {
             setCurrent(updateNum);
@@ -129,13 +134,13 @@ export default function DisplayScreen({ route, navigation }) {
                 <Text style={styles.labelText}>{perOrDue}</Text>
                 <View style={[styles.row, {justifyContent: 'flex-start'}]}>
                     <Text style={[styles.labelText, {marginBottom: 0} ]}>
-                        {Strings[settings.language].labels.currentUnit.replace(/unit/g, allSUnits[project._unitName]) + current}
+                        {Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[project._unitName]) + current}
                     </Text>
                     {current < project._endUnit && <TouchableHighlight
                         style={[styles.defaultsButton, {marginLeft: 20}]}
                         onPress={() => {
                             setmodalVisible(true)
-                            setModalMessage(Strings[settings.language].alerts.updateCurrent.replace(/units/g, allPUnits[project._unitName]).replace(/unit/g, allSUnits[project._unitName]))
+                            setModalMessage(Strings[settings.language].alerts.updateCurrent.replace(/\*units\*/g, allPUnits[project._unitName]).replace(/\*unit\*/g, allSUnits[project._unitName]))
                             setModalButtons([modalCancelBtn]);
                             setModalInputs([{
                                 label: '',
@@ -166,10 +171,10 @@ export default function DisplayScreen({ route, navigation }) {
                     {Strings[settings.language].labels.startDate + Moment(project._startDate).format(settings.dateFormat)}
                 </Text>
                 <Text style={styles.labelText}>
-                    {Strings[settings.language].labels.startUnit.replace(/unit/g, allSUnits[project._unitName]) + project._startUnit}
+                    {Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[project._unitName]) + project._startUnit}
                 </Text>
                 <Text style={styles.labelText}>
-                    {Strings[settings.language].labels.endUnit.replace(/unit/g, allSUnits[project._unitName]) + project._endUnit}
+                    {Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[project._unitName]) + project._endUnit}
                 </Text>
                 <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
                 <View style={styles.row}>

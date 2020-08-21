@@ -62,17 +62,17 @@ export default function CreateScreen({ route, navigation}) {
             setmodalVisible(true);
         }
         else if (!startValue) {
-            setModalMessage(Strings[settings.language].alerts.first);
+            setModalMessage(Strings[settings.language].alerts.first.replace(/\*unit\*/g, allSUnits[unitValue]));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!endValue) {
-            setModalMessage(Strings[settings.language].alerts.last);
+            setModalMessage(Strings[settings.language].alerts.last.replace(/\*unit\*/g, allSUnits[unitValue]));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (startValue >= endValue) {
-            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/unit/g, allSUnits[unitValue]));
+            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/\*unit\*/g, allSUnits[unitValue]));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
@@ -143,7 +143,7 @@ export default function CreateScreen({ route, navigation}) {
                 />
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.startUnit.replace(/unit/g, allSUnits[unitValue])}
+                        {Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                     </Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}
@@ -155,7 +155,7 @@ export default function CreateScreen({ route, navigation}) {
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.endUnit.replace(/unit/g, allSUnits[unitValue])}
+                        {Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                     </Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}

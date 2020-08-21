@@ -40,12 +40,7 @@ export default function HomeScreen({ route, navigation }) {
 		return ({_title: string, onPress: () => {
 			setModalVisible(false);
 			let key = Strings.orderKeys[index]
-			if (projArr.obj[Strings.orderKeys[index]].isNaN) {
-				return setProjArr(projArr.sort((a, b) => a.obj[key].localeCompare(b.obj[key])));
-			}
-			else {
-				return setProjArr(projArr.sort((a, b) => a.obj[key] - b.obj[key]));
-			}
+			setProjArr(projArr.sort((a, b) => a.obj[key].localeCompare(b.obj[key])));
 		}})
 	})
 	React.useEffect(() => {

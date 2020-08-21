@@ -75,8 +75,23 @@ export default function EditScreen({ route, navigation }) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
+        else if (!currentValue) {
+            setModalMessage(Strings[settings.language].alerts.current.replace(/\*unit\*/g, allSUnits[unitValue]));
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
         else if (startValue >= endValue) {
-            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/unit/g, allSUnits[unitValue]));
+            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/\*unit\*/g, allSUnits[unitValue]));
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
+        else if (currentValue < startValue) {
+            setModalMessage(Strings[settings.language].alerts.currentSmall.replace(/\*unit\*/g, allSUnits[unitValue]));
+            setModalButtons([modalokaybtn]);
+            setmodalVisible(true);
+        }
+        else if (currentValue > endValue) {
+            setModalMessage(Strings[settings.language].alerts.currentBig.replace(/\*units\*/g, allPUnits[project._unitName]).replace(/\*unit\*/g, allSUnits[unitValue]));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
@@ -144,7 +159,7 @@ export default function EditScreen({ route, navigation }) {
                     onChangeText={text => setTitleValue(text)}
                 />
                 <View style={[styles.row]}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.currentUnit.replace(/unit/g, allSUnits[unitValue])}</Text>
+                    <Text style={styles.labelText}>{Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[unitValue])}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
@@ -155,7 +170,7 @@ export default function EditScreen({ route, navigation }) {
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.startUnit.replace(/unit/g, allSUnits[unitValue])}
+                        {Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                     </Text>
                     <TextInput
                         style={styles.inputField}
@@ -167,7 +182,7 @@ export default function EditScreen({ route, navigation }) {
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.endUnit.replace(/unit/g, allSUnits[unitValue])}
+                        {Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                     </Text>
                     <TextInput
                         style={styles.inputField}
