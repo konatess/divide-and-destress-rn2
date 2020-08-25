@@ -33,7 +33,7 @@ export default function App(props) {
 
 			// Load our initial navigation state
 			setInitialNavigationState(await getInitialState());
-			fetchSettingsObj(await Storage.getSettings());
+			fetchSettingsObj(await Storage.getSettings('English'));
 
 			// Load fonts
 			await Font.loadAsync({

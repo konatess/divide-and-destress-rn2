@@ -1,8 +1,9 @@
 import { AsyncStorage } from 'react-native';
+import Notify from '../components/Notify';
 import Strings from '../constants/Strings';
 
 export default {
-    getSettings: async () => {
+    getSettings: async (language) => {
         try {
             const settingsobj = await AsyncStorage.getItem(Strings.keys.settings);
             if (settingsobj) {
@@ -26,22 +27,22 @@ export default {
             }
         }
         catch (error) {
-            return console.log(error);
+            return Notify.showError(language, error);
         }
     },
-    saveSettings: async (settingsobj) => {
+    saveSettings: async (settingsobj, language) => {
         try {
             await AsyncStorage.setItem(Strings.keys.settings, JSON.stringify(settingsobj))
         }
         catch (error) {
-            return console.log(error);
+            return Notify.showError(language, error);
         }
     },
-    getAllProj: async () => {
+    getAllProj: async (language) => {
         try {
             let keys = await AsyncStorage.getAllKeys();
             let allKeys = await AsyncStorage.multiGet(keys, (err, stores) => {
-                err && console.log(err);
+                err && Notify.showError(language, err);
             });
             let filterProj = allKeys.filter((result, i, store) => {
                 // get at each store's key/value so you can work with it
@@ -56,20 +57,27 @@ export default {
             return projArr;
         }
         catch (error) {
-            return console.log('Rejected: ' + error);
+            return Notify.showError(language, error);
         }
     },
-    deleteAllProj: async () => {
-        // get settings, and anything else I need
-        // clear all
-        // resave settings, etc
+    deleteAllProj: async (keys, language) => {
+        if (keys.length) {
+            try {
+                AsyncStorage.multiRemove(keys, (err) => {
+                    err && Notify.showError(language, err);
+                });
+            }
+            catch (error) {
+                return Notify.showError(language, error);
+            }
+        }
     },
-    createProj: async (projobj) => {
+    createProj: async (projobj, language) => {
         AsyncStorage.setItem(Strings.keys.projPrefix + projobj.title, JSON.stringify(projobj), (err) => {
-            err && console.log(err);
+            err && Notify.showError(language, err);
         });
     },
-    readProj: async (projkey) => {
+    readProj: async (projkey, language) => {
         try {
             const project = await AsyncStorage.getItem(projkey);
             if (project) {
@@ -77,17 +85,17 @@ export default {
             }
         }
         catch (error) {
-            return console.log(error);
+            return Notify.showError(language, error);
         }
     },
-    updateProj: async (projkey, projobj) => {
+    updateProj: async (projkey, projobj, language) => {
         AsyncStorage.mergeItem(projkey, JSON.stringify(projobj), (err) => {
-            err && console.log(err);
+            err && Notify.showError(language, err);
         })
     },
-    deleteProj: async (projkey) => {
+    deleteProj: async (projkey, language) => {
         AsyncStorage.removeItem(projkey, (err) => {
-            err && console.log(err);
+            err && Notify.showError(language, err);
         });
     }
 };

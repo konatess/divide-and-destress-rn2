@@ -21,7 +21,7 @@ export default function CreateScreen({ route, navigation}) {
     const { knowntitles } = route.params
     const { settings } = route.params
     // Unit picker
-    const [unitValue, setUnitValue] = React.useState(1);
+    const [unitValue, setUnitValue] = React.useState(settings.unit);
     // modal
     const [modalVisible, setmodalVisible] = React.useState(false);
     const [modalMessage, setModalMessage] = React.useState();
@@ -62,17 +62,17 @@ export default function CreateScreen({ route, navigation}) {
             setmodalVisible(true);
         }
         else if (!startValue) {
-            setModalMessage(Strings[settings.language].alerts.first);
+            setModalMessage(Strings[settings.language].alerts.first.replace(/\*unit\*/g, allSUnits[unitValue]));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!endValue) {
-            setModalMessage(Strings[settings.language].alerts.last);
+            setModalMessage(Strings[settings.language].alerts.last.replace(/\*unit\*/g, allSUnits[unitValue]));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (startValue >= endValue) {
-            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/unit/g, Strings[settings.language].units[unitValue]));
+            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/\*unit\*/g, allSUnits[unitValue]));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
@@ -86,10 +86,12 @@ export default function CreateScreen({ route, navigation}) {
             newProj.unitName = unitValue;
             newProj.freq = freqValue;
             newProj.time = timeValue;
-            Storage.createProj(newProj);
+            Storage.createProj(newProj, settings.language);
             navigation.navigate(Strings.routes.home)
         }
     };
+    const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s);
+    const allPUnits = Strings[settings.language].unitPlurals.concat(settings.userUnits.p);
     const savebtn = AllButtons.save;
     savebtn._title = Strings[settings.language].buttons.save
     const cancelbtn = AllButtons.cancel;
@@ -105,7 +107,7 @@ export default function CreateScreen({ route, navigation}) {
     modalokaybtn.onPress = () => setmodalVisible(false);
     modalcancelbtn.onPress = () => setmodalVisible(false);
     // modal picker buttons
-    const unitBtns = Strings[settings.language].unitPlurals.concat(settings.userUnits.p).map((string, index) => {
+    const unitBtns = allPUnits.map((string, index) => {
 		return ({_title: string, onPress: () => {
             setUnitValue(index);
 			setmodalVisible(false);
@@ -141,7 +143,7 @@ export default function CreateScreen({ route, navigation}) {
                 />
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}
+                        {Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                     </Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}
@@ -153,7 +155,7 @@ export default function CreateScreen({ route, navigation}) {
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[unitValue])}
+                        {Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                     </Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}
@@ -177,7 +179,7 @@ export default function CreateScreen({ route, navigation}) {
                     <Text style={[styles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}
-                        value={Strings[settings.language].unitPlurals.concat(settings.userUnits.p)[unitValue]}
+                        value={allPUnits[unitValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
                             setModalButtons([modalcancelbtn]);

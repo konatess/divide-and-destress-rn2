@@ -42,19 +42,21 @@ export default function DisplayScreen({ route, navigation }) {
                 // number per day
                 let number = (units/periods).toFixed(1);
                 // singular vs plural
-                let unitLabel = (number === 1) ? "units" : "unitPlurals";
+                let unitLabel = (number === 1) ? allSUnits : allPUnits;
                 // units remaining/freq periods remaining
-                return setPerOrDue(Strings[settings.language].labels.perDay.replace(/unit/g, Strings[settings.language][unitLabel][project._unitName])
-                .replace(/num/g, number)
-                .replace(/freq/g, Strings[settings.language].frequencyWords[project._frequency || settings.notifications.freq]))
+                return setPerOrDue(Strings[settings.language].labels.perDay.replace(/\*unit\*/g, unitLabel[project._unitName])
+                .replace(/\*num\*/g, number)
+                .replace(/\*freq\*/g, Strings[settings.language].frequencyWords[project._frequency || settings.notifications.freq]))
             }
         };
         getPerDay();
     }, [current]);
     const deleteProj = async (projKey) => {
-        await Storage.deleteProj(projKey);
+        await Storage.deleteProj(projKey, settings.language);
         navigation.navigate(Strings.routes.home); 
     }
+    const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s)
+    const allPUnits = Strings[settings.language].unitPlurals.concat(settings.userUnits.p)
     const deletebtn = AllButtons.delete;
     deletebtn._title = Strings[settings.language].buttons.delete;
     const editbtn = AllButtons.edit;
@@ -103,7 +105,7 @@ export default function DisplayScreen({ route, navigation }) {
         else {
             setCurrent(sum);
             project._currentUnit = sum;
-            Storage.updateProj(key, project);
+            Storage.updateProj(key, project, settings.language);
         }
     };
     updatebtn.onPress = () => {
@@ -112,12 +114,17 @@ export default function DisplayScreen({ route, navigation }) {
         if (updateNum > project._endUnit) {
             setmodalVisible(true);
             setModalButtons([modalokaybtn])
-            setModalMessage(Strings[settings.language].alerts.currentBig)
+            setModalMessage(Strings[settings.language].alerts.currentBig.replace(/\*units\*/g, allPUnits[project._unitName]).replace(/\*unit\*/g, allSUnits[project._unitName]))
+        }
+        else if (updateNum < project._startUnit) {
+            setmodalVisible(true);
+            setModalButtons([modalokaybtn])
+            setModalMessage(Strings[settings.language].alerts.currentSmall.replace(/\*unit\*/g, allSUnits[project._unitName]))
         }
         else {
             setCurrent(updateNum);
             project._currentUnit = updateNum;
-            Storage.updateProj(key, project);
+            Storage.updateProj(key, project, settings.language);
         }
     };
     return (
@@ -127,13 +134,13 @@ export default function DisplayScreen({ route, navigation }) {
                 <Text style={styles.labelText}>{perOrDue}</Text>
                 <View style={[styles.row, {justifyContent: 'flex-start'}]}>
                     <Text style={[styles.labelText, {marginBottom: 0} ]}>
-                        {Strings[settings.language].labels.currentUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + current}
+                        {Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[project._unitName]) + current}
                     </Text>
-                    <TouchableHighlight
+                    {current < project._endUnit && <TouchableHighlight
                         style={[styles.defaultsButton, {marginLeft: 20}]}
                         onPress={() => {
                             setmodalVisible(true)
-                            setModalMessage(Strings[settings.language].alerts.updateCurrent.replace(/units/g, Strings.English.unitPlurals[project._unitName]).replace(/unit/g, Strings[settings.language].units[project._unitName]))
+                            setModalMessage(Strings[settings.language].alerts.updateCurrent.replace(/\*units\*/g, allPUnits[project._unitName]).replace(/\*unit\*/g, allSUnits[project._unitName]))
                             setModalButtons([modalCancelBtn]);
                             setModalInputs([{
                                 label: '',
@@ -155,7 +162,7 @@ export default function DisplayScreen({ route, navigation }) {
                         <Text style={styles.buttonText}>
                             {Strings[settings.language].buttons.updateCurrent}
                         </Text>
-                    </TouchableHighlight>
+                    </TouchableHighlight>}
                 </View>
                 <Text style={styles.labelText}>
                     {Strings[settings.language].labels.dueDate + Moment(project._dueDate).format(settings.dateFormat)}
@@ -164,10 +171,10 @@ export default function DisplayScreen({ route, navigation }) {
                     {Strings[settings.language].labels.startDate + Moment(project._startDate).format(settings.dateFormat)}
                 </Text>
                 <Text style={styles.labelText}>
-                    {Strings[settings.language].labels.startUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._startUnit}
+                    {Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[project._unitName]) + project._startUnit}
                 </Text>
                 <Text style={styles.labelText}>
-                    {Strings[settings.language].labels.endUnit.replace(/unit/g, Strings[settings.language].units[project._unitName]) + project._endUnit}
+                    {Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[project._unitName]) + project._endUnit}
                 </Text>
                 <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
                 <View style={styles.row}>
