@@ -369,7 +369,7 @@ export default function SettingsScreen( {route, navigation} ) {
 			await Linking.openURL(Strings.mailto)
 		}
 		else {
-			Notify.showError(language, Strings.mailto);
+			Notify(language, Strings.mailto);
 		}
 	};
 	const buttonsArr = [
