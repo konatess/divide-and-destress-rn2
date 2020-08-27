@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, StatusBar, StyleSheet, View, AsyncStorage } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,7 +13,7 @@ import DisplayScreen from './screens/DisplayScreen';
 import CreateScreen from './screens/CreateScreen';
 import EditScreen from './screens/EditScreen';
 import Strings from './constants/Strings';
-import Colors from './constants/Colors';
+import Notify from './components/Notify';
 import Storage from './storage/Async';
 
 const Stack = createStackNavigator();
@@ -42,7 +42,7 @@ export default function App(props) {
 			});
 		} catch (e) {
 			// We might want to provide this error information to an error reporting service
-			console.warn(e);
+			Notify.showError('English', e);
 		} finally {
 			setLoadingComplete(true);
 			SplashScreen.hide();

@@ -44,9 +44,9 @@ export default function DisplayScreen({ route, navigation }) {
                 // singular vs plural
                 let unitLabel = (number === 1) ? allSUnits : allPUnits;
                 // units remaining/freq periods remaining
-                return setPerOrDue(Strings[settings.language].labels.perDay.replace(/\*unit\*/g, unitLabel[project._unitName])
+                return setPerOrDue(Strings.capitalize(Strings[settings.language].labels.perDay.replace(/\*unit\*/g, unitLabel[project._unitName])
                 .replace(/\*num\*/g, number)
-                .replace(/\*freq\*/g, Strings[settings.language].frequencyWords[project._frequency || settings.notifications.freq]))
+                .replace(/\*freq\*/g, Strings[settings.language].frequencyWords[project._frequency || settings.notifications.freq])))
             }
         };
         getPerDay();
@@ -100,7 +100,7 @@ export default function DisplayScreen({ route, navigation }) {
         if (sum > project._endUnit) {
             setmodalVisible(true);
             setModalButtons([modalokaybtn])
-            setModalMessage(Strings[settings.language].alerts.currentBig)
+            setModalMessage(Strings.capitalize(Strings[settings.language].alerts.currentBig.replace(/\*unit\*/g, allSUnits[project._unitName])))
         }
         else {
             setCurrent(sum);
@@ -114,12 +114,12 @@ export default function DisplayScreen({ route, navigation }) {
         if (updateNum > project._endUnit) {
             setmodalVisible(true);
             setModalButtons([modalokaybtn])
-            setModalMessage(Strings[settings.language].alerts.currentBig.replace(/\*units\*/g, allPUnits[project._unitName]).replace(/\*unit\*/g, allSUnits[project._unitName]))
+            setModalMessage(Strings.capitalize(Strings[settings.language].alerts.currentBig.replace(/\*unit\*/g, allSUnits[project._unitName])))
         }
         else if (updateNum < project._startUnit) {
             setmodalVisible(true);
             setModalButtons([modalokaybtn])
-            setModalMessage(Strings[settings.language].alerts.currentSmall.replace(/\*unit\*/g, allSUnits[project._unitName]))
+            setModalMessage(Strings.capitalize(Strings[settings.language].alerts.currentSmall.replace(/\*unit\*/g, allSUnits[project._unitName])))
         }
         else {
             setCurrent(updateNum);
@@ -132,15 +132,15 @@ export default function DisplayScreen({ route, navigation }) {
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings[settings.language].labels.title + project._title}</Text>
                 <Text style={styles.labelText}>{perOrDue}</Text>
-                <View style={[styles.row, {justifyContent: 'flex-start'}]}>
+                <View style={[styles.row, {justifyContent: 'flex-start', flexWrap: 'wrap'}]}>
                     <Text style={[styles.labelText, {marginBottom: 0} ]}>
-                        {Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[project._unitName]) + current}
+                        {Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[project._unitName]) + current)}
                     </Text>
                     {current < project._endUnit && <TouchableHighlight
-                        style={[styles.defaultsButton, {marginLeft: 20}]}
+                        style={[styles.defaultsButton, {marginLeft: 20, marginTop: 5}]}
                         onPress={() => {
                             setmodalVisible(true)
-                            setModalMessage(Strings[settings.language].alerts.updateCurrent.replace(/\*units\*/g, allPUnits[project._unitName]).replace(/\*unit\*/g, allSUnits[project._unitName]))
+                            setModalMessage(Strings.capitalize(Strings[settings.language].alerts.updateCurrent.replace(/\*units\*/g, allPUnits[project._unitName]).replace(/\*unit\*/g, allSUnits[project._unitName])))
                             setModalButtons([modalCancelBtn]);
                             setModalInputs([{
                                 label: '',
@@ -171,25 +171,28 @@ export default function DisplayScreen({ route, navigation }) {
                     {Strings[settings.language].labels.startDate + Moment(project._startDate).format(settings.dateFormat)}
                 </Text>
                 <Text style={styles.labelText}>
-                    {Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[project._unitName]) + project._startUnit}
+                    {Strings.capitalize(Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[project._unitName]) + project._startUnit)}
                 </Text>
                 <Text style={styles.labelText}>
-                    {Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[project._unitName]) + project._endUnit}
+                    {Strings.capitalize(Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[project._unitName]) + project._endUnit)}
                 </Text>
                 <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
+                <View style={[styles.row, {marginBottom: 0}]}>
+                    <Text style={[styles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.time + '  ' + (project._time === 'default' ? Strings[settings.language].frequencyWords[0] : project._time)}</Text>
+                </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.time + '  ' + project._time}</Text>
-                    <Text style={[styles.labelText, {paddingLeft: 5}]}>{Strings[settings.language].labels.frequency + '  ' + Strings[settings.language].frequencyWords[project._frequency]}</Text>
+                    <Text style={[styles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.frequency + '  ' + Strings[settings.language].frequencyWords[project._frequency]}</Text>
                 </View>
             </View>
             <ButtonBar buttons={[ deletebtn, editbtn, homebtn ]} />
             <CustModal 
-            visible={modalVisible} 
-            message={modalMessage} 
-            pickers={[]}
-			inputs={modalInputs}
-            buttons={modalButtons} 
-			darkmode={settings.darkmode}
+                visible={modalVisible} 
+                message={modalMessage} 
+                pickers={[]}
+                inputs={modalInputs}
+                buttons={modalButtons} 
+                vertical={true}
+                darkmode={settings.darkmode}
             />
         </View>
     )
@@ -214,7 +217,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         paddingRight: 5,
         textAlignVertical: 'center',
-        marginBottom: 15
+        marginBottom: 15,
+        flexWrap: 'wrap',
+        flexShrink: 1,
     }, 
     defaultsButton: {
         backgroundColor: Colors.cancel,
