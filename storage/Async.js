@@ -27,7 +27,7 @@ export default {
             }
         }
         catch (error) {
-            return Notify.showError(language, error);
+            return Notify(language, error);
         }
     },
     saveSettings: async (settingsobj, language) => {
@@ -35,14 +35,14 @@ export default {
             await AsyncStorage.setItem(Strings.keys.settings, JSON.stringify(settingsobj))
         }
         catch (error) {
-            return Notify.showError(language, error);
+            return Notify(language, error);
         }
     },
     getAllProj: async (language) => {
         try {
             let keys = await AsyncStorage.getAllKeys();
             let allKeys = await AsyncStorage.multiGet(keys, (err, stores) => {
-                err && Notify.showError(language, err);
+                err && Notify(language, err);
             });
             let filterProj = allKeys.filter((result, i, store) => {
                 // get at each store's key/value so you can work with it
@@ -57,24 +57,24 @@ export default {
             return projArr;
         }
         catch (error) {
-            return Notify.showError(language, error);
+            return Notify(language, error);
         }
     },
     deleteAllProj: async (keys, language) => {
         if (keys.length) {
             try {
                 AsyncStorage.multiRemove(keys, (err) => {
-                    err && Notify.showError(language, err);
+                    err && Notify(language, err);
                 });
             }
             catch (error) {
-                return Notify.showError(language, error);
+                return Notify(language, error);
             }
         }
     },
     createProj: async (projobj, language) => {
         AsyncStorage.setItem(Strings.keys.projPrefix + projobj.title, JSON.stringify(projobj), (err) => {
-            err && Notify.showError(language, err);
+            err && Notify(language, err);
         });
     },
     readProj: async (projkey, language) => {
@@ -85,17 +85,17 @@ export default {
             }
         }
         catch (error) {
-            return Notify.showError(language, error);
+            return Notify(language, error);
         }
     },
     updateProj: async (projkey, projobj, language) => {
         AsyncStorage.mergeItem(projkey, JSON.stringify(projobj), (err) => {
-            err && Notify.showError(language, err);
+            err && Notify(language, err);
         })
     },
     deleteProj: async (projkey, language) => {
         AsyncStorage.removeItem(projkey, (err) => {
-            err && Notify.showError(language, err);
+            err && Notify(language, err);
         });
     }
 };

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, Text, View, FlatList, StatusBar } from 'react-native';
-import { NavigationEvents } from '@react-navigation/native';
 import { RectButton } from 'react-native-gesture-handler';
-import { Project } from '../constants/ProjectClass';
 import ButtonBar from '../components/ButtonBar'
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
@@ -19,7 +17,6 @@ export default function HomeScreen({ route, navigation }) {
 	const [modalPickers, setModalPickers] = React.useState([]);
 	const [projArr, setProjArr] = React.useState([])
 	const [titles, setTitles] = React.useState([]);
-	// const [order, setOrder] = React.useState();
 	const settingsbtn = AllButtons.settings;
 	settingsbtn._title = Strings[settings.language].buttons.settings
 	settingsbtn.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings, knowntitles: titles, projects: projArr});
@@ -90,6 +87,7 @@ export default function HomeScreen({ route, navigation }) {
 				pickers={modalPickers}
 				inputs={[]}
 				buttons={[ modalCancelbtn ]}
+				vertical={false}
 				darkmode={settings.darkmode}
 				>
 			</CustModal>

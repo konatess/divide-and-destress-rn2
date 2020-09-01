@@ -53,59 +53,62 @@ export default function EditScreen({ route, navigation }) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!newProj.titleIsValid(titleValue)) {
+        else if (Strings.regex.titles.test(titleValue)) {
             setModalMessage(Strings[settings.language].alerts.charTitle);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (cleanedTitles.some((value) => {
-            return value === newProj.title
-        })) {
+        else if (cleanedTitles.some(item => {return item === titleValue})) {
             setModalMessage(Strings[settings.language].alerts.title.exists);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!startValue) {
-            setModalMessage(Strings[settings.language].alerts.first);
+            setModalMessage(Strings.capitalize(Strings[settings.language].alerts.first.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!endValue) {
-            setModalMessage(Strings[settings.language].alerts.last);
+            setModalMessage(Strings.capitalize(Strings[settings.language].alerts.last.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!currentValue) {
-            setModalMessage(Strings[settings.language].alerts.current.replace(/\*unit\*/g, allSUnits[unitValue]));
-            setModalButtons([modalokaybtn]);
-            setmodalVisible(true);
-        }
-        else if (startValue >= endValue) {
-            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/\*unit\*/g, allSUnits[unitValue]));
-            setModalButtons([modalokaybtn]);
-            setmodalVisible(true);
-        }
-        else if (currentValue < startValue) {
-            setModalMessage(Strings[settings.language].alerts.currentSmall.replace(/\*unit\*/g, allSUnits[unitValue]));
-            setModalButtons([modalokaybtn]);
-            setmodalVisible(true);
-        }
-        else if (currentValue > endValue) {
-            setModalMessage(Strings[settings.language].alerts.currentBig.replace(/\*units\*/g, allPUnits[project._unitName]).replace(/\*unit\*/g, allSUnits[unitValue]));
+            setModalMessage(Strings.capitalize(Strings[settings.language].alerts.current.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else {
-            newProj.title = titleValue.trim();
-            newProj.dueDate = dateValue;
-            newProj.startUnit = parseInt(startValue);
-            newProj.endUnit = parseInt(endValue);
-            newProj.currentUnit = parseInt(currentValue);
-            newProj.unitName = unitValue;
-            newProj.freq = freqValue;
-            newProj.time = timeValue;
-            Storage.updateProj(key, newProj, settings.language);
-            navigation.navigate(Strings.routes.home)
+            let start = parseInt(startValue);
+            let end = parseInt(endValue);
+            let current = parseInt(currentValue);
+            if (start >= end) {
+                setModalMessage(Strings.capitalize(Strings[settings.language].alerts.firstSmaller.replace(/\*unit\*/g, allSUnits[unitValue])));
+                setModalButtons([modalokaybtn]);
+                setmodalVisible(true);
+            }
+            else if (current < start) {
+                setModalMessage(Strings[settings.language].alerts.currentSmall.replace(/\*unit\*/g, allSUnits[unitValue]));
+                setModalButtons([modalokaybtn]);
+                setmodalVisible(true);
+            }
+            else if (current > end) {
+                setModalMessage(Strings.capitalize(Strings[settings.language].alerts.currentBig.replace(/\*unit\*/g, allSUnits[unitValue])));
+                setModalButtons([modalokaybtn]);
+                setmodalVisible(true);
+            }
+            else {
+                newProj.title = titleValue.trim();
+                newProj.dueDate = dateValue;
+                newProj.startUnit = start;
+                newProj.endUnit = end;
+                newProj.currentUnit = current;
+                newProj.unitName = unitValue;
+                newProj.freq = freqValue;
+                newProj.time = timeValue;
+                Storage.updateProj(key, newProj, settings.language);
+                navigation.navigate(Strings.routes.home)
+            }
         }
     };
     const savebtn = AllButtons.save;
@@ -133,6 +136,7 @@ export default function EditScreen({ route, navigation }) {
 		return ({_title: string, onPress: () => {
 			setFreqValue(index);
 			setmodalVisible(false);
+            setModalPickers([]);
 		}})
     });
     const getTextColor = () => {
@@ -159,7 +163,7 @@ export default function EditScreen({ route, navigation }) {
                     onChangeText={text => setTitleValue(text)}
                 />
                 <View style={[styles.row]}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[unitValue])}</Text>
+                    <Text style={styles.labelText}>{Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[unitValue]))}</Text>
                     <TextInput
                         style={styles.inputField}
                         placeholder={'42'}
@@ -170,7 +174,7 @@ export default function EditScreen({ route, navigation }) {
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
+                        {Strings.capitalize(Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
                         style={styles.inputField}
@@ -182,7 +186,7 @@ export default function EditScreen({ route, navigation }) {
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
+                        {Strings.capitalize(Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
                         style={styles.inputField}
@@ -193,7 +197,7 @@ export default function EditScreen({ route, navigation }) {
                     />
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.dueDate}</Text>
+                    <Text style={[styles.labelText, {flexWrap: 'wrap'}]}>{Strings[settings.language].labels.dueDate}</Text>
                     <TextInput 
                         style={styles.inputField} 
                         value={Moment(dateValue).format(settings.dateFormat)}
@@ -220,7 +224,7 @@ export default function EditScreen({ route, navigation }) {
                 <View style={styles.row}>
                     <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
                     <TouchableHighlight
-                        style={styles.defaultsButton}
+                        style={[styles.defaultsButton, {marginLeft: 5}]}
                         onPress={() => {
                             setTimeValue('default');
                             setFreqValue(0);
@@ -232,16 +236,18 @@ export default function EditScreen({ route, navigation }) {
                     </TouchableHighlight>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.time}</Text>
+                    <Text style={[styles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.time}</Text>
                     <TextInput
                         style={styles.inputField}
-                        value={timeValue}
+                        value={timeValue === 'default' ? Strings[settings.language].frequencyWords[0] : timeValue}
                         onFocus={() => {
                             setShowDate(true);
                             setDateMode('time');
                         }}
                     />
-                    <Text style={[styles.labelText, {paddingLeft: 5}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
+                </View>
+                <View style={styles.row}>
+                    <Text style={[styles.labelText, {paddingLeft: 10}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}
                         value={Strings[settings.language].frequencyWords[freqValue]}
@@ -287,12 +293,14 @@ const styles = StyleSheet.create({
     }, 
     row: {
         flexDirection: 'row', 
-        marginBottom: 10
+        marginBottom: 10,
     },
     labelText: {
         fontSize: 20,
         paddingRight: 5,
-        textAlignVertical: 'center'
+        textAlignVertical: 'center',
+        flexWrap: 'wrap',
+        flexShrink: 1,
     }, 
     inputField: {
         borderColor: Colors.inputBorder, 

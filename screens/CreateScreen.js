@@ -49,30 +49,28 @@ export default function CreateScreen({ route, navigation}) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!newProj.titleIsValid(titleValue)) {
+        else if (Strings.regex.titles.test(titleValue)) {
             setModalMessage(Strings[settings.language].alerts.charTitle);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (knowntitles.some((value) => {
-            return value === newProj.title
-        })) {
+        else if (knowntitles.some(item => {return item === titleValue})) {
             setModalMessage(Strings[settings.language].alerts.title.exists);
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!startValue) {
-            setModalMessage(Strings[settings.language].alerts.first.replace(/\*unit\*/g, allSUnits[unitValue]));
+            setModalMessage(Strings.capitalize(Strings[settings.language].alerts.first.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
         else if (!endValue) {
-            setModalMessage(Strings[settings.language].alerts.last.replace(/\*unit\*/g, allSUnits[unitValue]));
+            setModalMessage(Strings.capitalize(Strings[settings.language].alerts.last.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (startValue >= endValue) {
-            setModalMessage(Strings[settings.language].alerts.firstSmaller.replace(/\*unit\*/g, allSUnits[unitValue]));
+        else if (parseInt(startValue) >= parseInt(endValue)) {
+            setModalMessage(Strings.capitalize(Strings[settings.language].alerts.firstSmaller.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
@@ -116,7 +114,8 @@ export default function CreateScreen({ route, navigation}) {
     const freqBtns = Strings[settings.language].frequencyWords.map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setFreqValue(index);
-			setmodalVisible(false);
+            setmodalVisible(false);
+            setModalPickers([]);
 		}})
 	});
     const getTextColor = () => {
@@ -143,7 +142,7 @@ export default function CreateScreen({ route, navigation}) {
                 />
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
+                        {Strings.capitalize(Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}
@@ -155,7 +154,7 @@ export default function CreateScreen({ route, navigation}) {
                 </View>
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
-                        {Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
+                        {Strings.capitalize(Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}
@@ -192,7 +191,7 @@ export default function CreateScreen({ route, navigation}) {
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.notification}</Text>
                     <TouchableHighlight
-                        style={styles.defaultsButton}
+                        style={[styles.defaultsButton, {marginLeft: 5}]}
                         onPress={() => {
                             setTimeValue('default');
                             setFreqValue(0);
@@ -204,19 +203,21 @@ export default function CreateScreen({ route, navigation}) {
                     </TouchableHighlight>
                 </View>
                 <View style={styles.row}>
-                    <Text style={[styles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.time}</Text>
+                    <Text style={[styles.labelText, {paddingLeft: 10}, {color: getTextColor()}]}>{Strings[settings.language].labels.time}</Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}
-                        value={timeValue}
+                        value={timeValue === 'default' ? Strings[settings.language].frequencyWords[0] : timeValue}
                         onFocus={() => {
                             setShowDate(true);
                             setDateMode('time');
                         }}
                     />
-                    <Text style={[styles.labelText, {paddingLeft: 5}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
+                </View>
+                <View style={styles.row}>
+                    <Text style={[styles.labelText, {paddingLeft: 10}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
                     <TextInput
                         style={[styles.inputField, {color: getTextColor()}]}
-                        value={Strings.English.frequencyWords[freqValue]}
+                        value={Strings[settings.language].frequencyWords[freqValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
                             setModalButtons([modalcancelbtn]);
@@ -259,12 +260,14 @@ const styles = StyleSheet.create({
     }, 
     row: {
         flexDirection: 'row', 
-        marginBottom: 10
+        marginBottom: 10,
     },
     labelText: {
         fontSize: 20,
         paddingRight: 5,
-        textAlignVertical: 'center'
+        textAlignVertical: 'center',
+        flexWrap: 'wrap',
+        flexShrink: 1,
     }, 
     inputField: {
         borderColor: Colors.inputBorder, 

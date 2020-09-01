@@ -23,7 +23,6 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [freq, setFreq] = React.useState(settings.notifications.freq);
 	const [time, setTime] = React.useState(settings.notifications.time);
 	const [unit, setUnit] = React.useState(settings.unit);
-	const [editUnit, setEditUnit] = React.useState(settings.unit);
 	const [editIndex, setEditIndex] = React.useState(-1);
 	const [deletableUnits, setDeletableUnits] = React.useState([]);
 	const [userUnits, setuserUnits] = React.useState(settings.userUnits);
@@ -156,12 +155,12 @@ export default function SettingsScreen( {route, navigation} ) {
 			setModalInputs([
 				{
 					label: Strings[settings.language].labels.sUnit,
-					placeholder: Strings[settings.language].units[1],
+					placeholder: Strings[language].units[1],
 					default: userUnits.s[index],
 					onChange: text => {
 						let trimmed = text.trim();
 						let exists = (txt, num) => {
-							let ind = userUnits.s.findIndex((val) => {
+							let ind = Strings[language].units.concat(userUnits.s).findIndex(val => {
 								return val === txt
 							});
 							if (ind === -1 || ind === num) {
@@ -181,7 +180,7 @@ export default function SettingsScreen( {route, navigation} ) {
 							setSingUnit('');
 						}
 						else if (exists(trimmed, index)) {
-							setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + (Strings[language].alerts.settings.unitExists.replace(/\*unit\*/g, trimmed)));
+							setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + Strings.capitalize(Strings[language].alerts.settings.unitExists.replace(/\*unit\*/g, trimmed)));
 							setModalButtons([modalCancelbtn]);
 							setSingUnit('');
 						}
@@ -191,8 +190,8 @@ export default function SettingsScreen( {route, navigation} ) {
 					}
 				},
 				{
-					label: Strings[settings.language].labels.pUnit,
-					placeholder: Strings[settings.language].unitPlurals[1],
+					label: Strings[language].labels.pUnit,
+					placeholder: Strings[language].unitPlurals[1],
 					default: userUnits.p[index],
 					onChange: text => {
 						let trimmed = text.trim();
@@ -253,8 +252,8 @@ export default function SettingsScreen( {route, navigation} ) {
 		setModalButtons([modalCancelbtn]);
 		setModalInputs([
 			{
-				label: Strings[settings.language].labels.sUnit,
-				placeholder: Strings[settings.language].units[1],
+				label: Strings[language].labels.sUnit,
+				placeholder: Strings[language].units[1],
 				onChange: text => {
 					let trimmed = text.trim();
 					if (trimmed.length === 0) {
@@ -267,7 +266,7 @@ export default function SettingsScreen( {route, navigation} ) {
 						setSingUnit('');
 					}
 					else if (userUnits.s.includes(trimmed)) {
-						setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + (Strings[language].alerts.settings.unitExists.replace(/\*unit\*/g, trimmed)));
+						setModalMessage(Strings[language].alerts.settings.addUnit + '\n' + Strings.capitalize(Strings[language].alerts.settings.unitExists.replace(/\*unit\*/g, trimmed)));
 						setModalButtons([modalCancelbtn]);
 						setSingUnit('');
 					}
@@ -277,8 +276,8 @@ export default function SettingsScreen( {route, navigation} ) {
 				}
 			},
 			{
-				label: Strings[settings.language].labels.pUnit,
-				placeholder: Strings[settings.language].unitPlurals[1],
+				label: Strings[language].labels.pUnit,
+				placeholder: Strings[language].unitPlurals[1],
 				onChange: text => {
 					let trimmed = text.trim();
 					if (trimmed.length === 0) {
@@ -370,7 +369,7 @@ export default function SettingsScreen( {route, navigation} ) {
 			await Linking.openURL(Strings.mailto)
 		}
 		else {
-			Notify.showError(language, Strings.mailto);
+			Notify(language, Strings.mailto);
 		}
 	};
 	const buttonsArr = [
