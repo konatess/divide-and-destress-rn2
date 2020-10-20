@@ -62,6 +62,7 @@ export default function HomeScreen({ route, navigation }) {
 				barStyle={settings.darkmode ? "light-content" : "dark-content"} 
 				backgroundColor={settings.darkmode ? Colors.darkmode.background : Colors.mainbackground} 
 			/>
+			<View style={styles.buffer}></View>
 			{!projArr.length && <Text style={styles.labelText}>
 				{Strings[settings.language].placeholder.noProj}
 			</Text>}
@@ -113,7 +114,7 @@ function ProjectButton({ passKey, title, due, onPress, settings }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: 10
+		paddingTop: 30
 	},
 	project: {
 		padding: 10,
