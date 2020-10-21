@@ -18,10 +18,30 @@ export default {
       },
     
     sendNotificationImmediately: async () => {
-        let notificationId = await Notifications.presentLocalNotificationAsync({
+        let notificationId = await Notifications.presentNotificationAsync({
           title: "This is crazy",
           body: "Your mind will blow after reading this"
         });
         console.log(notificationId); // can be saved in AsyncStorage or send to server
-    }
+    },
+
+    scheduleNotification: async () => {
+        Notifications.setNotificationHandler({
+            handleNotification: async () => ({
+              shouldShowAlert: true,
+              shouldPlaySound: false,
+              shouldSetBadge: false,
+            }),
+          });
+        const notificationId = await Notifications.scheduleNotificationAsync({
+            content: {
+              title: 'Remember to drink water!',
+            },
+            trigger: {
+              seconds: 5,
+              repeats: false
+            },
+          });
+        console.log(notificationId);
+    },
 }

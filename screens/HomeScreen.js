@@ -82,9 +82,8 @@ export default function HomeScreen({ route, navigation }) {
 					})}
 				></ProjectButton>}
 			/>
-			{/* <Button onPress={Reminders.askPermissions}>
-				<Text>Ask Permissions</Text>
-			</Button> */}
+			<Button onPress={Reminders.askPermissions} title='Ask Permissions'/>
+			<Button onPress={Reminders.scheduleNotification} title='Send Notification'/>
 			<ButtonBar buttons={[settingsbtn, orderbtn, createbtn]} />
 			<CustModal 
 				visible={modalVisible} 
