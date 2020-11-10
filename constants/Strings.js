@@ -129,6 +129,10 @@ export default {
                 deleteAll: 'Are you sure you want to delete all of your projects? This cannot be undone.',
             },
             error: 'Error: ',
+            reminders: {
+                dueTom: 'This project is due tomorrow. Are you ready?',
+                regular: 'Have you made progress? Click to update.',
+            }
         },
     },
     Español: {

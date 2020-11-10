@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, FlatList, StatusBar, Button } from 'react-native';
+import { StyleSheet, Text, View, FlatList, StatusBar} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import ButtonBar from '../components/ButtonBar'
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass';
 import CustModal from '../components/Modal';
-import Moment from 'moment';
+import * as Moment from 'moment';
 import Storage from '../storage/Async';
-import Reminders from '../constants/Reminders';
 
 
 export default function HomeScreen({ route, navigation }) {
@@ -82,8 +81,6 @@ export default function HomeScreen({ route, navigation }) {
 					})}
 				></ProjectButton>}
 			/>
-			<Button onPress={Reminders.askPermissions} title='Ask Permissions'/>
-			<Button onPress={Reminders.scheduleNotification} title='Send Notification'/>
 			<ButtonBar buttons={[settingsbtn, orderbtn, createbtn]} />
 			<CustModal 
 				visible={modalVisible} 

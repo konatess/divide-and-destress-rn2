@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet,  Text, TouchableHighlight, View } from 'react-native';
+import { StyleSheet,  Text, TouchableHighlight, View, Button } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
@@ -8,7 +8,8 @@ import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass.js';
 import Storage from '../storage/Async';
-import Moment from 'moment';
+import * as Moment from 'moment';
+import Reminders from '../constants/Reminders';
 
 export default function DisplayScreen({ route, navigation }) {
     const { knowntitles } = route.params;
@@ -28,7 +29,7 @@ export default function DisplayScreen({ route, navigation }) {
             // units remaining
             let units = project._endUnit - current;
             // days remaining
-            let days = Moment().diff(project._dueDate, 'days')*-1
+            let days = moment().diff(project._dueDate, 'days')*-1
             if (units === 0) {
                 return setPerOrDue(Strings[settings.language].labels.complete)
             }
@@ -183,6 +184,8 @@ export default function DisplayScreen({ route, navigation }) {
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.frequency + '  ' + Strings[settings.language].frequencyWords[project._frequency]}</Text>
                 </View>
+                <Button onPress={console.log (Moment(project._time, Strings.timeFormat).hour())} title='Hour'/>
+                <Button onPress={Reminders.scheduleNotification(key, project._title, 'Have you made progress? Remaining: ' + (project._endUnit - current))} title='Send Notification'/>
             </View>
             <ButtonBar buttons={[ deletebtn, editbtn, homebtn ]} />
             <CustModal 

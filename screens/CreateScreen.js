@@ -15,7 +15,7 @@ import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass';
 import Storage from '../storage/Async';
-import Moment from 'moment';
+import * as Moment from 'moment';
 
 export default function CreateScreen({ route, navigation}) {
     const { knowntitles } = route.params
@@ -30,7 +30,7 @@ export default function CreateScreen({ route, navigation}) {
     // date picker
     const [showDate, setShowDate] = React.useState(false);
     const [dateMode, setDateMode] = React.useState('date');
-    const [dateValue, setDateValue] = React.useState(Moment().add(7, 'days').toDate());
+    const [dateValue, setDateValue] = React.useState(Moment().add(7, 'day').toDate());
     // time picker
     const [timeValue, setTimeValue] = React.useState('default');
     // Frequency picker
@@ -230,7 +230,7 @@ export default function CreateScreen({ route, navigation}) {
                 { showDate && <DateTimePicker 
                     value={dateValue}
                     mode={dateMode}
-                    minimumDate={Moment().add(2, 'days').toDate()}
+                    minimumDate={Moment().add(2, 'day').toDate()}
                     onChange={(event, date) => {
                         Keyboard.dismiss();
                         setShowDate(false);
