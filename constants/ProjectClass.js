@@ -10,7 +10,7 @@ export class Project {
         this._frequency = freq || 0;
         this._time = time || 'default';
         this._reminders = remind || {
-            dueTom: undefined,
+            dueTom: null,
             regular: [],
         }
     }  

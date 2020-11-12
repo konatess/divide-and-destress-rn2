@@ -10,7 +10,7 @@ import Notify from '../components/Notify';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import Storage from '../storage/Async';
-import * as Moment from 'moment';
+import Moment from 'moment';
 
 export default function SettingsScreen( {route, navigation} ) {
 	const {settings} = route.params

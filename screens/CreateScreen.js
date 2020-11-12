@@ -15,7 +15,8 @@ import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass';
 import Storage from '../storage/Async';
-import * as Moment from 'moment';
+import Moment from 'moment';
+import Reminders from '../constants/Reminders';
 
 export default function CreateScreen({ route, navigation}) {
     const { knowntitles } = route.params
@@ -43,7 +44,7 @@ export default function CreateScreen({ route, navigation}) {
     const [endValue, setEndValue] = React.useState(0);
     // project to save
     const newProj = new Project();
-    const saveProj = () => {
+    const saveProj = async () => {
         if (titleValue.trim() === "") {
             setModalMessage(Strings[settings.language].alerts.title.blank);
             setModalButtons([modalokaybtn]);
@@ -75,6 +76,17 @@ export default function CreateScreen({ route, navigation}) {
             setmodalVisible(true);
         }
         else {
+            let dueTom = "Strings.English.reminders.dueTom";
+            let regular = "Strings.English.reminders.regular";
+            let remindersObj = await Reminders.scheduleNotification( 
+                titleValue, 
+                dueTom,
+                regular,
+                (freqValue === 0 ? settings.notifications.freq : freqValue), 
+                (timeValue === 'default' ? settings.notifications.time : timeValue),
+                dateValue
+            )
+            console.log(remindersObj);
             newProj.title = titleValue.trim();
             newProj.startDate = Moment().toDate();
             newProj.dueDate = dateValue;
@@ -84,6 +96,7 @@ export default function CreateScreen({ route, navigation}) {
             newProj.unitName = unitValue;
             newProj.freq = freqValue;
             newProj.time = timeValue;
+            newProj.reminders = remindersObj;
             Storage.createProj(newProj, settings.language);
             navigation.navigate(Strings.routes.home)
         }

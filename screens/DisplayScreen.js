@@ -8,7 +8,7 @@ import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass.js';
 import Storage from '../storage/Async';
-import * as Moment from 'moment';
+import Moment from 'moment';
 import Reminders from '../constants/Reminders';
 
 export default function DisplayScreen({ route, navigation }) {
@@ -29,7 +29,7 @@ export default function DisplayScreen({ route, navigation }) {
             // units remaining
             let units = project._endUnit - current;
             // days remaining
-            let days = moment().diff(project._dueDate, 'days')*-1
+            let days = Moment().diff(project._dueDate, 'days')*-1
             if (units === 0) {
                 return setPerOrDue(Strings[settings.language].labels.complete)
             }
@@ -55,6 +55,10 @@ export default function DisplayScreen({ route, navigation }) {
     const deleteProj = async (projKey) => {
         await Storage.deleteProj(projKey, settings.language);
         navigation.navigate(Strings.routes.home); 
+    }
+    const cancelReminders = () => {
+        Reminders.cancelNotification([project._reminders.dueTom]).then(project._reminders.dueTom = null);
+        Reminders.cancelNotification(project._reminders.regular).then(project._reminders.dueTom = []);
     }
     const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s)
     const allPUnits = Strings[settings.language].unitPlurals.concat(settings.userUnits.p)
@@ -105,7 +109,10 @@ export default function DisplayScreen({ route, navigation }) {
         }
         else {
             setCurrent(sum);
-            project._currentUnit = sum;
+            project._currentUnit = sum; 
+            if (sum === project._endUnit && project._reminders.dueTom) {
+                cancelReminders();
+            }
             Storage.updateProj(key, project, settings.language);
         }
     };
@@ -125,6 +132,9 @@ export default function DisplayScreen({ route, navigation }) {
         else {
             setCurrent(updateNum);
             project._currentUnit = updateNum;
+            if (updateNum === project._endUnit && project._reminders.dueTom) {
+                cancelReminders();
+            }
             Storage.updateProj(key, project, settings.language);
         }
     };
@@ -138,6 +148,7 @@ export default function DisplayScreen({ route, navigation }) {
                         {Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[project._unitName]) + current)}
                     </Text>
                     {current < project._endUnit && <TouchableHighlight
+                        key='updatebtn'
                         style={[styles.defaultsButton, {marginLeft: 20, marginTop: 5}]}
                         onPress={() => {
                             setmodalVisible(true)
@@ -184,8 +195,6 @@ export default function DisplayScreen({ route, navigation }) {
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.frequency + '  ' + Strings[settings.language].frequencyWords[project._frequency]}</Text>
                 </View>
-                <Button onPress={console.log (Moment(project._time, Strings.timeFormat).hour())} title='Hour'/>
-                <Button onPress={Reminders.scheduleNotification(key, project._title, 'Have you made progress? Remaining: ' + (project._endUnit - current))} title='Send Notification'/>
             </View>
             <ButtonBar buttons={[ deletebtn, editbtn, homebtn ]} />
             <CustModal 

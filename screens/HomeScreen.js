@@ -6,7 +6,7 @@ import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass';
 import CustModal from '../components/Modal';
-import * as Moment from 'moment';
+import Moment from 'moment';
 import Storage from '../storage/Async';
 
 

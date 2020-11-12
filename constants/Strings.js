@@ -235,6 +235,10 @@ export default {
                 deleteAll: '¿Seguro que quieres borrar todos tus proyectos? Esto no se puede deshacer.',
             },
             error: 'Error: ',
+            reminders: {
+                dueTom: 'Este proyecto vence mañana. ¿Listo?',
+                regular: '¿Has progressado? Haz clic para actualizar.',
+            }
         },
     },
 };

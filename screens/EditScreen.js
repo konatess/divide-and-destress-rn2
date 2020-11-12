@@ -15,7 +15,8 @@ import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass.js';
 import Storage from '../storage/Async';
-import * as Moment from 'moment';
+import Moment from 'moment';
+import Reminders from '../constants/Reminders';
 
 export default function EditScreen({ route, navigation }) {
     const { knowntitles } = route.params;

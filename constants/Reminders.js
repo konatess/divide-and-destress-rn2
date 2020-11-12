@@ -2,7 +2,7 @@ import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import Strings from '../constants/Strings';
 import { Project } from "./ProjectClass";
-import * as Moment from 'moment';
+import Moment from 'moment';
 
 export default {
     askPermissions: async () => {
@@ -23,7 +23,7 @@ export default {
     // use due date to set 'due tomorrow' at time
     // get difference between today and due date -1
     // iterate every freq until due date: schedule by date at time
-    scheduleNotification: async (projectID, language, title, freq, time, dueDate) => {
+    scheduleNotification: async (title, dueBody, repeatBody, freq, time, dueDate) => {
         Notifications.setNotificationHandler({
             handleNotification: async () => ({
               shouldShowAlert: true,
@@ -31,33 +31,34 @@ export default {
               shouldSetBadge: false,
             }),
         });
-        const h = Moment(time, Strings.timeFormat).hour();
+
+        const from = Moment(time, Strings.timeFormat);
+        const h = from.hour();
         console.log('hour = ' + h);
-        const m = Moment(time, Strings.timeFormat).minute();
+        const m = from.minute();
         console.log('minute = ' + m);
         const d = Moment(dueDate).hour(h).minute(m).subtract(1, 'day');
-        const remain = Moment().hour(h).minute(m).diff(d, 'day');
-        console.log(remain);
+        const remain = d.diff(from,'day');
+        console.log('days remaining: ' + remain);
         let trigger = d.toDate();
+        console.log(trigger);
 
         const dueReminderID = await Notifications.scheduleNotificationAsync({
             content: {
               title: title,
-              body: Strings[language].reminders.dueTom,
-              data: {projectID: projectID}
+              body: dueBody,
             },
             trigger
         });
 
         const remindersArray = [];
 
-        for (i = freq; i < remain; i = i = i + freq) {
-            let trigger = Moment().add(i, 'day').toDate();
+        for (i = freq; i < remain; i = i + freq) {
+            let trigger = from.add(i, 'day').toDate();
             let id = await Notifications.scheduleNotificationAsync({
                 content: {
                   title: title,
-                  body: body,
-                  data: {projectID: projectID}
+                  body: repeatBody,
                 },
                 trigger
             });
@@ -69,4 +70,9 @@ export default {
             regular: remindersArray
         }
     },
+    cancelNotification: async (iDsArray) => {
+        iDsArray.forEach(async element => {
+            await Notifications.cancelScheduledNotificationAsync(element);
+        });
+    }
 }
