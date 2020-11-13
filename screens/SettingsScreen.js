@@ -11,6 +11,7 @@ import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import Storage from '../storage/Async';
 import Moment from 'moment';
+import Reminders from '../constants/Reminders';
 
 export default function SettingsScreen( {route, navigation} ) {
 	const {settings} = route.params
@@ -86,19 +87,47 @@ export default function SettingsScreen( {route, navigation} ) {
 	};
 	const modalDeletbtn = AllButtons.delete;
 	modalDeletbtn._title = Strings[language].buttons.delete;
-	modalDeletbtn.onPress = () => {
-		setmodalVisible(false);
+	modalDeletbtn.onPress = async () => {
+		setModalButtons([]);
+		setModalMessage(Strings[language].alerts.deleting)
+		for (i = 0; 1 < projects.length; i++) {
+			await Reminders.cancelNotification([projects[i].obj._reminders.dueTom]);
+			await Reminders.cancelNotification(projects[i].obj._reminders.regular);
+		}
 		let keys = projects.map(project => {
 			return project.key
 		})
 		Storage.deleteAllProj(keys, language);
+		setmodalVisible(false);
 	};
 	const modalDonebtn = AllButtons.done;
 	modalDonebtn._title = Strings[language].buttons.done;
 	const savebtn = AllButtons.save;
 	savebtn._title = Strings[language].buttons.save;
-	savebtn.onPress = () => {
+	savebtn.onPress = async () => {
 		// settings.darkmode = darkMode;
+
+		// add modal that opens here and closes before navigation
+		// contemplate fix for language change for reminders. Would require rescheduling all.
+		if (projects.length && (settings.notifications.freq !== freq || settings.notifications.time !== time)) {
+			let defaultProj = projects.filter(proj => {
+				return proj.obj._frequency === 0 || proj.obj._time === 'default'
+			})
+			for (i = 0; 1 < defaultProj.length; i++) {
+				await Reminders.cancelNotification([defaultProj[i].obj._reminders.dueTom]);
+				await Reminders.cancelNotification(defaultProj[i].obj._reminders.regular);
+				let remindersObj = await Reminders.scheduleNotification(
+					defaultProj[i].obj._title, 
+					language, 
+					defaultProj[i].obj._frequency === 0 ? freq : defaultProj[i].obj._frequency, 
+					defaultProj[i].obj._time === 'default' ? time : defaultProj[i].obj._time, 
+					defaultProj[i].obj._dueDate)
+				let updateObj = {
+					reminders: remindersObj
+				}
+				Storage.updateProj(defaultProj[i].key, updateObj, language);
+			}
+		}
 		settings.language = language;
 		settings.dateFormat = dateFormat;
 		settings.notifications = {

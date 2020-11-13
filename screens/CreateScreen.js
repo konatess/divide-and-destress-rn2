@@ -76,12 +76,9 @@ export default function CreateScreen({ route, navigation}) {
             setmodalVisible(true);
         }
         else {
-            let dueTom = "Strings.English.reminders.dueTom";
-            let regular = "Strings.English.reminders.regular";
             let remindersObj = await Reminders.scheduleNotification( 
                 titleValue, 
-                dueTom,
-                regular,
+                settings.language,
                 (freqValue === 0 ? settings.notifications.freq : freqValue), 
                 (timeValue === 'default' ? settings.notifications.time : timeValue),
                 dateValue

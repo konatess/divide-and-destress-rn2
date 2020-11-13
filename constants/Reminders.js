@@ -23,7 +23,7 @@ export default {
     // use due date to set 'due tomorrow' at time
     // get difference between today and due date -1
     // iterate every freq until due date: schedule by date at time
-    scheduleNotification: async (title, dueBody, repeatBody, freq, time, dueDate) => {
+    scheduleNotification: async (title, language, freq, time, dueDate) => {
         Notifications.setNotificationHandler({
             handleNotification: async () => ({
               shouldShowAlert: true,
@@ -43,32 +43,40 @@ export default {
         let trigger = d.toDate();
         console.log(trigger);
 
-        const dueReminderID = await Notifications.scheduleNotificationAsync({
-            content: {
-              title: title,
-              body: dueBody,
-            },
-            trigger
-        });
-
-        const remindersArray = [];
-
-        for (i = freq; i < remain; i = i + freq) {
-            let trigger = from.add(i, 'day').toDate();
-            let id = await Notifications.scheduleNotificationAsync({
+        if (remain > 0) {
+            const dueReminderID = await Notifications.scheduleNotificationAsync({
                 content: {
-                  title: title,
-                  body: repeatBody,
+                title: title,
+                body: Strings[language].alerts.reminders.dueTom,
                 },
                 trigger
             });
-            remindersArray.push(id);
-        }
 
-        return {
-            dueTom: dueReminderID,
-            regular: remindersArray
+            const remindersArray = [];
+
+            for (i = freq; i < remain; i = i + freq) {
+                let trigger = d.subtract(i, 'day').toDate();
+                let id = await Notifications.scheduleNotificationAsync({
+                    content: {
+                    title: title,
+                    body: Strings[language].alerts.reminders.regular,
+                    },
+                    trigger
+                });
+                remindersArray.push(id);
+            }
+
+            return {
+                dueTom: dueReminderID,
+                regular: remindersArray
+            }
         }
+        else {
+            return {
+                dueTom: null,
+                regular: [],
+            }
+        } 
     },
     cancelNotification: async (iDsArray) => {
         iDsArray.forEach(async element => {

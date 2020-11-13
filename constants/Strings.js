@@ -128,6 +128,8 @@ export default {
                 noProj: 'You have no projects to delete.',
                 deleteAll: 'Are you sure you want to delete all of your projects? This cannot be undone.',
             },
+            deleting: 'Deleting...',
+            saving: 'Saving...',
             error: 'Error: ',
             reminders: {
                 dueTom: 'This project is due tomorrow. Are you ready?',
@@ -234,6 +236,8 @@ export default {
                 noProj: 'No tienes proyectos para borrar.',
                 deleteAll: '¿Seguro que quieres borrar todos tus proyectos? Esto no se puede deshacer.',
             },
+            deleting: 'Quitando...',
+            saving: 'Guardando...',
             error: 'Error: ',
             reminders: {
                 dueTom: 'Este proyecto vence mañana. ¿Listo?',
