@@ -266,7 +266,8 @@ export default function SettingsScreen( {route, navigation} ) {
 				return proj.obj._unitName === Strings[language].units.length + num;
 			})
 			for (i = 0; i < updateArr.length; i++) {
-				Storage.updateProj(updateArr[i].key, updateArr[i].obj, language);
+				let newObj = {obj: {_unitName: updateArr[i].obj._unitName - 1}}
+				Storage.updateProj(updateArr[i].key, newObj, language);
 			}
 			let sUnits = userUnits.s.slice();
 			let pUnits = userUnits.p.slice();
