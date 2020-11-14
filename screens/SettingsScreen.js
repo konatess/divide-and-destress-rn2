@@ -104,9 +104,29 @@ export default function SettingsScreen( {route, navigation} ) {
 	savebtn.onPress = async () => {
 		// settings.darkmode = darkMode;
 
-		// add modal that opens here and closes before navigation
-		// contemplate fix for language change for reminders. Would require rescheduling all.
-		if (projects.length && (settings.notifications.freq !== freq || settings.notifications.time !== time)) {
+		setmodalVisible(true);
+		setModalMessage(Strings[language].alerts.saving);
+		setModalButtons([]);
+		setModalPickers([]);
+		setModalInputs([]);
+		// Reschedule reminders on save settings if language has changed.
+		if (settings.language !== language) {
+			for (i = 0; 1 < projects.length; i++) {
+				await Reminders.cancelAll();
+				let remindersObj = await Reminders.scheduleNotification(
+					projects[i].obj._title, 
+					language, 
+					projects[i].obj._frequency === 0 ? freq : projects[i].obj._frequency, 
+					projects[i].obj._time === 'default' ? time : projects[i].obj._time, 
+					projects[i].obj._dueDate)
+				let updateObj = {
+					reminders: remindersObj
+				}
+				Storage.updateProj(projects[i].key, updateObj, language);
+			}
+		}
+		// Reschedule reminders on save if language hasn't changed, but time or frequency have.
+		else if (projects.length && (settings.notifications.freq !== freq || settings.notifications.time !== time)) {
 			let defaultProj = projects.filter(proj => {
 				return proj.obj._frequency === 0 || proj.obj._time === 'default'
 			})
@@ -134,6 +154,7 @@ export default function SettingsScreen( {route, navigation} ) {
 		settings.unit = unit;
 		settings.userUnits = userUnits;
 		Storage.saveSettings(settings, language);
+		setmodalVisible(false);
         navigation.navigate(Strings.routes.home)
 	};
 	const cancelbtn = AllButtons.cancel;
@@ -241,6 +262,12 @@ export default function SettingsScreen( {route, navigation} ) {
 	const delUnitBtns = deletableUnits.map(num => {
 		return ({_title: userUnits.s[num], onPress: () => {
 			setmodalVisible(false)
+			let updateArr = projects.filter(proj => {
+				return proj.obj._unitName === Strings[language].units.length + num;
+			})
+			for (i = 0; i < updateArr.length; i++) {
+				Storage.updateProj(updateArr[i].key, updateArr[i].obj, language);
+			}
 			let sUnits = userUnits.s.slice();
 			let pUnits = userUnits.p.slice();
 			sUnits.splice(num, 1);
