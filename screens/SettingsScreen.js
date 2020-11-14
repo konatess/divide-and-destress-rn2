@@ -87,13 +87,10 @@ export default function SettingsScreen( {route, navigation} ) {
 	};
 	const modalDeletbtn = AllButtons.delete;
 	modalDeletbtn._title = Strings[language].buttons.delete;
-	modalDeletbtn.onPress = async () => {
+	modalDeletbtn.onPress = () => {
 		setModalButtons([]);
 		setModalMessage(Strings[language].alerts.deleting)
-		for (i = 0; 1 < projects.length; i++) {
-			await Reminders.cancelNotification([projects[i].obj._reminders.dueTom]);
-			await Reminders.cancelNotification(projects[i].obj._reminders.regular);
-		}
+		Reminders.cancelAll();
 		let keys = projects.map(project => {
 			return project.key
 		})

@@ -82,5 +82,8 @@ export default {
         iDsArray.forEach(async element => {
             await Notifications.cancelScheduledNotificationAsync(element);
         });
+    },
+    cancelAll: async () => {
+        await Notifications.cancelAllScheduledNotificationsAsync();
     }
 }
