@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, FlatList, StatusBar} from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, FlatList, StatusBar} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import ButtonBar from '../components/ButtonBar'
 import Colors from '../constants/Colors';
@@ -57,13 +57,12 @@ export default function HomeScreen({ route, navigation }) {
 		return refreshData;
 	}, [navigation])
 	return (
-		<View style={[styles.container, {backgroundColor: settings.darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
+		<SafeAreaView style={[styles.container, {backgroundColor: settings.darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
 			<StatusBar 
 				barStyle={settings.darkmode ? "light-content" : "dark-content"} 
 				backgroundColor={settings.darkmode ? Colors.darkmode.background : Colors.mainbackground} 
 			/>
-			<View style={styles.buffer}></View>
-			{!projArr.length && <Text style={styles.labelText}>
+			{!projArr.length && <Text style={[styles.labelText, {padding: 20}]}>
 				{Strings[settings.language].placeholder.noProj}
 			</Text>}
 			<FlatList 
@@ -92,7 +91,7 @@ export default function HomeScreen({ route, navigation }) {
 				darkmode={settings.darkmode}
 				>
 			</CustModal>
-		</View>
+		</SafeAreaView>
 	);
 }
 
@@ -114,10 +113,9 @@ function ProjectButton({ passKey, title, due, onPress, settings }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: 30
 	},
 	project: {
-		padding: 10,
+		padding: 15,
 	},
 	projectLabelTextContainer: {
 		flexShrink: 1,

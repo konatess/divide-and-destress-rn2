@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { 
     Keyboard, 
+    SafeAreaView,
     StyleSheet, 
     Text, 
     TextInput, 
@@ -171,7 +172,7 @@ export default function EditScreen({ route, navigation }) {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <CustModal 
                 visible={modalVisible} 
                 message={modalMessage} 
@@ -305,14 +306,13 @@ export default function EditScreen({ route, navigation }) {
                 />}
             </View>
             <ButtonBar buttons={[ cancelbtn, savebtn ]}/>
-        </View>
+        </SafeAreaView>
     )
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 30,
       },
     mainview: {
         flex: 1,

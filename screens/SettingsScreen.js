@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import { StatusBar, StyleSheet, Text, View, Linking} from 'react-native';
+import { StatusBar, StyleSheet, Text, View, Linking, SafeAreaView} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AllButtons from '../constants/ButtonClass';
@@ -112,7 +112,7 @@ export default function SettingsScreen( {route, navigation} ) {
 		setModalPickers([]);
 		setModalInputs([]);
 		// Reschedule reminders on save settings if language has changed.
-		if (settings.language !== language) {
+		if (settings.language !== language && projects.length) {
 			for (i = 0; 1 < projects.length; i++) {
 				await Reminders.cancelAll();
 				let remindersObj = await Reminders.scheduleNotification(
@@ -461,7 +461,7 @@ export default function SettingsScreen( {route, navigation} ) {
         buttons.feedback,
 	]
 	return (
-		<View style={[styles.container, {backgroundColor: darkMode ? Colors.darkmode.background : Colors.mainbackground} ]} contentContainerStyle={styles.contentContainer}>
+		<SafeAreaView style={[styles.container, {backgroundColor: darkMode ? Colors.darkmode.background : Colors.mainbackground} ]} contentContainerStyle={styles.contentContainer}>
 			<StatusBar 
 				barStyle={darkMode ? "light-content" : "dark-content"} 
 				backgroundColor={darkMode ? Colors.darkmode.background : Colors.mainbackground} 
@@ -502,7 +502,7 @@ export default function SettingsScreen( {route, navigation} ) {
 				}}
 			/>}
 			<ButtonBar buttons={[ cancelbtn, savebtn ]} />
-		</View>
+		</SafeAreaView>
 	);
 }
 

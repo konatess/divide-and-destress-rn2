@@ -55,7 +55,8 @@ export default {
             const remindersArray = [];
 
             for (i = freq; i < remain; i = i + freq) {
-                let trigger = d.subtract(i, 'day').toDate();
+                // set to freq because Moment is mutable. Would change to i for DayJS
+                let trigger = d.subtract(freq, 'day').toDate();
                 let id = await Notifications.scheduleNotificationAsync({
                     content: {
                     title: title,
@@ -63,6 +64,7 @@ export default {
                     },
                     trigger
                 });
+                console.log("Remaining: " + remain + " i: " + i)
                 remindersArray.push(id);
             }
 

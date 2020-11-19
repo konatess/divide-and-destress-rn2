@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet,  Text, TouchableHighlight, View, Button } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableHighlight, View, } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
@@ -145,7 +145,7 @@ export default function DisplayScreen({ route, navigation }) {
         }
     };
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.mainview}>
                 <Text style={styles.labelText}>{Strings[settings.language].labels.title + project._title}</Text>
                 <Text style={styles.labelText}>{perOrDue}</Text>
@@ -212,14 +212,13 @@ export default function DisplayScreen({ route, navigation }) {
                 vertical={true}
                 darkmode={settings.darkmode}
             />
-        </View>
+        </SafeAreaView>
     )
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 30,
       },
     mainview: {
         flex: 1,
