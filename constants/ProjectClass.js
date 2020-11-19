@@ -1,5 +1,5 @@
 export class Project {
-    constructor(ti, sD, dD, sU, eU, cU, uN, freq, time) {
+    constructor(ti, sD, dD, sU, eU, cU, uN, freq, time, remind) {
         this._title = ti;
         this._startDate = sD;
         this._dueDate = dD;
@@ -9,6 +9,10 @@ export class Project {
         this._unitName = uN || 1;
         this._frequency = freq || 0;
         this._time = time || 'default';
+        this._reminders = remind || {
+            dueTom: null,
+            regular: [],
+        }
     }  
     get title() {
         return this._title
@@ -63,5 +67,11 @@ export class Project {
     }
     set time(timestring) {
         this._time = timestring;
+    }
+    get reminders() {
+        return this._reminders;
+    }
+    set reminders(remindersObj) {
+        this._reminders = remindersObj;
     }
 }

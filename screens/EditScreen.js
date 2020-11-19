@@ -16,6 +16,7 @@ import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass.js';
 import Storage from '../storage/Async';
 import Moment from 'moment';
+import Reminders from '../constants/Reminders';
 
 export default function EditScreen({ route, navigation }) {
     const { knowntitles } = route.params;
@@ -47,7 +48,7 @@ export default function EditScreen({ route, navigation }) {
     const allPUnits = Strings[settings.language].unitPlurals.concat(settings.userUnits.p);
     // project to save
     const newProj = new Project();
-    const updateProj = () => {
+    const updateProj = async () => {
         if (titleValue.trim() === "") {
             setModalMessage(Strings[settings.language].alerts.title.blank);
             setModalButtons([modalokaybtn]);
@@ -98,6 +99,25 @@ export default function EditScreen({ route, navigation }) {
                 setmodalVisible(true);
             }
             else {
+                if (current === end) {
+                    await Reminders.cancelNotification([project._reminders.dueTom]);
+                    await Reminders.cancelNotification(project._reminders.regular);
+                    newProj.reminders = {
+                        dueTom: null,
+                        regular: [],
+                    }
+                }
+                else if (project._frequency !== freqValue || project._time !== timeValue || project._dueDate !== dateValue) {
+                    await Reminders.cancelNotification([project._reminders.dueTom]);
+                    await Reminders.cancelNotification(project._reminders.regular);
+                    let remindersObj = await Reminders.scheduleNotification(
+                        project._title, 
+                        settings.language, 
+                        project._frequency === 0 ? freq : project._frequency, 
+                        project._time === 'default' ? time : project._time, 
+                        project._dueDate)
+                    newProj.reminders = remindersObj;
+                }
                 newProj.title = titleValue.trim();
                 newProj.dueDate = dateValue;
                 newProj.startUnit = start;
@@ -285,7 +305,7 @@ export default function EditScreen({ route, navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 10,
+        paddingTop: 30,
       },
     mainview: {
         flex: 1,

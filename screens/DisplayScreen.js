@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet,  Text, TouchableHighlight, View } from 'react-native';
+import { StyleSheet,  Text, TouchableHighlight, View, Button } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
@@ -9,6 +9,7 @@ import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass.js';
 import Storage from '../storage/Async';
 import Moment from 'moment';
+import Reminders from '../constants/Reminders';
 
 export default function DisplayScreen({ route, navigation }) {
     const { knowntitles } = route.params;
@@ -54,6 +55,10 @@ export default function DisplayScreen({ route, navigation }) {
     const deleteProj = async (projKey) => {
         await Storage.deleteProj(projKey, settings.language);
         navigation.navigate(Strings.routes.home); 
+    }
+    const cancelReminders = () => {
+        Reminders.cancelNotification([project._reminders.dueTom]).then(project._reminders.dueTom = null);
+        Reminders.cancelNotification(project._reminders.regular).then(project._reminders.dueTom = []);
     }
     const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s)
     const allPUnits = Strings[settings.language].unitPlurals.concat(settings.userUnits.p)
@@ -104,7 +109,10 @@ export default function DisplayScreen({ route, navigation }) {
         }
         else {
             setCurrent(sum);
-            project._currentUnit = sum;
+            project._currentUnit = sum; 
+            if (sum === project._endUnit && project._reminders.dueTom) {
+                cancelReminders();
+            }
             Storage.updateProj(key, project, settings.language);
         }
     };
@@ -124,6 +132,9 @@ export default function DisplayScreen({ route, navigation }) {
         else {
             setCurrent(updateNum);
             project._currentUnit = updateNum;
+            if (updateNum === project._endUnit && project._reminders.dueTom) {
+                cancelReminders();
+            }
             Storage.updateProj(key, project, settings.language);
         }
     };
@@ -137,6 +148,7 @@ export default function DisplayScreen({ route, navigation }) {
                         {Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[project._unitName]) + current)}
                     </Text>
                     {current < project._endUnit && <TouchableHighlight
+                        key='updatebtn'
                         style={[styles.defaultsButton, {marginLeft: 20, marginTop: 5}]}
                         onPress={() => {
                             setmodalVisible(true)
@@ -201,7 +213,7 @@ export default function DisplayScreen({ route, navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 10,
+        paddingTop: 30,
       },
     mainview: {
         flex: 1,

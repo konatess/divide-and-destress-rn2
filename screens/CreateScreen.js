@@ -16,6 +16,7 @@ import Strings from '../constants/Strings';
 import AllButtons from '../constants/ButtonClass';
 import Storage from '../storage/Async';
 import Moment from 'moment';
+import Reminders from '../constants/Reminders';
 
 export default function CreateScreen({ route, navigation}) {
     const { knowntitles } = route.params
@@ -30,7 +31,7 @@ export default function CreateScreen({ route, navigation}) {
     // date picker
     const [showDate, setShowDate] = React.useState(false);
     const [dateMode, setDateMode] = React.useState('date');
-    const [dateValue, setDateValue] = React.useState(Moment().add(7, 'days').toDate());
+    const [dateValue, setDateValue] = React.useState(Moment().add(7, 'day').toDate());
     // time picker
     const [timeValue, setTimeValue] = React.useState('default');
     // Frequency picker
@@ -43,7 +44,7 @@ export default function CreateScreen({ route, navigation}) {
     const [endValue, setEndValue] = React.useState(0);
     // project to save
     const newProj = new Project();
-    const saveProj = () => {
+    const saveProj = async () => {
         if (titleValue.trim() === "") {
             setModalMessage(Strings[settings.language].alerts.title.blank);
             setModalButtons([modalokaybtn]);
@@ -75,6 +76,14 @@ export default function CreateScreen({ route, navigation}) {
             setmodalVisible(true);
         }
         else {
+            let remindersObj = await Reminders.scheduleNotification( 
+                titleValue, 
+                settings.language,
+                (freqValue === 0 ? settings.notifications.freq : freqValue), 
+                (timeValue === 'default' ? settings.notifications.time : timeValue),
+                dateValue
+            )
+            console.log(remindersObj);
             newProj.title = titleValue.trim();
             newProj.startDate = Moment().toDate();
             newProj.dueDate = dateValue;
@@ -84,6 +93,7 @@ export default function CreateScreen({ route, navigation}) {
             newProj.unitName = unitValue;
             newProj.freq = freqValue;
             newProj.time = timeValue;
+            newProj.reminders = remindersObj;
             Storage.createProj(newProj, settings.language);
             navigation.navigate(Strings.routes.home)
         }
@@ -230,7 +240,7 @@ export default function CreateScreen({ route, navigation}) {
                 { showDate && <DateTimePicker 
                     value={dateValue}
                     mode={dateMode}
-                    minimumDate={Moment().add(2, 'days').toDate()}
+                    minimumDate={Moment().add(2, 'day').toDate()}
                     onChange={(event, date) => {
                         Keyboard.dismiss();
                         setShowDate(false);
@@ -252,7 +262,7 @@ export default function CreateScreen({ route, navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 10,
+        paddingTop: 30,
       },
     mainview: {
         flex: 1,
