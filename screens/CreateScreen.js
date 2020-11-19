@@ -45,6 +45,7 @@ export default function CreateScreen({ route, navigation}) {
     // project to save
     const newProj = new Project();
     const saveProj = async () => {
+        setModalPickers([]);
         if (titleValue.trim() === "") {
             setModalMessage(Strings[settings.language].alerts.title.blank);
             setModalButtons([modalokaybtn]);

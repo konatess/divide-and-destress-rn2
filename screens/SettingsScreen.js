@@ -82,6 +82,8 @@ export default function SettingsScreen( {route, navigation} ) {
 	modalCancelbtn.onPress = () => {
 		setmodalVisible(false);
 		setButtonsVertical(false);
+		setModalButtons([]);
+		setModalInputs([]);
 		setSingUnit('');
 		setPluUnit('');
 	};
@@ -165,12 +167,18 @@ export default function SettingsScreen( {route, navigation} ) {
 	const dateFormatBtns = Strings.dateFormats.map((string) => {
 		return ({_title: string, onPress: () => {
 			setmodalVisible(false);
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
 			setDateFormat(string);
 		}})
 	});
 	const languageBtns = Strings.languages.map((string) => {
 		return ({_title: string, onPress: () => {
 			setmodalVisible(false);
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
 			setLanguage(string);
 		}})
 	});
@@ -178,12 +186,18 @@ export default function SettingsScreen( {route, navigation} ) {
 	const freqBtns = freqWords.map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setFreq(index + 1);
-			setmodalVisible(false)
+			setmodalVisible(false);
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
 		}})
 	});
 	const unitBtns = Strings[language].units.concat(userUnits.s).map((string, index) => {
 		return ({_title: string, onPress: () => {
-			setmodalVisible(false)
+			setmodalVisible(false);
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
 			setUnit(index);
 		}})
 	});
@@ -191,6 +205,9 @@ export default function SettingsScreen( {route, navigation} ) {
 		return ({_title: string, onPress: () => {
 			modalDonebtn.onPress = () => {
 				setmodalVisible(false);
+				setModalButtons([]);
+				setModalPickers([]);
+				setModalInputs([]);
 				setDonePush(true);
 			};
 			setEditIndex(index);
@@ -262,6 +279,9 @@ export default function SettingsScreen( {route, navigation} ) {
 	const delUnitBtns = deletableUnits.map(num => {
 		return ({_title: userUnits.s[num], onPress: () => {
 			setmodalVisible(false)
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
 			let updateArr = projects.filter(proj => {
 				return proj.obj._unitName === Strings[language].units.length + num;
 			})
@@ -299,6 +319,9 @@ export default function SettingsScreen( {route, navigation} ) {
 		setButtonsVertical(false);
 		modalDonebtn.onPress = () => {
 			setmodalVisible(false);
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
 			setDonePush(true);
 		};
 		setModalMessage(Strings[language].alerts.settings.addUnit);

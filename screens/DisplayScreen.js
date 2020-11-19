@@ -87,12 +87,16 @@ export default function DisplayScreen({ route, navigation }) {
     homebtn.onPress = () => navigation.navigate(Strings.routes.home);
     modalDeleteBtn.onPress = () => {
         setmodalVisible(false);
+        setModalButtons([]);
+        setModalInputs([]);
         Reminders.cancelNotification([project._reminders.dueTom]);
         Reminders.cancelNotification(project._reminders.regular);
         deleteProj(key);
     };
     modalCancelBtn.onPress = () => {
-        setmodalVisible(false)
+        setmodalVisible(false);
+        setModalButtons([]);
+        setModalInputs([]);
     };
     deletebtn.onPress = () => {
         setModalMessage(Strings[settings.language].alerts.confirmDelete);

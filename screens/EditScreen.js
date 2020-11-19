@@ -144,18 +144,25 @@ export default function EditScreen({ route, navigation }) {
     savebtn.onPress = () => updateProj();
     cancelbtn.onPress = () => navigation.navigate(Strings.routes.display);
     modalokaybtn.onPress = () => setmodalVisible(false);
-    modalcancelbtn.onPress = () => setmodalVisible(false);
+    modalcancelbtn.onPress = () => {
+        setmodalVisible(false);
+        setModalButtons([]);
+        setModalPickers([]);
+    }
     // modal picker buttons
     const unitBtns = allPUnits.map((string, index) => {
 		return ({_title: string, onPress: () => {
             setUnitValue(index);
 			setmodalVisible(false);
+            setModalButtons([]);
+            setModalPickers([]);
 		}})
 	});
     const freqBtns = Strings[settings.language].frequencyWords.map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setFreqValue(index);
 			setmodalVisible(false);
+            setModalButtons([]);
             setModalPickers([]);
 		}})
     });
