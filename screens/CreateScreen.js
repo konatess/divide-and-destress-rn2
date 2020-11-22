@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { 
     Keyboard, 
+    Platform, 
     SafeAreaView,
     StyleSheet, 
     Text, 
@@ -151,6 +152,7 @@ export default function CreateScreen({ route, navigation}) {
                     placeholder={Strings[settings.language].placeholder.title}
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
+                    onFocus={() => {setShowDate(false);}}
                 />
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {color: getTextColor()}]}>
@@ -162,6 +164,7 @@ export default function CreateScreen({ route, navigation}) {
                         placeholder={'1'}
                         keyboardType={'number-pad'}
                         onChangeText={text => setStartValue(text)}
+                        onFocus={() => {setShowDate(false);}}
                     />
                 </View>
                 <View style={styles.row}>
@@ -173,6 +176,7 @@ export default function CreateScreen({ route, navigation}) {
                         placeholder={'42'}
                         keyboardType={'number-pad'}
                         onChangeText={text => setEndValue(text)}
+                        onFocus={() => {setShowDate(false);}}
                     />
                 </View>
                 <View style={styles.row}>
@@ -181,6 +185,7 @@ export default function CreateScreen({ route, navigation}) {
                         style={[styles.inputField, {color: getTextColor()}]} 
                         value={Moment(dateValue).format(settings.dateFormat)}
                         onFocus={() => {
+                            Keyboard.dismiss();
                             setShowDate(true);
                             setDateMode('date');
                         }}
@@ -193,6 +198,7 @@ export default function CreateScreen({ route, navigation}) {
                         value={allPUnits[unitValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
+                            setShowDate(false);
                             setModalButtons([modalcancelbtn]);
                             setModalPickers([unitBtns]);
                             setModalMessage(Strings[settings.language].alerts.create_edit.unit);
@@ -207,6 +213,7 @@ export default function CreateScreen({ route, navigation}) {
                         onPress={() => {
                             setTimeValue('default');
                             setFreqValue(0);
+                            setShowDate(false);
                         }}
                         >
                         <Text style={styles.buttonText}>
@@ -220,6 +227,7 @@ export default function CreateScreen({ route, navigation}) {
                         style={[styles.inputField, {color: getTextColor()}]}
                         value={timeValue === 'default' ? Strings[settings.language].frequencyWords[0] : timeValue}
                         onFocus={() => {
+                            Keyboard.dismiss();
                             setShowDate(true);
                             setDateMode('time');
                         }}
@@ -232,6 +240,7 @@ export default function CreateScreen({ route, navigation}) {
                         value={Strings[settings.language].frequencyWords[freqValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
+                            setShowDate(false);
                             setModalButtons([modalcancelbtn]);
                             setModalPickers([freqBtns]);
                             setModalMessage(Strings[settings.language].alerts.create_edit.freq);
@@ -244,8 +253,6 @@ export default function CreateScreen({ route, navigation}) {
                     mode={dateMode}
                     minimumDate={Moment().add(2, 'day').toDate()}
                     onChange={(event, date) => {
-                        Keyboard.dismiss();
-                        setShowDate(false);
                         if (dateMode === 'date' && date !== undefined) {
                             setDateValue(date); 
                         }
@@ -255,6 +262,28 @@ export default function CreateScreen({ route, navigation}) {
                         }
                     }}
                 />}
+                {Platform.OS === 'ios' && showDate && <View style={[styles.row, {justifyContent: 'center'}]}>
+                    <TouchableHighlight 
+                        key={'cancel'} 
+                        style={styles.defaultsButton}
+                        onPress={() => {
+                            setShowDate(false);
+                            dateMode === 'time' && setTimeValue('default');
+                            dateMode === 'date' && setDateValue(Moment().add(7, 'day').toDate());
+                        }}
+                    >
+                        <Text style={styles.buttonText}>{Strings[settings.language].buttons.cancel}</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight 
+                        key={'accept'} 
+                        style={[styles.defaultsButton, {backgroundColor: Colors.create, marginLeft: 10}]}
+                        onPress={() => {
+                            setShowDate(false);
+                        }}
+                    >
+                        <Text style={styles.buttonText}>{Strings[settings.language].buttons.okay}</Text>
+                    </TouchableHighlight>
+                </View>}
             </View>
             <ButtonBar buttons={[ cancelbtn, savebtn ]} />
         </SafeAreaView>

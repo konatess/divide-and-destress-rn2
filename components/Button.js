@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     button: {
         flex:1, 
         padding: 15,
+        paddingBottom: 20,
         justifyContent: 'center',
         alignItems: 'center'
     },

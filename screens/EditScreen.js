@@ -189,6 +189,7 @@ export default function EditScreen({ route, navigation }) {
                     value={titleValue}
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
+                    onFocus={() => {setShowDate(false);}}
                 />
                 <View style={[styles.row]}>
                     <Text style={styles.labelText}>{Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[unitValue]))}</Text>
@@ -198,6 +199,7 @@ export default function EditScreen({ route, navigation }) {
                         value={currentValue.toString()}
                         keyboardType={'number-pad'}
                         onChangeText={text => setCurrentValue(text)}
+                        onFocus={() => {setShowDate(false);}}
                     />
                 </View>
                 <View style={styles.row}>
@@ -210,6 +212,7 @@ export default function EditScreen({ route, navigation }) {
                         value={startValue.toString()}
                         keyboardType={'number-pad'}
                         onChangeText={text => setStartValue(text)}
+                        onFocus={() => {setShowDate(false);}}
                     />
                 </View>
                 <View style={styles.row}>
@@ -222,6 +225,7 @@ export default function EditScreen({ route, navigation }) {
                         value={endValue.toString()}
                         keyboardType={'number-pad'}
                         onChangeText={text => setEndValue(text)}
+                        onFocus={() => {setShowDate(false);}}
                     />
                 </View>
                 <View style={styles.row}>
@@ -230,6 +234,7 @@ export default function EditScreen({ route, navigation }) {
                         style={styles.inputField} 
                         value={Moment(dateValue).format(settings.dateFormat)}
                         onFocus={() => {
+                            Keyboard.dismiss();
                             setShowDate(true);
                             setDateMode('date');
                         }}
@@ -242,6 +247,7 @@ export default function EditScreen({ route, navigation }) {
                         value={allPUnits[unitValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
+                            setShowDate(false);
                             setModalButtons([modalcancelbtn]);
                             setModalPickers([unitBtns]);
                             setModalMessage(Strings[settings.language].alerts.create_edit.unit);
@@ -256,6 +262,7 @@ export default function EditScreen({ route, navigation }) {
                         onPress={() => {
                             setTimeValue('default');
                             setFreqValue(0);
+                            setShowDate(false);
                         }}
                         >
                         <Text style={styles.buttonText}>
@@ -269,6 +276,7 @@ export default function EditScreen({ route, navigation }) {
                         style={styles.inputField}
                         value={timeValue === 'default' ? Strings[settings.language].frequencyWords[0] : timeValue}
                         onFocus={() => {
+                            Keyboard.dismiss();
                             setShowDate(true);
                             setDateMode('time');
                         }}
@@ -281,6 +289,7 @@ export default function EditScreen({ route, navigation }) {
                         value={Strings[settings.language].frequencyWords[freqValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
+                            setShowDate(false);
                             setModalButtons([modalcancelbtn]);
                             setModalPickers([freqBtns]);
                             setModalMessage(Strings[settings.language].alerts.create_edit.freq);
@@ -293,8 +302,6 @@ export default function EditScreen({ route, navigation }) {
                     mode={dateMode}
                     minimumDate={Moment().toDate()}
                     onChange={(event, date) => {
-                        Keyboard.dismiss();
-                        setShowDate(false);
                         if (dateMode === 'date' && date !== undefined) {
                             setDateValue(date); 
                         }
@@ -304,6 +311,28 @@ export default function EditScreen({ route, navigation }) {
                         }
                     }}
                 />}
+                {Platform.OS === 'ios' && showDate && <View style={[styles.row, {justifyContent: 'center'}]}>
+                    <TouchableHighlight 
+                        key={'cancel'} 
+                        style={styles.defaultsButton}
+                        onPress={() => {
+                            setShowDate(false);
+                            dateMode === 'time' && setTimeValue('default');
+                            dateMode === 'date' && setDateValue(Moment().add(7, 'day').toDate());
+                        }}
+                    >
+                        <Text style={styles.buttonText}>{Strings[settings.language].buttons.cancel}</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight 
+                        key={'accept'} 
+                        style={[styles.defaultsButton, {backgroundColor: Colors.create, marginLeft: 10}]}
+                        onPress={() => {
+                            setShowDate(false);
+                        }}
+                    >
+                        <Text style={styles.buttonText}>{Strings[settings.language].buttons.okay}</Text>
+                    </TouchableHighlight>
+                </View>}
             </View>
             <ButtonBar buttons={[ cancelbtn, savebtn ]}/>
         </SafeAreaView>
