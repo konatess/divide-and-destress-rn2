@@ -124,11 +124,11 @@ export default function EditScreen({ route, navigation }) {
                     await Reminders.cancelNotification([project._reminders.dueTom]);
                     await Reminders.cancelNotification(project._reminders.regular);
                     let remindersObj = await Reminders.scheduleNotification(
-                        project._title, 
-                        settings.language, 
-                        project._frequency === 0 ? freq : project._frequency, 
-                        project._time === 'default' ? time : project._time, 
-                        project._dueDate)
+                        titleValue, 
+                        settings.language,
+                        (freqValue === 0 ? settings.notifications.freq : freqValue), 
+                        (timeValue === 'default' ? settings.notifications.time : timeValue),
+                        dateValue)
                     newProj.reminders = remindersObj;
                 }
                 newProj.title = titleValue.trim();
