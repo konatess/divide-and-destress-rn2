@@ -47,6 +47,18 @@ export default function EditScreen({ route, navigation }) {
     const [endValue, setEndValue] = React.useState(project._endUnit);
     const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s);
     const allPUnits = Strings[settings.language].unitPlurals.concat(settings.userUnits.p);
+    // android hide bottom buttons if keyboard is showing
+    const [keyboardOut, setKeyboardOut] = React.useState(false);
+    Platform.OS === 'android' &&  React.useEffect(() => {
+        Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
+        Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+        return () => {
+            Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
+            Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
+        };
+    }, []);
+    const _keyboardDidShow = () => {setKeyboardOut(true)};
+    const _keyboardDidHide = () => { setKeyboardOut(false)};
     // project to save
     const newProj = new Project();
     const updateProj = async () => {
@@ -302,6 +314,9 @@ export default function EditScreen({ route, navigation }) {
                     mode={dateMode}
                     minimumDate={Moment().toDate()}
                     onChange={(event, date) => {
+                        if (Platform.OS === 'android') {
+                            setShowDate(false)
+                        }
                         if (dateMode === 'date' && date !== undefined) {
                             setDateValue(date); 
                         }
@@ -334,7 +349,8 @@ export default function EditScreen({ route, navigation }) {
                     </TouchableHighlight>
                 </View>}
             </View>
-            <ButtonBar buttons={[ cancelbtn, savebtn ]}/>
+            {Platform.OS === 'ios' && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
+            {Platform.OS === 'android' && !keyboardOut && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
         </SafeAreaView>
     )
 };

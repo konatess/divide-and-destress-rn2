@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import { StatusBar, StyleSheet, Text, View, Linking, SafeAreaView} from 'react-native';
+import { Keyboard, StatusBar, StyleSheet, Text, View, Linking, SafeAreaView, TouchableHighlight} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AllButtons from '../constants/ButtonClass';
@@ -77,6 +77,18 @@ export default function SettingsScreen( {route, navigation} ) {
 		})
 		setDeletableUnits(list);
 	}, [userUnits, unit]);
+    // android hide bottom buttons if keyboard is showing
+    const [keyboardOut, setKeyboardOut] = React.useState(false);
+    Platform.OS === 'android' &&  React.useEffect(() => {
+        Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
+        Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+        return () => {
+            Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
+            Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
+        };
+    }, []);
+    const _keyboardDidShow = () => {setKeyboardOut(true)};
+    const _keyboardDidHide = () => { setKeyboardOut(false)};
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[language].buttons.cancel;
 	modalCancelbtn.onPress = () => {
@@ -157,7 +169,7 @@ export default function SettingsScreen( {route, navigation} ) {
 		settings.userUnits = userUnits;
 		Storage.saveSettings(settings, language);
 		setmodalVisible(false);
-        navigation.navigate(Strings.routes.home)
+        navigation.navigate(Strings.routes.home);
 	};
 	const cancelbtn = AllButtons.cancel;
 	cancelbtn._title = Strings[language].buttons.cancel;
@@ -481,6 +493,31 @@ export default function SettingsScreen( {route, navigation} ) {
 							</RectButton>
 						)
 				})}
+
+
+				{ showDate && <DateTimePicker 
+					value={Moment(time, Strings.timeFormat).toDate()}
+					mode={'time'}
+					onChange={(event, date) => {
+						if (Platform.OS === 'android') {
+							setShowDate(false)
+						}
+						if (date !== undefined) {
+							setTime(Moment(date).format(Strings.timeFormat));
+						}
+					}}
+				/>}
+				{Platform.OS === 'ios' && showDate && <View style={[{flexDirection: 'row', justifyContent: 'center'}]}>
+					<TouchableHighlight 
+						key={'accept'} 
+						style={styles.calButton}
+						onPress={() => {
+							setShowDate(false);
+						}}
+					>
+						<Text style={styles.calButtonText}>{Strings[settings.language].buttons.okay}</Text>
+					</TouchableHighlight>
+				</View>}
 			</View>
 			<CustModal 
 				visible={modalVisible} 
@@ -491,17 +528,8 @@ export default function SettingsScreen( {route, navigation} ) {
 				vertical={buttonsVertical}
 				darkmode={darkMode}
 			/>
-			{ showDate && <DateTimePicker 
-				value={Moment(time, Strings.timeFormat).toDate()}
-				mode={'time'}
-				onChange={(event, date) => {
-					setShowDate(false);
-					if (date !== undefined) {
-						setTime(Moment(date).format(Strings.timeFormat));
-					}
-				}}
-			/>}
-			<ButtonBar buttons={[ cancelbtn, savebtn ]} />
+            {Platform.OS === 'ios' && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
+            {Platform.OS === 'android' && !keyboardOut && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
 		</SafeAreaView>
 	);
 }
@@ -549,4 +577,16 @@ const styles = StyleSheet.create({
 		shadowRadius: 3.84,
 		elevation: 5
 	},
+    calButton: {
+        backgroundColor: Colors.create,
+        borderRadius: 20,
+        padding: 10,
+        elevation: 0
+    },
+    calButtonText: {
+        color: Colors.navButtonText,
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: 14,
+    },
 });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableHighlight, View, } from 'react-native';
+import { Keyboard, SafeAreaView, StyleSheet, Text, TouchableHighlight, View, } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
@@ -60,6 +60,18 @@ export default function DisplayScreen({ route, navigation }) {
         Reminders.cancelNotification([project._reminders.dueTom]).then(project._reminders.dueTom = null);
         Reminders.cancelNotification(project._reminders.regular).then(project._reminders.dueTom = []);
     }
+    // android hide bottom buttons if keyboard is showing
+    const [keyboardOut, setKeyboardOut] = React.useState(false);
+    Platform.OS === 'android' &&  React.useEffect(() => {
+        Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
+        Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+        return () => {
+            Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
+            Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
+        };
+    }, []);
+    const _keyboardDidShow = () => {setKeyboardOut(true)};
+    const _keyboardDidHide = () => { setKeyboardOut(false)};
     const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s)
     const allPUnits = Strings[settings.language].unitPlurals.concat(settings.userUnits.p)
     const deletebtn = AllButtons.delete;
@@ -202,7 +214,8 @@ export default function DisplayScreen({ route, navigation }) {
                     <Text style={[styles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.frequency + '  ' + Strings[settings.language].frequencyWords[project._frequency]}</Text>
                 </View>
             </View>
-            <ButtonBar buttons={[ deletebtn, editbtn, homebtn ]} />
+            {Platform.OS === 'ios' && <ButtonBar buttons={[ deletebtn, editbtn, homebtn ]} />}
+            {Platform.OS === 'android' && !keyboardOut && <ButtonBar buttons={[ deletebtn, editbtn, homebtn ]} />}
             <CustModal 
                 visible={modalVisible} 
                 message={modalMessage} 
