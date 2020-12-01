@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { Keyboard, SafeAreaView, StyleSheet, Text, TouchableHighlight, View, } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
-import { Project } from '../constants/ProjectClass.js';
 import ButtonBar from '../components/ButtonBar'
 import CustModal from '../components/Modal';
 import Colors from '../constants/Colors';
