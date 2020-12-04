@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import { StatusBar, StyleSheet, Text, View, Linking} from 'react-native';
+import { Keyboard, StatusBar, StyleSheet, Text, View, Linking, SafeAreaView, TouchableHighlight} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AllButtons from '../constants/ButtonClass';
@@ -77,23 +77,34 @@ export default function SettingsScreen( {route, navigation} ) {
 		})
 		setDeletableUnits(list);
 	}, [userUnits, unit]);
+    // android hide bottom buttons if keyboard is showing
+    const [keyboardOut, setKeyboardOut] = React.useState(false);
+    Platform.OS === 'android' &&  React.useEffect(() => {
+        Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
+        Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+        return () => {
+            Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
+            Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
+        };
+    }, []);
+    const _keyboardDidShow = () => {setKeyboardOut(true)};
+    const _keyboardDidHide = () => { setKeyboardOut(false)};
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[language].buttons.cancel;
 	modalCancelbtn.onPress = () => {
 		setmodalVisible(false);
 		setButtonsVertical(false);
+		setModalButtons([]);
+		setModalInputs([]);
 		setSingUnit('');
 		setPluUnit('');
 	};
 	const modalDeletbtn = AllButtons.delete;
 	modalDeletbtn._title = Strings[language].buttons.delete;
-	modalDeletbtn.onPress = async () => {
+	modalDeletbtn.onPress = () => {
 		setModalButtons([]);
 		setModalMessage(Strings[language].alerts.deleting)
-		for (i = 0; 1 < projects.length; i++) {
-			await Reminders.cancelNotification([projects[i].obj._reminders.dueTom]);
-			await Reminders.cancelNotification(projects[i].obj._reminders.regular);
-		}
+		Reminders.cancelAll();
 		let keys = projects.map(project => {
 			return project.key
 		})
@@ -107,9 +118,29 @@ export default function SettingsScreen( {route, navigation} ) {
 	savebtn.onPress = async () => {
 		// settings.darkmode = darkMode;
 
-		// add modal that opens here and closes before navigation
-		// contemplate fix for language change for reminders. Would require rescheduling all.
-		if (projects.length && (settings.notifications.freq !== freq || settings.notifications.time !== time)) {
+		setmodalVisible(true);
+		setModalMessage(Strings[language].alerts.saving);
+		setModalButtons([]);
+		setModalPickers([]);
+		setModalInputs([]);
+		// Reschedule reminders on save settings if language has changed.
+		if (settings.language !== language && projects.length) {
+			for (i = 0; 1 < projects.length; i++) {
+				await Reminders.cancelAll();
+				let remindersObj = await Reminders.scheduleNotification(
+					projects[i].obj._title, 
+					language, 
+					projects[i].obj._frequency === 0 ? freq : projects[i].obj._frequency, 
+					projects[i].obj._time === 'default' ? time : projects[i].obj._time, 
+					projects[i].obj._dueDate)
+				let updateObj = {
+					reminders: remindersObj
+				}
+				Storage.updateProj(projects[i].key, updateObj, language);
+			}
+		}
+		// Reschedule reminders on save if language hasn't changed, but time or frequency have.
+		else if (projects.length && (settings.notifications.freq !== freq || settings.notifications.time !== time)) {
 			let defaultProj = projects.filter(proj => {
 				return proj.obj._frequency === 0 || proj.obj._time === 'default'
 			})
@@ -137,7 +168,8 @@ export default function SettingsScreen( {route, navigation} ) {
 		settings.unit = unit;
 		settings.userUnits = userUnits;
 		Storage.saveSettings(settings, language);
-        navigation.navigate(Strings.routes.home)
+		setmodalVisible(false);
+        navigation.navigate(Strings.routes.home);
 	};
 	const cancelbtn = AllButtons.cancel;
 	cancelbtn._title = Strings[language].buttons.cancel;
@@ -147,12 +179,18 @@ export default function SettingsScreen( {route, navigation} ) {
 	const dateFormatBtns = Strings.dateFormats.map((string) => {
 		return ({_title: string, onPress: () => {
 			setmodalVisible(false);
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
 			setDateFormat(string);
 		}})
 	});
 	const languageBtns = Strings.languages.map((string) => {
 		return ({_title: string, onPress: () => {
 			setmodalVisible(false);
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
 			setLanguage(string);
 		}})
 	});
@@ -160,12 +198,18 @@ export default function SettingsScreen( {route, navigation} ) {
 	const freqBtns = freqWords.map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setFreq(index + 1);
-			setmodalVisible(false)
+			setmodalVisible(false);
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
 		}})
 	});
 	const unitBtns = Strings[language].units.concat(userUnits.s).map((string, index) => {
 		return ({_title: string, onPress: () => {
-			setmodalVisible(false)
+			setmodalVisible(false);
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
 			setUnit(index);
 		}})
 	});
@@ -173,6 +217,9 @@ export default function SettingsScreen( {route, navigation} ) {
 		return ({_title: string, onPress: () => {
 			modalDonebtn.onPress = () => {
 				setmodalVisible(false);
+				setModalButtons([]);
+				setModalPickers([]);
+				setModalInputs([]);
 				setDonePush(true);
 			};
 			setEditIndex(index);
@@ -244,6 +291,16 @@ export default function SettingsScreen( {route, navigation} ) {
 	const delUnitBtns = deletableUnits.map(num => {
 		return ({_title: userUnits.s[num], onPress: () => {
 			setmodalVisible(false)
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
+			let updateArr = projects.filter(proj => {
+				return proj.obj._unitName === Strings[language].units.length + num;
+			})
+			for (i = 0; i < updateArr.length; i++) {
+				let newObj = {obj: {_unitName: updateArr[i].obj._unitName - 1}}
+				Storage.updateProj(updateArr[i].key, newObj, language);
+			}
 			let sUnits = userUnits.s.slice();
 			let pUnits = userUnits.p.slice();
 			sUnits.splice(num, 1);
@@ -274,6 +331,9 @@ export default function SettingsScreen( {route, navigation} ) {
 		setButtonsVertical(false);
 		modalDonebtn.onPress = () => {
 			setmodalVisible(false);
+			setModalButtons([]);
+			setModalPickers([]);
+			setModalInputs([]);
 			setDonePush(true);
 		};
 		setModalMessage(Strings[language].alerts.settings.addUnit);
@@ -413,7 +473,7 @@ export default function SettingsScreen( {route, navigation} ) {
         buttons.feedback,
 	]
 	return (
-		<View style={[styles.container, {backgroundColor: darkMode ? Colors.darkmode.background : Colors.mainbackground} ]} contentContainerStyle={styles.contentContainer}>
+		<SafeAreaView style={[styles.container, {backgroundColor: darkMode ? Colors.darkmode.background : Colors.mainbackground} ]} contentContainerStyle={styles.contentContainer}>
 			<StatusBar 
 				barStyle={darkMode ? "light-content" : "dark-content"} 
 				backgroundColor={darkMode ? Colors.darkmode.background : Colors.mainbackground} 
@@ -433,6 +493,31 @@ export default function SettingsScreen( {route, navigation} ) {
 							</RectButton>
 						)
 				})}
+
+
+				{ showDate && <DateTimePicker 
+					value={Moment(time, Strings.timeFormat).toDate()}
+					mode={'time'}
+					onChange={(event, date) => {
+						if (Platform.OS === 'android') {
+							setShowDate(false)
+						}
+						if (date !== undefined) {
+							setTime(Moment(date).format(Strings.timeFormat));
+						}
+					}}
+				/>}
+				{Platform.OS === 'ios' && showDate && <View style={[{flexDirection: 'row', justifyContent: 'center'}]}>
+					<TouchableHighlight 
+						key={'accept'} 
+						style={styles.calButton}
+						onPress={() => {
+							setShowDate(false);
+						}}
+					>
+						<Text style={styles.calButtonText}>{Strings[settings.language].buttons.okay}</Text>
+					</TouchableHighlight>
+				</View>}
 			</View>
 			<CustModal 
 				visible={modalVisible} 
@@ -443,18 +528,9 @@ export default function SettingsScreen( {route, navigation} ) {
 				vertical={buttonsVertical}
 				darkmode={darkMode}
 			/>
-			{ showDate && <DateTimePicker 
-				value={Moment(time, Strings.timeFormat).toDate()}
-				mode={'time'}
-				onChange={(event, date) => {
-					setShowDate(false);
-					if (date !== undefined) {
-						setTime(Moment(date).format(Strings.timeFormat));
-					}
-				}}
-			/>}
-			<ButtonBar buttons={[ cancelbtn, savebtn ]} />
-		</View>
+            {Platform.OS === 'ios' && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
+            {Platform.OS === 'android' && !keyboardOut && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
+		</SafeAreaView>
 	);
 }
 
@@ -501,4 +577,16 @@ const styles = StyleSheet.create({
 		shadowRadius: 3.84,
 		elevation: 5
 	},
+    calButton: {
+        backgroundColor: Colors.create,
+        borderRadius: 20,
+        padding: 10,
+        elevation: 0
+    },
+    calButtonText: {
+        color: Colors.navButtonText,
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: 14,
+    },
 });

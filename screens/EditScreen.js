@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { 
     Keyboard, 
+    SafeAreaView,
     StyleSheet, 
     Text, 
     TextInput, 
@@ -46,6 +47,18 @@ export default function EditScreen({ route, navigation }) {
     const [endValue, setEndValue] = React.useState(project._endUnit);
     const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s);
     const allPUnits = Strings[settings.language].unitPlurals.concat(settings.userUnits.p);
+    // android hide bottom buttons if keyboard is showing
+    const [keyboardOut, setKeyboardOut] = React.useState(false);
+    Platform.OS === 'android' &&  React.useEffect(() => {
+        Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
+        Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+        return () => {
+            Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
+            Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
+        };
+    }, []);
+    const _keyboardDidShow = () => {setKeyboardOut(true)};
+    const _keyboardDidHide = () => { setKeyboardOut(false)};
     // project to save
     const newProj = new Project();
     const updateProj = async () => {
@@ -111,11 +124,11 @@ export default function EditScreen({ route, navigation }) {
                     await Reminders.cancelNotification([project._reminders.dueTom]);
                     await Reminders.cancelNotification(project._reminders.regular);
                     let remindersObj = await Reminders.scheduleNotification(
-                        project._title, 
-                        settings.language, 
-                        project._frequency === 0 ? freq : project._frequency, 
-                        project._time === 'default' ? time : project._time, 
-                        project._dueDate)
+                        titleValue, 
+                        settings.language,
+                        (freqValue === 0 ? settings.notifications.freq : freqValue), 
+                        (timeValue === 'default' ? settings.notifications.time : timeValue),
+                        dateValue)
                     newProj.reminders = remindersObj;
                 }
                 newProj.title = titleValue.trim();
@@ -144,18 +157,25 @@ export default function EditScreen({ route, navigation }) {
     savebtn.onPress = () => updateProj();
     cancelbtn.onPress = () => navigation.navigate(Strings.routes.display);
     modalokaybtn.onPress = () => setmodalVisible(false);
-    modalcancelbtn.onPress = () => setmodalVisible(false);
+    modalcancelbtn.onPress = () => {
+        setmodalVisible(false);
+        setModalButtons([]);
+        setModalPickers([]);
+    }
     // modal picker buttons
     const unitBtns = allPUnits.map((string, index) => {
 		return ({_title: string, onPress: () => {
             setUnitValue(index);
 			setmodalVisible(false);
+            setModalButtons([]);
+            setModalPickers([]);
 		}})
 	});
     const freqBtns = Strings[settings.language].frequencyWords.map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setFreqValue(index);
 			setmodalVisible(false);
+            setModalButtons([]);
             setModalPickers([]);
 		}})
     });
@@ -164,7 +184,7 @@ export default function EditScreen({ route, navigation }) {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <CustModal 
                 visible={modalVisible} 
                 message={modalMessage} 
@@ -181,6 +201,7 @@ export default function EditScreen({ route, navigation }) {
                     value={titleValue}
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
+                    onFocus={() => {setShowDate(false);}}
                 />
                 <View style={[styles.row]}>
                     <Text style={styles.labelText}>{Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[unitValue]))}</Text>
@@ -190,6 +211,7 @@ export default function EditScreen({ route, navigation }) {
                         value={currentValue.toString()}
                         keyboardType={'number-pad'}
                         onChangeText={text => setCurrentValue(text)}
+                        onFocus={() => {setShowDate(false);}}
                     />
                 </View>
                 <View style={styles.row}>
@@ -202,6 +224,7 @@ export default function EditScreen({ route, navigation }) {
                         value={startValue.toString()}
                         keyboardType={'number-pad'}
                         onChangeText={text => setStartValue(text)}
+                        onFocus={() => {setShowDate(false);}}
                     />
                 </View>
                 <View style={styles.row}>
@@ -214,6 +237,7 @@ export default function EditScreen({ route, navigation }) {
                         value={endValue.toString()}
                         keyboardType={'number-pad'}
                         onChangeText={text => setEndValue(text)}
+                        onFocus={() => {setShowDate(false);}}
                     />
                 </View>
                 <View style={styles.row}>
@@ -222,6 +246,7 @@ export default function EditScreen({ route, navigation }) {
                         style={styles.inputField} 
                         value={Moment(dateValue).format(settings.dateFormat)}
                         onFocus={() => {
+                            Keyboard.dismiss();
                             setShowDate(true);
                             setDateMode('date');
                         }}
@@ -234,6 +259,7 @@ export default function EditScreen({ route, navigation }) {
                         value={allPUnits[unitValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
+                            setShowDate(false);
                             setModalButtons([modalcancelbtn]);
                             setModalPickers([unitBtns]);
                             setModalMessage(Strings[settings.language].alerts.create_edit.unit);
@@ -248,6 +274,7 @@ export default function EditScreen({ route, navigation }) {
                         onPress={() => {
                             setTimeValue('default');
                             setFreqValue(0);
+                            setShowDate(false);
                         }}
                         >
                         <Text style={styles.buttonText}>
@@ -261,6 +288,7 @@ export default function EditScreen({ route, navigation }) {
                         style={styles.inputField}
                         value={timeValue === 'default' ? Strings[settings.language].frequencyWords[0] : timeValue}
                         onFocus={() => {
+                            Keyboard.dismiss();
                             setShowDate(true);
                             setDateMode('time');
                         }}
@@ -273,6 +301,7 @@ export default function EditScreen({ route, navigation }) {
                         value={Strings[settings.language].frequencyWords[freqValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
+                            setShowDate(false);
                             setModalButtons([modalcancelbtn]);
                             setModalPickers([freqBtns]);
                             setModalMessage(Strings[settings.language].alerts.create_edit.freq);
@@ -285,8 +314,9 @@ export default function EditScreen({ route, navigation }) {
                     mode={dateMode}
                     minimumDate={Moment().toDate()}
                     onChange={(event, date) => {
-                        Keyboard.dismiss();
-                        setShowDate(false);
+                        if (Platform.OS === 'android') {
+                            setShowDate(false)
+                        }
                         if (dateMode === 'date' && date !== undefined) {
                             setDateValue(date); 
                         }
@@ -296,16 +326,38 @@ export default function EditScreen({ route, navigation }) {
                         }
                     }}
                 />}
+                {Platform.OS === 'ios' && showDate && <View style={[styles.row, {justifyContent: 'center'}]}>
+                    <TouchableHighlight 
+                        key={'cancel'} 
+                        style={styles.defaultsButton}
+                        onPress={() => {
+                            setShowDate(false);
+                            dateMode === 'time' && setTimeValue('default');
+                            dateMode === 'date' && setDateValue(Moment().add(7, 'day').toDate());
+                        }}
+                    >
+                        <Text style={styles.buttonText}>{Strings[settings.language].buttons.cancel}</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight 
+                        key={'accept'} 
+                        style={[styles.defaultsButton, {backgroundColor: Colors.create, marginLeft: 10}]}
+                        onPress={() => {
+                            setShowDate(false);
+                        }}
+                    >
+                        <Text style={styles.buttonText}>{Strings[settings.language].buttons.okay}</Text>
+                    </TouchableHighlight>
+                </View>}
             </View>
-            <ButtonBar buttons={[ cancelbtn, savebtn ]}/>
-        </View>
+            {Platform.OS === 'ios' && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
+            {Platform.OS === 'android' && !keyboardOut && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
+        </SafeAreaView>
     )
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 30,
       },
     mainview: {
         flex: 1,

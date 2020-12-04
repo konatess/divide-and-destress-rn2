@@ -1,8 +1,11 @@
 const tintColor = '#2f95dc';
 const purple = '#580084' // '#9200DA';
+const iconColor = '#3A8BA6'
 
 export default {
     tintColor,
+    iconColor,
+    topbarText: '#eee',
     tabIconDefault: '#fff',
     tabIconSelected: tintColor,
     tabBar: '#fefefe',

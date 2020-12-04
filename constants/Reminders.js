@@ -1,7 +1,6 @@
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import Strings from '../constants/Strings';
-import { Project } from "./ProjectClass";
 import Moment from 'moment';
 
 export default {
@@ -34,14 +33,10 @@ export default {
 
         const from = Moment(time, Strings.timeFormat);
         const h = from.hour();
-        console.log('hour = ' + h);
         const m = from.minute();
-        console.log('minute = ' + m);
         const d = Moment(dueDate).hour(h).minute(m).subtract(1, 'day');
         const remain = d.diff(from,'day');
-        console.log('days remaining: ' + remain);
         let trigger = d.toDate();
-        console.log(trigger);
 
         if (remain > 0) {
             const dueReminderID = await Notifications.scheduleNotificationAsync({
@@ -55,7 +50,8 @@ export default {
             const remindersArray = [];
 
             for (i = freq; i < remain; i = i + freq) {
-                let trigger = d.subtract(i, 'day').toDate();
+                // set to freq because Moment is mutable. Would change to i for DayJS
+                let trigger = d.subtract(freq, 'day').toDate();
                 let id = await Notifications.scheduleNotificationAsync({
                     content: {
                     title: title,
@@ -82,5 +78,8 @@ export default {
         iDsArray.forEach(async element => {
             await Notifications.cancelScheduledNotificationAsync(element);
         });
+    },
+    cancelAll: async () => {
+        await Notifications.cancelAllScheduledNotificationsAsync();
     }
 }

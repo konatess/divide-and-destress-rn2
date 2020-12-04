@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import CustomButton from './Button';
 
 export default function ButtonBar({buttons}) {
@@ -22,7 +22,10 @@ export default function ButtonBar({buttons}) {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        height: 55,
+        height: 70,
+        width: Dimensions.get('window').width,
         padding: 0,
+        position: 'absolute',
+        bottom: 0
     },
 });
