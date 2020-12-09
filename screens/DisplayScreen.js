@@ -22,6 +22,7 @@ export default function DisplayScreen({ route, navigation }) {
     const [modalMessage, setModalMessage] = React.useState();
     const [modalButtons, setModalButtons] = React.useState([]);
     const [modalInputs, setModalInputs] = React.useState([]);
+    const [progress, setProgress] =React.useState(project._currentUnit/project._endUnit);
     React.useEffect(() => {
         const getPerDay = () => {
             // units remaining
@@ -129,6 +130,7 @@ export default function DisplayScreen({ route, navigation }) {
             if (sum === project._endUnit && project._reminders.dueTom) {
                 cancelReminders();
             }
+            setProgress(sum/project._endUnit);
             Storage.updateProj(key, project, settings.language);
         }
     };
@@ -151,6 +153,7 @@ export default function DisplayScreen({ route, navigation }) {
             if (updateNum === project._endUnit && project._reminders.dueTom) {
                 cancelReminders();
             }
+            setProgress(updateNum/project._endUnit);
             Storage.updateProj(key, project, settings.language);
         }
     };
@@ -165,7 +168,7 @@ export default function DisplayScreen({ route, navigation }) {
                     </Text>
                     {current < project._endUnit && <TouchableHighlight
                         key='updatebtn'
-                        style={[styles.defaultsButton, {marginLeft: 20, marginTop: 5}]}
+                        style={[styles.updateButton, {marginLeft: 20, marginTop: 5}]}
                         onPress={() => {
                             setmodalVisible(true)
                             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.updateCurrent.replace(/\*units\*/g, allPUnits[project._unitName]).replace(/\*unit\*/g, allSUnits[project._unitName])))
@@ -211,6 +214,9 @@ export default function DisplayScreen({ route, navigation }) {
                 <View style={styles.row}>
                     <Text style={[styles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.frequency + '  ' + Strings[settings.language].frequencyWords[project._frequency]}</Text>
                 </View>
+                <View style={styles.progressbar}>
+                    <View style={[styles.progressfill, {width: `${progress*100}%`}]}></View>
+                </View>
             </View>
             {Platform.OS === 'ios' && <ButtonBar buttons={[ deletebtn, editbtn, homebtn ]} />}
             {Platform.OS === 'android' && !keyboardOut && <ButtonBar buttons={[ deletebtn, editbtn, homebtn ]} />}
@@ -249,16 +255,32 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         flexShrink: 1,
     }, 
-    defaultsButton: {
-        backgroundColor: Colors.cancel,
+    updateButton: {
+        backgroundColor: Colors.edit,
         borderRadius: 20,
         padding: 10,
         elevation: 0
     },
     buttonText: {
         color: Colors.navButtonText,
-        fontWeight: "bold",
-        textAlign: "center",
+        fontWeight: 'bold',
+        textAlign: 'center',
         fontSize: 14,
+    },
+    progressbar: {
+        flexDirection: 'row',
+        height: 15,
+        width: '100%',
+        borderColor: Colors.edit,
+        borderWidth: 2,
+        borderRadius: 5,
+    },
+    progressfill: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: Colors.edit,
     },
 });

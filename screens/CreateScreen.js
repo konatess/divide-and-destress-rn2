@@ -42,8 +42,8 @@ export default function CreateScreen({ route, navigation}) {
     // title value
     const [titleValue, setTitleValue] = React.useState("");
     // start and end values
-    const [startValue, setStartValue] = React.useState(1);
-    const [endValue, setEndValue] = React.useState(0);
+    const [startValue, setStartValue] = React.useState("1");
+    const [endValue, setEndValue] = React.useState("1");
     // android hide bottom buttons if keyboard is showing
     const [keyboardOut, setKeyboardOut] = React.useState(false);
     Platform.OS === 'android' &&  React.useEffect(() => {
@@ -75,12 +75,18 @@ export default function CreateScreen({ route, navigation}) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!startValue) {
+        else if (!startValue || isNaN(parseInt(startValue))) {
+            if (isNaN(parseInt(startValue))) {
+                setStartValue("0");
+            }
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.first.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!endValue) {
+        else if (!endValue || isNaN(parseInt(endValue))) {
+            if (isNaN(parseInt(endValue))) {
+                setEndValue("0");
+            }
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.last.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
