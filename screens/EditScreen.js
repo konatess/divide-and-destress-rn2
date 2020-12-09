@@ -77,7 +77,7 @@ export default function EditScreen({ route, navigation }) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!startValue || isNaN(parseInt(startValue))) {
+        else if (!startValue === '' || isNaN(parseInt(startValue))) {
             if (isNaN(parseInt(startValue))) {
                 setStartValue("0");
             }
@@ -85,7 +85,7 @@ export default function EditScreen({ route, navigation }) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!endValue || isNaN(parseInt(endValue))) {
+        else if (!endValue === '' || isNaN(parseInt(endValue))) {
             if (isNaN(parseInt(endValue))) {
                 setEndValue("0");
             }

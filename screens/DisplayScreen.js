@@ -22,7 +22,7 @@ export default function DisplayScreen({ route, navigation }) {
     const [modalMessage, setModalMessage] = React.useState();
     const [modalButtons, setModalButtons] = React.useState([]);
     const [modalInputs, setModalInputs] = React.useState([]);
-    const [progress, setProgress] =React.useState(project._currentUnit/project._endUnit);
+    const [progress, setProgress] =React.useState((project._currentUnit - project._startUnit)/(project._endUnit - project._startUnit));
     React.useEffect(() => {
         const getPerDay = () => {
             // units remaining
@@ -130,7 +130,7 @@ export default function DisplayScreen({ route, navigation }) {
             if (sum === project._endUnit && project._reminders.dueTom) {
                 cancelReminders();
             }
-            setProgress(sum/project._endUnit);
+            setProgress((sum - project._startUnit)/(project._endUnit - project._startUnit));
             Storage.updateProj(key, project, settings.language);
         }
     };
@@ -153,7 +153,7 @@ export default function DisplayScreen({ route, navigation }) {
             if (updateNum === project._endUnit && project._reminders.dueTom) {
                 cancelReminders();
             }
-            setProgress(updateNum/project._endUnit);
+            setProgress((updateNum - project._startUnit)/(project._endUnit - project._startUnit));
             Storage.updateProj(key, project, settings.language);
         }
     };
