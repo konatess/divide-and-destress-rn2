@@ -75,7 +75,7 @@ export default {
             tags: 'Tags, e.g. class or genre (optional): ',
             tagsDisplay: 'Tags: ',
             notification: 'Notifications: ',
-            frequency: 'Freqency:',
+            frequency: 'Frequency:',
             time: 'Time:',
             perDay: 'Complete *num* *unit* *freq*.',
             complete: '🎉 This project is complete! 🎉',
