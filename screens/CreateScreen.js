@@ -43,7 +43,7 @@ export default function CreateScreen({ route, navigation}) {
     const [titleValue, setTitleValue] = React.useState("");
     // start and end values
     const [startValue, setStartValue] = React.useState("1");
-    const [endValue, setEndValue] = React.useState("1");
+    const [endValue, setEndValue] = React.useState("");
     // android hide bottom buttons if keyboard is showing
     const [keyboardOut, setKeyboardOut] = React.useState(false);
     Platform.OS === 'android' &&  React.useEffect(() => {
@@ -75,7 +75,7 @@ export default function CreateScreen({ route, navigation}) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!startValue || isNaN(parseInt(startValue))) {
+        else if (startValue === '' || isNaN(parseInt(startValue))) {
             if (isNaN(parseInt(startValue))) {
                 setStartValue("0");
             }
@@ -83,7 +83,7 @@ export default function CreateScreen({ route, navigation}) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!endValue || isNaN(parseInt(endValue))) {
+        else if (endValue === '' || isNaN(parseInt(endValue))) {
             if (isNaN(parseInt(endValue))) {
                 setEndValue("0");
             }
