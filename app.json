@@ -24,7 +24,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.buddingapps.dividedestress",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.buddingapps.dividedestress",
+      "versionCode": 1
     }
   }
 }
