@@ -107,7 +107,7 @@ export default {
             charTitle: "Title can only contain letters, numbers, spaces, and these symbols: '-_/&:!",
             confirmDelete: 'Are you sure you want to delete this project?',
             order: 'Select below to reorder your projects.',
-            updateCurrent: 'Enter a number below to add *units* to current *unit*, or update current *unit*.',
+            updateCurrent: 'Enter a number below to add to or update current *unit*.',
             currentBig: 'Current *unit* cannot be bigger than last *unit*.',
             currentSmall: 'Current *unit* cannot be smaller than first *unit*.',
             create_edit: {
