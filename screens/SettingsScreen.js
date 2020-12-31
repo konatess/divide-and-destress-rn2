@@ -527,8 +527,9 @@ export default function SettingsScreen( {route, navigation} ) {
 					value={dateValue}
 					mode={dateMode}
 					onChange={(event, date) => {
+						// event.preventDefault();
 						setShowDate(false);
-						// setDateValue(date).toDate();
+						setDateValue(date);
 						setTime(Moment(date).format(Strings.timeFormat));
 					}}
 				/>}

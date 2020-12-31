@@ -287,6 +287,7 @@ export default function CreateScreen({ route, navigation}) {
                     mode={dateMode}
                     minimumDate={Moment().add(2, 'day').toDate()}
                     onChange={(event, date) => {
+						event.preventDefault();
                         setShowDate(false);
                         if (dateMode === 'date' && date !== undefined) {
                             setDateValue(date); 

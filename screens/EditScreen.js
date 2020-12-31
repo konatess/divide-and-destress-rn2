@@ -341,6 +341,7 @@ export default function EditScreen({ route, navigation }) {
                     mode={dateMode}
                     minimumDate={Moment().add(2, 'day').toDate()}
                     onChange={(event, date) => {
+						event.preventDefault();
                         if (Platform.OS === "android") {
                             setShowDate(false);
                         }
