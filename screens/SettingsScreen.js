@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import { Keyboard, StatusBar, StyleSheet, Text, View, Linking, SafeAreaView, TouchableHighlight} from 'react-native';
+import { Keyboard, StatusBar, StyleSheet, Text, View, Linking, SafeAreaView, TouchableHighlight, Platform, Modal} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AllButtons from '../constants/ButtonClass';
@@ -461,6 +461,16 @@ export default function SettingsScreen( {route, navigation} ) {
 			Notify(language, Strings.mailto);
 		}
 	};
+	buttons.site._title = Strings[language].buttons.allSettings.site;
+	buttons.site.onPress = async () => {
+		let supported = await Linking.canOpenURL(Strings.website);
+		if (supported) {
+			await Linking.openURL(Strings.website)
+		}
+		else {
+			Notify(language, Strings.website);
+		}
+	};
 	const buttonsArr = [
 		// buttons.darkMode,
 		buttons.language,
@@ -470,7 +480,8 @@ export default function SettingsScreen( {route, navigation} ) {
 		buttons.defaultUnit,
 		buttons.editUnit,
         buttons.deleteAll,
-        buttons.feedback,
+		buttons.feedback,
+		buttons.site,
 	]
 	return (
 		<SafeAreaView style={[styles.container, {backgroundColor: darkMode ? Colors.darkmode.background : Colors.mainbackground} ]} contentContainerStyle={styles.contentContainer}>
@@ -495,9 +506,10 @@ export default function SettingsScreen( {route, navigation} ) {
 				})}
 
 
-				{ showDate && <DateTimePicker 
+				{/* { showDate && <DateTimePicker 
 					value={Moment(time, Strings.timeFormat).toDate()}
 					mode={'time'}
+                    display={Platform.OS === "ios" ? 'spinner' : 'default'}
 					onChange={(event, date) => {
 						if (Platform.OS === 'android') {
 							setShowDate(false)
@@ -506,8 +518,22 @@ export default function SettingsScreen( {route, navigation} ) {
 							setTime(Moment(date).format(Strings.timeFormat));
 						}
 					}}
-				/>}
-				{Platform.OS === 'ios' && showDate && <View style={[{flexDirection: 'row', justifyContent: 'center'}]}>
+				/>} */}
+				{Platform.OS === 'ios' && showDate && <Modal>
+					<DateTimePicker 
+						value={Moment(time, Strings.timeFormat).toDate()}
+						mode={'time'}
+						display={Platform.OS === "ios" ? 'spinner' : 'default'}
+						onChange={(event, date) => {
+							if (Platform.OS === 'android') {
+								setShowDate(false)
+							}
+							if (date !== undefined) {
+								setTime(Moment(date).format(Strings.timeFormat));
+							}
+						}}
+					/>
+					<View style={[{flexDirection: 'row', justifyContent: 'center'}]}>
 					<TouchableHighlight 
 						key={'accept'} 
 						style={styles.calButton}
@@ -517,7 +543,19 @@ export default function SettingsScreen( {route, navigation} ) {
 					>
 						<Text style={styles.calButtonText}>{Strings[settings.language].buttons.okay}</Text>
 					</TouchableHighlight>
-				</View>}
+				</View>
+				</Modal>}
+				{/* {Platform.OS === 'ios' && showDate && <View style={[{flexDirection: 'row', justifyContent: 'center'}]}>
+					<TouchableHighlight 
+						key={'accept'} 
+						style={styles.calButton}
+						onPress={() => {
+							setShowDate(false);
+						}}
+					>
+						<Text style={styles.calButtonText}>{Strings[settings.language].buttons.okay}</Text>
+					</TouchableHighlight>
+				</View>} */}
 			</View>
 			<CustModal 
 				visible={modalVisible} 

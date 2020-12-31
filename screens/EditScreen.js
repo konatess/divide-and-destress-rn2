@@ -318,10 +318,11 @@ export default function EditScreen({ route, navigation }) {
                 { showDate && <DateTimePicker 
                     value={dateValue}
                     mode={dateMode}
-                    minimumDate={Moment().toDate()}
+                    display={Platform.OS === "ios" ? 'spinner' : 'default'}
+                    minimumDate={Moment().add(2, 'day').toDate()}
                     onChange={(event, date) => {
-                        if (Platform.OS === 'android') {
-                            setShowDate(false)
+                        if (Platform.OS === "android") {
+                            setShowDate(false);
                         }
                         if (dateMode === 'date' && date !== undefined) {
                             setDateValue(date); 
@@ -338,8 +339,8 @@ export default function EditScreen({ route, navigation }) {
                         style={styles.defaultsButton}
                         onPress={() => {
                             setShowDate(false);
-                            dateMode === 'time' && setTimeValue('default');
-                            dateMode === 'date' && setDateValue(Moment().add(7, 'day').toDate());
+                            dateMode === 'time' && setTimeValue(project._time);
+                            dateMode === 'date' && setDateValue(project._dueDate);
                         }}
                     >
                         <Text style={styles.buttonText}>{Strings[settings.language].buttons.cancel}</Text>

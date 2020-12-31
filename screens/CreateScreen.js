@@ -269,10 +269,11 @@ export default function CreateScreen({ route, navigation}) {
                 { showDate && <DateTimePicker 
                     value={dateValue}
                     mode={dateMode}
+                    display={Platform.OS === "ios" ? 'spinner' : 'default'}
                     minimumDate={Moment().add(2, 'day').toDate()}
                     onChange={(event, date) => {
-                        if (Platform.OS === 'android') {
-                            setShowDate(false)
+                        if (Platform.OS === "android") {
+                            setShowDate(false);
                         }
                         if (dateMode === 'date' && date !== undefined) {
                             setDateValue(date); 

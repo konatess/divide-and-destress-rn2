@@ -30,6 +30,7 @@ const unit= new ButtonObj('', Colors.done, 'list');
 const editUnit= new ButtonObj('', Colors.edit, 'md-add-sharp');
 const deleteAll= new ButtonObj('', Colors.done, 'trash-sharp');
 const feedback= new ButtonObj('', Colors.done, 'chatbubble');
+const site= new ButtonObj('', Colors.done, 'globe');
 
 export default {
     settings: settings,
@@ -55,6 +56,7 @@ export default {
         defaultUnit: unit,
         editUnit: editUnit,
         deleteAll: deleteAll,
-        feedback: feedback
+        feedback: feedback,
+        site: site
     }
 };

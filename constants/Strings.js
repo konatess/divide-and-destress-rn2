@@ -13,6 +13,7 @@ export default {
         projPrefix: 'PROJ-',
     },
     mailto: 'mailto:<admin@buddingapps.com>?subject=Divide%20%26%20De-Stress',
+    website: 'https://www.buddingapps.com/projects/divide-%26-de-stress',
     languages: ['English', 'Español',],
     dateFormats: ['MM/DD', 'DD/MM', 'MM-DD', 'DD-MM', 'YY/MM/DD', 'DD/MM/YY', 'MM/DD/YY', 'YY-MM-DD', 'DD-MM-YY', 'MM-DD-YY'],
     timeFormat: 'h:mm a',
@@ -60,7 +61,8 @@ export default {
                 editUnit: 'Edit or Add Unit Names',
                 tags: 'Edit Your Tags',
                 deleteAll: 'Start Fresh - Delete All Projects',
-                feedback: 'Send Us Your Feedback'
+                feedback: 'Send Us Your Feedback',
+                site: 'Visit Our Website'
             }
         },
         labels: {
@@ -168,7 +170,8 @@ export default {
                 editUnit: 'Editar o Añadir Nombres de Unidad',
                 tags: 'Edita Tu Etiqueta',
                 deleteAll: 'Nuevo Comienzo - quitar Todos los Proyectos',
-                feedback: 'Envíenos Sus Comentarios'
+                feedback: 'Envíenos Sus Comentarios',
+                site: 'Visite Nuestro Sitio Web'
             }
         },
         labels: {
