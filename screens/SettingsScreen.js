@@ -9,6 +9,7 @@ import CustModal from '../components/Modal';
 import Notify from '../components/Notify';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
+import {containers, rows, buttonStyles, textStyles} from "../constants/Styles";
 import Storage from '../storage/Async';
 import Moment from 'moment';
 import Reminders from '../constants/Reminders';
@@ -484,21 +485,21 @@ export default function SettingsScreen( {route, navigation} ) {
 		buttons.site,
 	]
 	return (
-		<SafeAreaView style={[styles.container, {backgroundColor: darkMode ? Colors.darkmode.background : Colors.mainbackground} ]} contentContainerStyle={styles.contentContainer}>
+		<SafeAreaView style={[containers.safeArea, {backgroundColor: darkMode ? Colors.darkmode.background : Colors.mainbackground} ]} >
 			<StatusBar 
 				barStyle={darkMode ? "light-content" : "dark-content"} 
 				backgroundColor={darkMode ? Colors.darkmode.background : Colors.mainbackground} 
 			/>
-			<View style={styles.container}>
+			<View style={containers.safeArea}>
 				{buttonsArr.map((unit, index) => {
 						return (
-							<RectButton style={[styles.option, (index === buttonsArr.length - 1) && styles.lastOption]} onPress={unit.onPress} key={unit._title}>
-								<View style={{ flexDirection: 'row' }}>
-									<View style={styles.optionIconContainer}>
+							<RectButton style={[buttonStyles.settingsBtnArea, (index === buttonsArr.length - 1) && buttonStyles.settingslastBtn]} onPress={unit.onPress} key={unit._title}>
+								<View style={rows.rowSetBtn}>
+									<View style={buttonStyles.settingsIconArea}>
 										<Ionicons name={unit._iconName} size={22} color={Colors.settingsIcons} />
 									</View>
-									<View style={styles.optionTextContainer}>
-										<Text style={[styles.optionText, {color: darkMode ? Colors.darkmode.text : Colors.maintext}]}>{unit._title}</Text>
+									<View>
+										<Text style={[textStyles.settingsBtnText, {color: darkMode ? Colors.darkmode.text : Colors.maintext}]}>{unit._title}</Text>
 									</View>
 								</View>
 							</RectButton>
@@ -533,7 +534,7 @@ export default function SettingsScreen( {route, navigation} ) {
 							}
 						}}
 					/>
-					<View style={[{flexDirection: 'row', justifyContent: 'center'}]}>
+					<View style={[{flexDirection: 'row', justifyContent: 'space-around'}]}>
 					<TouchableHighlight 
 						key={'accept'} 
 						style={styles.calButton}
@@ -573,47 +574,10 @@ export default function SettingsScreen( {route, navigation} ) {
 }
 
 const styles = StyleSheet.create({
-  	container: {
-		flex: 1,
-  	},
-	contentContainer: {
-		paddingTop: 50,
-	},
-	optionIconContainer: {
-		marginRight: 12,
-	},
-	option: {
-		paddingHorizontal: 15,
-		paddingVertical: 15,
-		borderWidth: StyleSheet.hairlineWidth,
-		borderBottomWidth: 0,
-	},
-	lastOption: {
-		borderBottomWidth: StyleSheet.hairlineWidth,
-	},
 	optionText: {
 		fontSize: 15,
 		alignSelf: 'flex-start',
 		marginTop: 1,
-	},
-	centeredView: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	modalView: {
-		margin: 20,
-		borderRadius: 20,
-		padding: 30,
-		alignItems: "center",
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 2
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 3.84,
-		elevation: 5
 	},
     calButton: {
         backgroundColor: Colors.create,

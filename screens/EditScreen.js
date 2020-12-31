@@ -14,6 +14,7 @@ import ButtonBar from '../components/ButtonBar';
 import CustModal from '../components/Modal';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
+import {containers, rows, buttonStyles, inputStyles, textStyles} from "../constants/Styles";
 import AllButtons from '../constants/ButtonClass.js';
 import Storage from '../storage/Async';
 import Moment from 'moment';
@@ -190,7 +191,7 @@ export default function EditScreen({ route, navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={containers.safeArea}>
             <CustModal 
                 visible={modalVisible} 
                 message={modalMessage} 
@@ -199,20 +200,20 @@ export default function EditScreen({ route, navigation }) {
                 buttons={modalButtons} 
                 darkmode={settings.darkmode}
             />
-            <View style={styles.mainview}>
-                <Text style={styles.labelText}>{Strings[settings.language].labels.title}</Text>
+            <View style={containers.projArea}>
+                <Text style={textStyles.labelText}>{Strings[settings.language].labels.title}</Text>
                 <TextInput
-                    style={[styles.inputField, {marginBottom: 10}]}
+                    style={[inputStyles.inputField, {marginBottom: 10}]}
                     placeholder={Strings[settings.language].placeholder.title}
                     value={titleValue}
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
                     onFocus={() => {setShowDate(false);}}
                 />
-                <View style={[styles.row]}>
-                    <Text style={styles.labelText}>{Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[unitValue]))}</Text>
+                <View style={rows.row1}>
+                    <Text style={textStyles.labelText}>{Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[unitValue]))}</Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={inputStyles.inputField}
                         placeholder={'42'}
                         value={currentValue.toString()}
                         keyboardType={'number-pad'}
@@ -220,12 +221,12 @@ export default function EditScreen({ route, navigation }) {
                         onFocus={() => {setShowDate(false);}}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {color: getTextColor()}]}>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, {color: getTextColor()}]}>
                         {Strings.capitalize(Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={inputStyles.inputField}
                         placeholder={'1'}
                         value={startValue.toString()}
                         keyboardType={'number-pad'}
@@ -233,12 +234,12 @@ export default function EditScreen({ route, navigation }) {
                         onFocus={() => {setShowDate(false);}}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {color: getTextColor()}]}>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, {color: getTextColor()}]}>
                         {Strings.capitalize(Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={inputStyles.inputField}
                         placeholder={'42'}
                         value={endValue.toString()}
                         keyboardType={'number-pad'}
@@ -246,10 +247,10 @@ export default function EditScreen({ route, navigation }) {
                         onFocus={() => {setShowDate(false);}}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {flexWrap: 'wrap'}]}>{Strings[settings.language].labels.dueDate}</Text>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, {flexWrap: 'wrap'}]}>{Strings[settings.language].labels.dueDate}</Text>
                     <TextInput 
-                        style={styles.inputField} 
+                        style={inputStyles.inputField} 
                         value={Moment(dateValue).format(settings.dateFormat)}
                         onFocus={() => {
                             Keyboard.dismiss();
@@ -258,10 +259,10 @@ export default function EditScreen({ route, navigation }) {
                         }}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
                     <TextInput
-                        style={[styles.inputField, {color: getTextColor()}]}
+                        style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={allPUnits[unitValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
@@ -273,25 +274,25 @@ export default function EditScreen({ route, navigation }) {
                         }}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
+                <View style={rows.row1}>
+                    <Text style={textStyles.labelText}>{Strings[settings.language].labels.notification}</Text>
                     <TouchableHighlight
-                        style={[styles.defaultsButton, {marginLeft: 5}]}
+                        style={[buttonStyles.basicButton, {marginLeft: 5, backgroundColor: Colors.cancel}]}
                         onPress={() => {
                             setTimeValue('default');
                             setFreqValue(0);
                             setShowDate(false);
                         }}
                         >
-                        <Text style={styles.buttonText}>
+                        <Text style={textStyles.buttonText}>
                             {Strings[settings.language].buttons.setToDefault}
                         </Text>
                     </TouchableHighlight>
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.time}</Text>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.time}</Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={inputStyles.inputField}
                         value={timeValue === 'default' ? Strings[settings.language].frequencyWords[0] : timeValue}
                         onFocus={() => {
                             Keyboard.dismiss();
@@ -300,10 +301,10 @@ export default function EditScreen({ route, navigation }) {
                         }}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {paddingLeft: 10}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, {paddingLeft: 10}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
                     <TextInput
-                        style={[styles.inputField, {color: getTextColor()}]}
+                        style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={Strings[settings.language].frequencyWords[freqValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
@@ -333,26 +334,26 @@ export default function EditScreen({ route, navigation }) {
                         }
                     }}
                 />}
-                {Platform.OS === 'ios' && showDate && <View style={[styles.row, {justifyContent: 'center'}]}>
+                {Platform.OS === 'ios' && showDate && <View style={[rows.row1, {justifyContent: 'center'}]}>
                     <TouchableHighlight 
                         key={'cancel'} 
-                        style={styles.defaultsButton}
+                        style={[buttonStyles.basicButton, {backgroundColor: Colors.cancel}]}
                         onPress={() => {
                             setShowDate(false);
                             dateMode === 'time' && setTimeValue(project._time);
                             dateMode === 'date' && setDateValue(project._dueDate);
                         }}
                     >
-                        <Text style={styles.buttonText}>{Strings[settings.language].buttons.cancel}</Text>
+                        <Text style={textStyles.buttonText}>{Strings[settings.language].buttons.cancel}</Text>
                     </TouchableHighlight>
                     <TouchableHighlight 
                         key={'accept'} 
-                        style={[styles.defaultsButton, {backgroundColor: Colors.create, marginLeft: 10}]}
+                        style={[buttonStyles.basicButton, {backgroundColor: Colors.create, marginLeft: 10}]}
                         onPress={() => {
                             setShowDate(false);
                         }}
                     >
-                        <Text style={styles.buttonText}>{Strings[settings.language].buttons.okay}</Text>
+                        <Text style={textStyles.buttonText}>{Strings[settings.language].buttons.okay}</Text>
                     </TouchableHighlight>
                 </View>}
             </View>
@@ -361,43 +362,3 @@ export default function EditScreen({ route, navigation }) {
         </SafeAreaView>
     )
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-      },
-    mainview: {
-        flex: 1,
-        padding: 10,
-    }, 
-    row: {
-        flexDirection: 'row', 
-        marginBottom: 10,
-    },
-    labelText: {
-        fontSize: 20,
-        paddingRight: 5,
-        textAlignVertical: 'center',
-        flexWrap: 'wrap',
-        flexShrink: 1,
-    }, 
-    inputField: {
-        borderColor: Colors.inputBorder, 
-        borderWidth: 1, 
-        padding: 3,
-        paddingHorizontal: 10,
-        fontSize: 18,
-    }, 
-    defaultsButton: {
-        backgroundColor: Colors.cancel,
-        borderRadius: 20,
-        padding: 10,
-        elevation: 0
-    },
-    buttonText: {
-        color: Colors.navButtonText,
-        fontWeight: "bold",
-        textAlign: "center",
-        fontSize: 14,
-    },
-});
