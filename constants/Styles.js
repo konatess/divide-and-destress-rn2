@@ -47,8 +47,7 @@ const containers = StyleSheet.create({
         padding: 5,
     },
     datetimeSpinner: {
-        width: Dimensions.get('window').width*.7,
-        color: Colors.edit
+        width: Dimensions.get('window').width * .8,
     }
 });
 

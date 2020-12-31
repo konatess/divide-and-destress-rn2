@@ -3,7 +3,6 @@ import {
     Keyboard, 
     Platform, 
     SafeAreaView,
-    StyleSheet, 
     Text, 
     TextInput, 
     TouchableHighlight, 
@@ -35,6 +34,7 @@ export default function CreateScreen({ route, navigation}) {
     const [showDate, setShowDate] = React.useState(false);
     const [dateMode, setDateMode] = React.useState('date');
     const [dateValue, setDateValue] = React.useState(Moment().add(7, 'day').toDate());
+    const [tempDate, setTempDate] = React.useState(Moment(settings.notifications.time, Strings.timeFormat).add(7, 'day').toDate());
     // time picker
     const [timeValue, setTimeValue] = React.useState('default');
     // Frequency picker
@@ -132,10 +132,21 @@ export default function CreateScreen({ route, navigation}) {
     modaldonebtn._title = Strings[settings.language].buttons.done;
     const modalcancelbtn = AllButtons.cancel2;
     modalcancelbtn._title = Strings[settings.language].buttons.cancel;
+    const modalTimeOkayBtn = AllButtons.okaySave;
+	modalTimeOkayBtn._title = Strings[settings.language].buttons.okay;
     savebtn.onPress = () => saveProj();
 	cancelbtn.onPress = () => navigation.navigate(Strings.routes.home);
     modalokaybtn.onPress = () => setmodalVisible(false);
-    modalcancelbtn.onPress = () => setmodalVisible(false);
+    modalcancelbtn.onPress = () => {
+        setmodalVisible(false);
+        setShowDate(false);
+        setTempDate(dateValue);
+    };
+	modalTimeOkayBtn.onPress = () => {
+		dateMode === 'time' ? setTimeValue(Moment(tempDate).format(Strings.timeFormat)) : setDateValue(tempDate);
+		setShowDate(false);
+		setmodalVisible(false);
+	};
     // modal picker buttons
     const unitBtns = allPUnits.map((string, index) => {
 		return ({_title: string, onPress: () => {
@@ -156,14 +167,6 @@ export default function CreateScreen({ route, navigation}) {
     
     return (
         <SafeAreaView style={[containers.safeArea, {backgroundColor: settings.darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
-            <CustModal 
-                visible={modalVisible} 
-                message={modalMessage} 
-				pickers={modalPickers}
-				inputs={[]}
-                buttons={modalButtons} 
-                darkmode={settings.darkmode}
-            />
             <View style={containers.projArea}>
                 <Text style={[textStyles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.title}</Text>
                 <TextInput
@@ -207,6 +210,12 @@ export default function CreateScreen({ route, navigation}) {
                             Keyboard.dismiss();
                             setShowDate(true);
                             setDateMode('date');
+                            if (Platform.OS === 'ios') {
+                                setmodalVisible(true);
+                                setModalButtons([modalcancelbtn, modalTimeOkayBtn]);
+                                setModalPickers([]);
+                                setModalMessage('');
+                            }
                         }}
                     />
                 </View>
@@ -249,6 +258,12 @@ export default function CreateScreen({ route, navigation}) {
                             Keyboard.dismiss();
                             setShowDate(true);
                             setDateMode('time');
+                            if (Platform.OS === 'ios') {
+                                setmodalVisible(true);
+                                setModalButtons([modalcancelbtn, modalTimeOkayBtn]);
+                                setModalPickers([]);
+                                setModalMessage('');
+                            }
                         }}
                     />
                 </View>
@@ -267,15 +282,12 @@ export default function CreateScreen({ route, navigation}) {
                         }}
                     />
                 </View>
-                { showDate && <DateTimePicker 
+                { Platform.OS === 'android' && showDate && <DateTimePicker 
                     value={dateValue}
                     mode={dateMode}
-                    display={Platform.OS === "ios" ? 'spinner' : 'default'}
                     minimumDate={Moment().add(2, 'day').toDate()}
                     onChange={(event, date) => {
-                        if (Platform.OS === "android") {
-                            setShowDate(false);
-                        }
+                        setShowDate(false);
                         if (dateMode === 'date' && date !== undefined) {
                             setDateValue(date); 
                         }
@@ -285,29 +297,20 @@ export default function CreateScreen({ route, navigation}) {
                         }
                     }}
                 />}
-                {Platform.OS === 'ios' && showDate && <View style={[rows.row1, {justifyContent: 'center'}]}>
-                    <TouchableHighlight 
-                        key={'cancel'} 
-                        style={[buttonStyles.basicButton, {backgroundColor: Colors.cancel}]}
-                        onPress={() => {
-                            setShowDate(false);
-                            dateMode === 'time' && setTimeValue('default');
-                            dateMode === 'date' && setDateValue(Moment().add(7, 'day').toDate());
-                        }}
-                    >
-                        <Text style={textStyles.buttonText}>{Strings[settings.language].buttons.cancel}</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight 
-                        key={'accept'} 
-                        style={[buttonStyles.basicButton, {backgroundColor: Colors.create, marginLeft: 10}]}
-                        onPress={() => {
-                            setShowDate(false);
-                        }}
-                    >
-                        <Text style={textStyles.buttonText}>{Strings[settings.language].buttons.okay}</Text>
-                    </TouchableHighlight>
-                </View>}
             </View>
+            <CustModal 
+                visible={modalVisible} 
+                message={modalMessage} 
+				pickers={modalPickers}
+                inputs={[]}
+				showDate={showDate}
+                datemode={dateMode}
+                dateValue={tempDate}
+                minDate={Moment().add(2, 'day').toDate()}
+				dateOnChange={(value) => setTempDate(value)}
+                buttons={modalButtons} 
+                darkmode={settings.darkmode}
+            />
             {Platform.OS === 'ios' && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
             {Platform.OS === 'android' && !keyboardOut && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
         </SafeAreaView>

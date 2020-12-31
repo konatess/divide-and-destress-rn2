@@ -20,6 +20,7 @@ const cancel= new ButtonObj('', Colors.cancel, 'md-close');
 const cancel2= new ButtonObj('', Colors.cancel, 'md-close');
 const done= new ButtonObj('', Colors.done, 'md-checkmark');
 const okay= new ButtonObj('', Colors.done, 'md-checkmark');
+const okaySave= new ButtonObj('', Colors.save, 'md-checkmark');
 const darkMode= new ButtonObj('', Colors.done, 'md-contrast');
 const language= new ButtonObj('', Colors.done, 'language');
 const dateFormat= new ButtonObj('', Colors.done, 'md-calendar');
@@ -46,6 +47,7 @@ export default {
     cancel2: cancel2,
     done: done,
     okay: okay,
+    okaySave: okaySave,
     settingsList: {
         darkMode: darkMode,
         language: language,

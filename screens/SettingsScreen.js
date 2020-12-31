@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import { Keyboard, StatusBar, StyleSheet, Text, View, Linking, SafeAreaView, TouchableHighlight, Platform, Modal} from 'react-native';
+import { Keyboard, StatusBar, Text, View, Linking, SafeAreaView, Platform } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AllButtons from '../constants/ButtonClass';
@@ -32,7 +32,8 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [pluUnit, setPluUnit] = React.useState('');
 	// time picker
 	const [showDate, setShowDate] = React.useState(false);
-	const [datemode, setDatemode] = React.useState('');
+	const [dateMode, setDateMode] = React.useState('time');
+	const [dateValue, setDateValue] = React.useState(Moment(time, Strings.timeFormat).toDate());
 	// modal
     const [modalVisible, setmodalVisible] = React.useState(false);
     const [modalMessage, setModalMessage] = React.useState();
@@ -100,6 +101,8 @@ export default function SettingsScreen( {route, navigation} ) {
 		setModalInputs([]);
 		setSingUnit('');
 		setPluUnit('');
+		setDateValue(Moment(time, Strings.timeFormat).toDate());
+		setShowDate(false);
 	};
 	const modalDeletbtn = AllButtons.delete;
 	modalDeletbtn._title = Strings[language].buttons.delete;
@@ -115,10 +118,11 @@ export default function SettingsScreen( {route, navigation} ) {
 	};
 	const modalDonebtn = AllButtons.done;
 	modalDonebtn._title = Strings[language].buttons.done;
-	const modalTimeOkayBtn = AllButtons.okay;
+	const modalTimeOkayBtn = AllButtons.okaySave;
 	modalTimeOkayBtn._title = Strings[language].buttons.okay;
 	modalTimeOkayBtn.onPress = () => {
-		setDatemode('');
+		setTime(Moment(dateValue).format(Strings.timeFormat));
+		setShowDate(false);
 		setmodalVisible(false);
 	};
 	const savebtn = AllButtons.save;
@@ -423,12 +427,12 @@ export default function SettingsScreen( {route, navigation} ) {
 	};
 	buttons.time._title = Strings[language].buttons.allSettings.time + time;
 	buttons.time.onPress = () => {
-		setDatemode('time');
+		setShowDate(true);
 		if (Platform.OS === 'ios') {
 			setmodalVisible(true);
 			setModalMessage('');
 			setModalPickers([]);
-			setModalButtons([modalTimeOkayBtn]);
+			setModalButtons([modalCancelbtn, modalTimeOkayBtn]);
 			setModalInputs([]);
 		}
 	};
@@ -519,18 +523,13 @@ export default function SettingsScreen( {route, navigation} ) {
 							</RectButton>
 						)
 				})}
-				{ Platform.OS === 'android' && datemode !== '' && <DateTimePicker 
-					value={Moment(time, Strings.timeFormat).toDate()}
-					mode={'time'}
-                    display={Platform.OS === "ios" ? 'spinner' : 'default'}
+				{ Platform.OS === 'android' && showDate && <DateTimePicker 
+					value={dateValue}
+					mode={dateMode}
 					onChange={(event, date) => {
-						if (Platform.OS === 'android') {
-							setShowDate(false)
-							setDatemode('');
-						}
-						if (date !== undefined) {
-							setTime(Moment(date).format(Strings.timeFormat));
-						}
+						setShowDate(false);
+						// setDateValue(date).toDate();
+						setTime(Moment(date).format(Strings.timeFormat));
 					}}
 				/>}
 			</View>
@@ -539,9 +538,11 @@ export default function SettingsScreen( {route, navigation} ) {
 				message={modalMessage} 
 				pickers={modalPickers}
 				inputs={modalInputs}
-				datemode={datemode}
-				dateValue={Moment(time, Strings.timeFormat).toDate()}
-				dateOnChange={(value) => setTime(Moment(value).format(Strings.timeFormat))}
+				showDate={showDate}
+				datemode={dateMode}
+				dateValue={dateValue}
+				minDate={Moment().toDate()}
+				dateOnChange={(value) => setDateValue(Moment(value).toDate())}
 				buttons={modalButtons} 
 				vertical={buttonsVertical}
 				darkmode={darkMode}
@@ -551,23 +552,3 @@ export default function SettingsScreen( {route, navigation} ) {
 		</SafeAreaView>
 	);
 }
-
-const styles = StyleSheet.create({
-	optionText: {
-		fontSize: 15,
-		alignSelf: 'flex-start',
-		marginTop: 1,
-	},
-    calButton: {
-        backgroundColor: Colors.create,
-        borderRadius: 20,
-        padding: 10,
-        elevation: 0
-    },
-    calButtonText: {
-        color: Colors.navButtonText,
-        fontWeight: "bold",
-        textAlign: "center",
-        fontSize: 14,
-    },
-});

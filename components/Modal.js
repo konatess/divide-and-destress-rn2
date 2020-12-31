@@ -1,18 +1,19 @@
 import React from "react";
 import {
-  Modal,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  View,
+  	Modal,
+	Platform,
+	ScrollView,
+	Text,
+	TextInput,
+	TouchableHighlight,
+	View,
 } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Colors from '../constants/Colors';
 import { containers, rows, buttonStyles, textStyles, inputStyles } from "../constants/Styles";
 import { Ionicons } from '@expo/vector-icons';
 
-export default ({visible, message, pickers, inputs, datemode, dateValue, dateOnChange, buttons, vertical, darkmode}) => {
+export default ({visible, message, pickers, inputs, showDate, datemode, dateValue, minDate, dateOnChange, buttons, vertical, darkmode}) => {
     return (
         <Modal
 			animationType="slide"
@@ -51,11 +52,13 @@ export default ({visible, message, pickers, inputs, datemode, dateValue, dateOnC
 								/>
 							</View>	)})
 					}
-					{datemode !== '' && <DateTimePicker 
+					{Platform.OS === 'ios' && showDate && <DateTimePicker 
 						value={dateValue}
 						mode={datemode}
 						display={'spinner'}
+						minimumDate={minDate}
 						style={containers.datetimeSpinner}
+						textColor={darkmode ? Colors.darkmode.text : Colors.maintext}
 						onChange={(event, date) => {
 							if (date !== undefined) {
 								dateOnChange(date);
