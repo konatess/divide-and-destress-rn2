@@ -33,7 +33,7 @@ export default function SettingsScreen( {route, navigation} ) {
 	// time picker
 	const [showDate, setShowDate] = React.useState(false);
 	const [dateMode, setDateMode] = React.useState('time');
-	const [dateValue, setDateValue] = React.useState(Moment(time, Strings.timeFormat).toDate());
+	const [dateValue, setDateValue] = React.useState(Moment(settings.notifications.time, Strings.timeFormat).toDate());
 	// modal
     const [modalVisible, setmodalVisible] = React.useState(false);
     const [modalMessage, setModalMessage] = React.useState();
@@ -524,12 +524,10 @@ export default function SettingsScreen( {route, navigation} ) {
 						)
 				})}
 				{ Platform.OS === 'android' && showDate && <DateTimePicker 
-					value={dateValue}
+					value={Moment(time, Strings.timeFormat).toDate()}
 					mode={dateMode}
 					onChange={(event, date) => {
-						// event.preventDefault();
 						setShowDate(false);
-						setDateValue(date);
 						setTime(Moment(date).format(Strings.timeFormat));
 					}}
 				/>}

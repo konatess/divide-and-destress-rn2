@@ -60,7 +60,6 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateValu
 						style={containers.datetimeSpinner}
 						textColor={darkmode ? Colors.darkmode.text : Colors.maintext}
 						onChange={(event, date) => {
-							event.preventDefault();
 							if (date !== undefined) {
 								dateOnChange(date);
 							}

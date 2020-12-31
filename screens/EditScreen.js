@@ -36,13 +36,13 @@ export default function EditScreen({ route, navigation }) {
     // date/time picker
     const [showDate, setShowDate] = React.useState(false);
     const [dateMode, setDateMode] = React.useState('date');
-    const [dateValue, setDateValue] = React.useState(Moment(project._dueDate).toDate());
     const generateTempDate = () => {
-        let time = project._time === 'default' ? settings.notifications.time : project._time
-        let timeM = Moment(time);
+        let time = project._time === 'default' ? settings.notifications.time : project._time;
+        let timeM = Moment(time, Strings.timeFormat);
         let temp = Moment(project._dueDate).hour(timeM.hour()).minute(timeM.minute());
         return temp.toDate();
     }
+    const [dateValue, setDateValue] = React.useState(generateTempDate());
     const [tempDate, setTempDate] = React.useState(generateTempDate());
     const [timeValue, setTimeValue] = React.useState(project._time);
     // Frequency picker
@@ -341,7 +341,6 @@ export default function EditScreen({ route, navigation }) {
                     mode={dateMode}
                     minimumDate={Moment().add(2, 'day').toDate()}
                     onChange={(event, date) => {
-						event.preventDefault();
                         if (Platform.OS === "android") {
                             setShowDate(false);
                         }
