@@ -46,6 +46,10 @@ const containers = StyleSheet.create({
         borderRadius: 10,
         padding: 5,
     },
+    datetimeSpinner: {
+        width: Dimensions.get('window').width*.7,
+        color: Colors.edit
+    }
 });
 
 const rows = StyleSheet.create({

@@ -32,6 +32,7 @@ export default function SettingsScreen( {route, navigation} ) {
 	const [pluUnit, setPluUnit] = React.useState('');
 	// time picker
 	const [showDate, setShowDate] = React.useState(false);
+	const [datemode, setDatemode] = React.useState('');
 	// modal
     const [modalVisible, setmodalVisible] = React.useState(false);
     const [modalMessage, setModalMessage] = React.useState();
@@ -114,6 +115,12 @@ export default function SettingsScreen( {route, navigation} ) {
 	};
 	const modalDonebtn = AllButtons.done;
 	modalDonebtn._title = Strings[language].buttons.done;
+	const modalTimeOkayBtn = AllButtons.okay;
+	modalTimeOkayBtn._title = Strings[language].buttons.okay;
+	modalTimeOkayBtn.onPress = () => {
+		setDatemode('');
+		setmodalVisible(false);
+	};
 	const savebtn = AllButtons.save;
 	savebtn._title = Strings[language].buttons.save;
 	savebtn.onPress = async () => {
@@ -416,7 +423,14 @@ export default function SettingsScreen( {route, navigation} ) {
 	};
 	buttons.time._title = Strings[language].buttons.allSettings.time + time;
 	buttons.time.onPress = () => {
-		setShowDate(true);
+		setDatemode('time');
+		if (Platform.OS === 'ios') {
+			setmodalVisible(true);
+			setModalMessage('');
+			setModalPickers([]);
+			setModalButtons([modalTimeOkayBtn]);
+			setModalInputs([]);
+		}
 	};
 	buttons.defaultUnit._title = Strings[language].buttons.allSettings.unit + Strings[language].units.concat(userUnits.s)[unit];
 	buttons.defaultUnit.onPress = () => {
@@ -505,64 +519,29 @@ export default function SettingsScreen( {route, navigation} ) {
 							</RectButton>
 						)
 				})}
-
-
-				{/* { showDate && <DateTimePicker 
+				{ Platform.OS === 'android' && datemode !== '' && <DateTimePicker 
 					value={Moment(time, Strings.timeFormat).toDate()}
 					mode={'time'}
                     display={Platform.OS === "ios" ? 'spinner' : 'default'}
 					onChange={(event, date) => {
 						if (Platform.OS === 'android') {
 							setShowDate(false)
+							setDatemode('');
 						}
 						if (date !== undefined) {
 							setTime(Moment(date).format(Strings.timeFormat));
 						}
 					}}
-				/>} */}
-				{Platform.OS === 'ios' && showDate && <Modal>
-					<DateTimePicker 
-						value={Moment(time, Strings.timeFormat).toDate()}
-						mode={'time'}
-						display={Platform.OS === "ios" ? 'spinner' : 'default'}
-						onChange={(event, date) => {
-							if (Platform.OS === 'android') {
-								setShowDate(false)
-							}
-							if (date !== undefined) {
-								setTime(Moment(date).format(Strings.timeFormat));
-							}
-						}}
-					/>
-					<View style={[{flexDirection: 'row', justifyContent: 'space-around'}]}>
-					<TouchableHighlight 
-						key={'accept'} 
-						style={styles.calButton}
-						onPress={() => {
-							setShowDate(false);
-						}}
-					>
-						<Text style={styles.calButtonText}>{Strings[settings.language].buttons.okay}</Text>
-					</TouchableHighlight>
-				</View>
-				</Modal>}
-				{/* {Platform.OS === 'ios' && showDate && <View style={[{flexDirection: 'row', justifyContent: 'center'}]}>
-					<TouchableHighlight 
-						key={'accept'} 
-						style={styles.calButton}
-						onPress={() => {
-							setShowDate(false);
-						}}
-					>
-						<Text style={styles.calButtonText}>{Strings[settings.language].buttons.okay}</Text>
-					</TouchableHighlight>
-				</View>} */}
+				/>}
 			</View>
 			<CustModal 
 				visible={modalVisible} 
 				message={modalMessage} 
 				pickers={modalPickers}
 				inputs={modalInputs}
+				datemode={datemode}
+				dateValue={Moment(time, Strings.timeFormat).toDate()}
+				dateOnChange={(value) => setTime(Moment(value).format(Strings.timeFormat))}
 				buttons={modalButtons} 
 				vertical={buttonsVertical}
 				darkmode={darkMode}

@@ -2,17 +2,17 @@ import React from "react";
 import {
   Modal,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableHighlight,
   View,
 } from "react-native";
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Colors from '../constants/Colors';
 import { containers, rows, buttonStyles, textStyles, inputStyles } from "../constants/Styles";
 import { Ionicons } from '@expo/vector-icons';
 
-export default ({visible, message, pickers, inputs, buttons, vertical, darkmode}) => {
+export default ({visible, message, pickers, inputs, datemode, dateValue, dateOnChange, buttons, vertical, darkmode}) => {
     return (
         <Modal
 			animationType="slide"
@@ -21,7 +21,7 @@ export default ({visible, message, pickers, inputs, buttons, vertical, darkmode}
         >
 			<View style={containers.centerModal}>
 				<View style={[containers.modalArea, {backgroundColor: darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
-					{message && <Text style={[textStyles.modalMsgText, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}>{message}</Text>}
+					{message !== '' && <Text style={[textStyles.modalMsgText, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}>{message}</Text>}
 					{(pickers.length > 0) && <View style={containers.pickerArea}>
 						<View style={rows.rowModal}>
 							{pickers.map((picker, index) => {
@@ -51,6 +51,17 @@ export default ({visible, message, pickers, inputs, buttons, vertical, darkmode}
 								/>
 							</View>	)})
 					}
+					{datemode !== '' && <DateTimePicker 
+						value={dateValue}
+						mode={datemode}
+						display={'spinner'}
+						style={containers.datetimeSpinner}
+						onChange={(event, date) => {
+							if (date !== undefined) {
+								dateOnChange(date);
+							}
+						}}
+					/>}
 					<View style={vertical ? rows.vertical : rows.rowModal}>
 						{buttons.map((unit, index) => {
 							return (
