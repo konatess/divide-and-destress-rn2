@@ -40,7 +40,7 @@ const containers = StyleSheet.create({
     },
     pickerArea: {
         maxHeight: 150,
-        marginBottom: 10,
+        marginVertical: 10,
         borderColor: Colors.done,
         borderWidth: .5,
         borderRadius: 10,
@@ -74,7 +74,7 @@ const rows = StyleSheet.create({
         justifyContent: 'space-around',
     },
     vertical: {
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
     },
 });
 
