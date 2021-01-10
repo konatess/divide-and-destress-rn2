@@ -208,7 +208,7 @@ export default {
         frequencyWords: ['por defecto', 'diario', 'cada 2 dias', 'cada 3 dias', 'cada 4 dias', 'cada 5 dias', 'cada 6 dias', 'semanal'],
         orders: ['Título', 'Debido Próximo'],
         alerts: {
-            info: `Gracias por descargar\nDivide & De-Stress!\n\nToca "Ajustes" para:\n\u2022 cambiar idioma del app\n\u2022 cambiar ajustes por defecto\n\u2022 añadir nombres de unidad\n\u2022 envíenos sus comentarios\n\u2022 visite nuestra pagina web\n\nToca "Nuevo" para comenzar a seguir un nuevo proyecto.\n\nNuevo proyectos aparecen en esta pagina. Toca el proyecto para ver o editar.`,
+            info: `Gracias por descargar\nDivide & De-Stress!\n\nToca "Ajustes" para:\n\u2022 cambiar idioma del app\n\u2022 cambiar ajustes por defecto\n\u2022 añadir nombres de unidad\n\u2022 envíarnos tus comentarios\n\u2022 visitar nuestra pagina web\n\nToca "Nuevo" para comenzar a seguir un nuevo proyecto.\n\nNuevo proyectos aparecen en esta pagina. Toca el proyecto para ver o editar.`,
             title: {
                 exists: 'Título ya existe.',
                 blank: 'Título no puede dejarse en blanco.'
