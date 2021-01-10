@@ -55,6 +55,7 @@ const rows = StyleSheet.create({
     row1: {
         flexDirection: 'row', 
         marginBottom: 10,
+        alignItems: 'center',
     },
     row2: {
         flexDirection: 'row', 
@@ -72,6 +73,8 @@ const rows = StyleSheet.create({
     rowModal: {
         flexDirection: 'row', 
         justifyContent: 'space-around',
+        alignItems: 'center',
+        marginTop: 10,
     },
     vertical: {
         justifyContent: 'flex-start',
@@ -167,7 +170,7 @@ const textStyles = StyleSheet.create({
         fontSize: 18
     },
     modalMsgText: {
-        marginBottom: 15,
+        marginBottom: 5,
         textAlign: "center",
         fontSize: 18,
     },

@@ -24,7 +24,7 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateValu
 				<View style={[containers.modalArea, {backgroundColor: darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
 					{message !== '' && <Text style={[textStyles.modalMsgText, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}>{message}</Text>}
 					{(pickers.length > 0) && <View style={containers.pickerArea}>
-						<View style={rows.rowModal}>
+						<View>
 							{pickers.map((picker, index) => {
 								return (<ScrollView key={"picker" + index}>
 									{picker.map((unit) => {
@@ -43,7 +43,7 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateValu
 								<TextInput
 									key={unit.label + '-input'}
 									keyboardType={unit.keyboardType || 'default'}
-									style={[inputStyles.inputField, {marginBottom: 10}, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}
+									style={[inputStyles.inputField, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}
 									placeholder={unit.placeholder}
 									defaultValue={unit.default || ''}
 									autoFocus={!index}
@@ -65,7 +65,7 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateValu
 							}
 						}}
 					/>}
-					<View style={[vertical ? rows.vertical : rows.rowModal, {marginTop: 10}]}>
+					<View style={vertical ? rows.vertical : rows.rowModal}>
 						{buttons.map((unit, index) => {
 							return (
 								<TouchableHighlight
