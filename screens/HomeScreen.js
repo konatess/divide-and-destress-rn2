@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { SafeAreaView, Text, View, FlatList, StatusBar} from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import { SafeAreaView, Text, View, FlatList, StatusBar } from 'react-native';
+import { RectButton, BorderlessButton } from 'react-native-gesture-handler';
 import ButtonBar from '../components/ButtonBar'
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
+import { Ionicons } from '@expo/vector-icons';
 import {containers, buttonStyles, textStyles, rows} from "../constants/Styles";
 import AllButtons from '../constants/ButtonClass';
 import CustModal from '../components/Modal';
@@ -34,6 +35,11 @@ export default function HomeScreen({ route, navigation }) {
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[settings.language].buttons.cancel;
 	modalCancelbtn.onPress = () => setModalVisible(false);
+	const infoPress = () => {
+		setModalVisible(true);
+		setModalMessage(Strings[settings.language].alerts.info);
+		setModalPickers([])
+	};
 	const modalOrders = Strings[settings.language].orders.map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setModalVisible(false);
@@ -109,6 +115,9 @@ export default function HomeScreen({ route, navigation }) {
 					})}
 				></ProjectButton>}
 			/>
+			<BorderlessButton key='information' style={buttonStyles.fab} onPress={infoPress}>
+				<Ionicons name="information-circle-outline" size={50} color={Colors.settings} />
+			</BorderlessButton>
 			<ButtonBar buttons={[settingsbtn, orderbtn, createbtn]} />
 			<CustModal 
 				visible={modalVisible} 

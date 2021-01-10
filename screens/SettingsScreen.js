@@ -137,8 +137,8 @@ export default function SettingsScreen( {route, navigation} ) {
 		setModalInputs([]);
 		// Reschedule reminders on save settings if language has changed.
 		if (settings.language !== language && projects.length) {
-			for (i = 0; 1 < projects.length; i++) {
-				await Reminders.cancelAll();
+			await Reminders.cancelAll();
+			for (let i = 0; i < projects.length; i++) {
 				let remindersObj = await Reminders.scheduleNotification(
 					projects[i].obj._title, 
 					language, 
@@ -146,9 +146,11 @@ export default function SettingsScreen( {route, navigation} ) {
 					projects[i].obj._time === 'default' ? time : projects[i].obj._time, 
 					projects[i].obj._dueDate)
 				let updateObj = {
-					reminders: remindersObj
+					obj: {
+						_reminders: remindersObj
+					}
 				}
-				Storage.updateProj(projects[i].key, updateObj, language);
+				await Storage.updateProj(projects[i].key, updateObj, language);
 			}
 		}
 		// Reschedule reminders on save if language hasn't changed, but time or frequency have.
@@ -156,7 +158,7 @@ export default function SettingsScreen( {route, navigation} ) {
 			let defaultProj = projects.filter(proj => {
 				return proj.obj._frequency === 0 || proj.obj._time === 'default'
 			})
-			for (i = 0; 1 < defaultProj.length; i++) {
+			for (let i = 0; 1 < defaultProj.length; i++) {
 				await Reminders.cancelNotification([defaultProj[i].obj._reminders.dueTom]);
 				await Reminders.cancelNotification(defaultProj[i].obj._reminders.regular);
 				let remindersObj = await Reminders.scheduleNotification(
@@ -168,7 +170,7 @@ export default function SettingsScreen( {route, navigation} ) {
 				let updateObj = {
 					reminders: remindersObj
 				}
-				Storage.updateProj(defaultProj[i].key, updateObj, language);
+				await Storage.updateProj(defaultProj[i].key, updateObj, language);
 			}
 		}
 		settings.language = language;
@@ -309,7 +311,7 @@ export default function SettingsScreen( {route, navigation} ) {
 			let updateArr = projects.filter(proj => {
 				return proj.obj._unitName === Strings[language].units.length + num;
 			})
-			for (i = 0; i < updateArr.length; i++) {
+			for (let i = 0; i < updateArr.length; i++) {
 				let newObj = {obj: {_unitName: updateArr[i].obj._unitName - 1}}
 				Storage.updateProj(updateArr[i].key, newObj, language);
 			}

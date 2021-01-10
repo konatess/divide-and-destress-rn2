@@ -129,6 +129,13 @@ const buttonStyles = StyleSheet.create({
     settingslastBtn: {
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
+    fab: {
+        position: 'absolute',
+        right: 15,
+        bottom: 75,
+        backgroundColor: Colors.transparent,
+        borderRadius: 50,
+    },
 });
 
 const inputStyles = StyleSheet.create({

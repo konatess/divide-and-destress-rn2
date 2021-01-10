@@ -32,6 +32,7 @@ export default {
     modalbackground: '#eee',
     settingsIcons: '#888',
     transparent: '#0000',
+    translucentWhite: '#FFF4',
     toggle: {
         trackfalse: '#888', 
         tracktrue: '#006EC3', // '#0090FF',

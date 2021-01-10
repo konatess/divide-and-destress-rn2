@@ -37,42 +37,45 @@ export default {
         const d = Moment(dueDate).hour(h).minute(m).subtract(1, 'day');
         const remain = d.diff(from,'day');
         let trigger = d.toDate();
-
-        if (remain > 0) {
-            const dueReminderID = await Notifications.scheduleNotificationAsync({
-                content: {
-                title: title,
-                body: Strings[language].alerts.reminders.dueTom,
-                },
-                trigger
-            });
-
-            const remindersArray = [];
-
-            for (i = freq; i < remain; i = i + freq) {
-                // set to freq because Moment is mutable. Would change to i for DayJS
-                let trigger = d.subtract(freq, 'day').toDate();
-                let id = await Notifications.scheduleNotificationAsync({
+        try {
+            if (remain > 0) {
+                const dueReminderID = await Notifications.scheduleNotificationAsync({
                     content: {
                     title: title,
-                    body: Strings[language].alerts.reminders.regular,
+                    body: Strings[language].alerts.reminders.dueTom,
                     },
                     trigger
                 });
-                remindersArray.push(id);
+    
+                const remindersArray = [];
+    
+                for (let i = freq; i < remain; i = i + freq) {
+                    // set to freq because Moment is mutable. Would change to i for DayJS
+                    let trigger = d.subtract(freq, 'day').toDate();
+                    let id = await Notifications.scheduleNotificationAsync({
+                        content: {
+                        title: title,
+                        body: Strings[language].alerts.reminders.regular,
+                        },
+                        trigger
+                    });
+                    remindersArray.push(id);
+                }
+                return {
+                    dueTom: dueReminderID,
+                    regular: remindersArray
+                }
             }
-
-            return {
-                dueTom: dueReminderID,
-                regular: remindersArray
-            }
+            else {
+                return {
+                    dueTom: null,
+                    regular: [],
+                }
+            } 
         }
-        else {
-            return {
-                dueTom: null,
-                regular: [],
-            }
-        } 
+        catch (error) {
+            console.log(error);
+        }
     },
     cancelNotification: async (iDsArray) => {
         iDsArray.forEach(async element => {
@@ -80,6 +83,11 @@ export default {
         });
     },
     cancelAll: async () => {
-        await Notifications.cancelAllScheduledNotificationsAsync();
+        try {
+            await Notifications.cancelAllScheduledNotificationsAsync();
+        }
+        catch (error) {
+            console.log(error)
+        }
     }
 }
