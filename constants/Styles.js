@@ -1,5 +1,8 @@
+import DeviceInfo from 'react-native-device-info';
 import { Dimensions, StyleSheet } from 'react-native';
 import Colors from "../constants/Colors";
+
+const isTablet = DeviceInfo.isTablet();
 
 const containers = StyleSheet.create({
     // safe area view
