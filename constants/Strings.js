@@ -21,7 +21,7 @@ export default {
     regex: {
         titles: /[^\wÀ-ÖØ-öø-ÿ'\- _/&:!]/,
         units: /[^A-Za-zÀ-ÖØ-öø-ÿ ]/,
-        numbers: /([0-9])\w+/,
+        numbers: /[^0-9]/,
     },
     capitalize: (str) => {
         if (typeof str !== 'string' || /[^a-zÀ-ÖØ-öø-ÿ]/.test(str.charAt(0))) {

@@ -50,9 +50,9 @@ export default function EditScreen({ route, navigation }) {
     // title value
     const [titleValue, setTitleValue] = React.useState(project._title);
     // start and end units
-    const [startValue, setStartValue] = React.useState(project._startUnit);
-    const [currentValue, setCurrentValue] = React.useState(project._currentUnit);
-    const [endValue, setEndValue] = React.useState(project._endUnit);
+    const [startValue, setStartValue] = React.useState(project._startUnit.toString());
+    const [currentValue, setCurrentValue] = React.useState(project._currentUnit.toString());
+    const [endValue, setEndValue] = React.useState(project._endUnit.toString());
     const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s);
     const allPUnits = Strings[settings.language].unitPlurals.concat(settings.userUnits.p);
     // android hide bottom buttons if keyboard is showing
@@ -65,8 +65,8 @@ export default function EditScreen({ route, navigation }) {
             Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
         };
     }, []);
-    const _keyboardDidShow = () => {setKeyboardOut(true)};
-    const _keyboardDidHide = () => { setKeyboardOut(false)};
+    const _keyboardDidShow = () => { setKeyboardOut(true) };
+    const _keyboardDidHide = () => { setKeyboardOut(false) };
     // project to save
     const newProj = new Project();
     const updateProj = async () => {
@@ -85,23 +85,26 @@ export default function EditScreen({ route, navigation }) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!startValue === '' || isNaN(parseInt(startValue))) {
+        else if (startValue === '' || isNaN(parseInt(startValue))) {
             if (isNaN(parseInt(startValue))) {
-                setStartValue("0");
+                setStartValue("");
             }
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.first.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!endValue === '' || isNaN(parseInt(endValue))) {
+        else if (endValue === '' || isNaN(parseInt(endValue))) {
             if (isNaN(parseInt(endValue))) {
-                setEndValue("0");
+                setEndValue("");
             }
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.last.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!currentValue) {
+        else if (currentValue === '' || isNaN(parseInt(currentValue))) {
+            if (isNaN(parseInt(currentValue))) {
+                setCurrentValue("");
+            }
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.current.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
@@ -225,7 +228,11 @@ export default function EditScreen({ route, navigation }) {
                         placeholder={'42'}
                         value={currentValue.toString()}
                         keyboardType={'number-pad'}
-                        onChangeText={text => setCurrentValue(text)}
+                        onChangeText={text => {
+                            if (text.length === 0 || !Strings.regex.numbers.test(text)) {
+                                setCurrentValue(text)
+                            }
+                        }}
                         onFocus={() => {setShowDate(false);}}
                     />
                 </View>
@@ -238,7 +245,11 @@ export default function EditScreen({ route, navigation }) {
                         placeholder={'1'}
                         value={startValue.toString()}
                         keyboardType={'number-pad'}
-                        onChangeText={text => setStartValue(text)}
+                        onChangeText={text => {
+                            if (text.length === 0 || !Strings.regex.numbers.test(text)) {
+                                setStartValue(text)
+                            }
+                        }}
                         onFocus={() => {setShowDate(false);}}
                     />
                 </View>
@@ -251,7 +262,11 @@ export default function EditScreen({ route, navigation }) {
                         placeholder={'42'}
                         value={endValue.toString()}
                         keyboardType={'number-pad'}
-                        onChangeText={text => setEndValue(text)}
+                        onChangeText={text => {
+                            if (text.length === 0 || !Strings.regex.numbers.test(text)) {
+                                setEndValue(text)
+                            }
+                        }}
                         onFocus={() => {setShowDate(false);}}
                     />
                 </View>

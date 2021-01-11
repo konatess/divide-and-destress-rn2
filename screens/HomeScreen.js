@@ -125,10 +125,10 @@ export default function HomeScreen({ route, navigation }) {
 				pickers={modalPickers}
 				inputs={[]}
 				buttons={[ modalCancelbtn ]}
+				showDate={false}
 				vertical={false}
 				darkmode={settings.darkmode}
-				>
-			</CustModal>
+			/>
 		</SafeAreaView>
 	);
 }

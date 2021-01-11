@@ -55,8 +55,8 @@ export default function CreateScreen({ route, navigation}) {
             Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
         };
     }, []);
-    const _keyboardDidShow = () => {setKeyboardOut(true)};
-    const _keyboardDidHide = () => { setKeyboardOut(false)};
+    const _keyboardDidShow = () => { setKeyboardOut(true) };
+    const _keyboardDidHide = () => { setKeyboardOut(false) };
     // project to save
     const newProj = new Project();
     const saveProj = async () => {
@@ -78,7 +78,7 @@ export default function CreateScreen({ route, navigation}) {
         }
         else if (startValue === '' || isNaN(parseInt(startValue))) {
             if (isNaN(parseInt(startValue))) {
-                setStartValue("0");
+                setStartValue("");
             }
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.first.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
@@ -86,7 +86,7 @@ export default function CreateScreen({ route, navigation}) {
         }
         else if (endValue === '' || isNaN(parseInt(endValue))) {
             if (isNaN(parseInt(endValue))) {
-                setEndValue("0");
+                setEndValue("");
             }
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.last.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
@@ -174,7 +174,6 @@ export default function CreateScreen({ route, navigation}) {
                     placeholder={Strings[settings.language].placeholder.title}
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
-                    onFocus={() => {setShowDate(false);}}
                 />
                 <View style={rows.row1}>
                     <Text style={[textStyles.labelText, {color: getTextColor()}]}>
@@ -182,11 +181,15 @@ export default function CreateScreen({ route, navigation}) {
                     </Text>
                     <TextInput
                         style={[inputStyles.inputField, {color: getTextColor()}]}
-                        defaultValue={'1'}
+                        // defaultValue={'1'}
+                        value={startValue}
                         placeholder={'1'}
                         keyboardType={'number-pad'}
-                        onChangeText={text => setStartValue(text)}
-                        onFocus={() => {setShowDate(false);}}
+                        onChangeText={text => {
+                            if (text.length === 0 || !Strings.regex.numbers.test(text)) {
+                                setStartValue(text)
+                            }
+                        }}
                     />
                 </View>
                 <View style={rows.row1}>
@@ -195,10 +198,14 @@ export default function CreateScreen({ route, navigation}) {
                     </Text>
                     <TextInput
                         style={[inputStyles.inputField, {color: getTextColor()}]}
+                        value={endValue}
                         placeholder={'42'}
                         keyboardType={'number-pad'}
-                        onChangeText={text => setEndValue(text)}
-                        onFocus={() => {setShowDate(false);}}
+                        onChangeText={text => {
+                            if (text.length === 0 || !Strings.regex.numbers.test(text)) {
+                                setEndValue(text)
+                            }
+                        }}
                     />
                 </View>
                 <View style={rows.row1}>
