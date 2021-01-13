@@ -29,15 +29,16 @@
     "expo-splash-screen": "~0.8.1",
     "expo-web-browser": "~8.6.0",
     "moment": "^2.29.1",
-    "react": "16.13.1",
+    "native": "^0.3.3",
+    "react": "^17.0.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
-    "react-native-device-info": "^8.0.0",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "~2.15.0",
     "react-native-web": "~0.13.12",
+    "react-native-windows": "^0.63.17",
     "yarn": "^1.22.10"
   },
   "devDependencies": {

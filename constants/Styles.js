@@ -1,8 +1,12 @@
-import DeviceInfo from 'react-native-device-info';
+
 import { Dimensions, StyleSheet } from 'react-native';
 import Colors from "../constants/Colors";
 
-const isTablet = DeviceInfo.isTablet();
+const width = Dimensions.get('window').width
+
+const sizer = width <= 400 ? 1 : ( width > 700 ? 1.6 : width/400 );
+
+// console.log('width = ' + width)
 
 const containers = StyleSheet.create({
     // safe area view
@@ -16,8 +20,8 @@ const containers = StyleSheet.create({
     }, 
     buttonBar: {
         flexDirection: 'row',
-        height: 70,
-        width: Dimensions.get('window').width,
+        height: 70 * sizer,
+        width: width,
         padding: 0,
         position: 'absolute',
         bottom: 0
@@ -28,7 +32,7 @@ const containers = StyleSheet.create({
         alignItems: "center",
     },
     modalArea: {
-        margin: 20,
+        margin: 30 * sizer,
         borderRadius: 20,
         padding: 30,
         alignItems: "center",
@@ -50,7 +54,7 @@ const containers = StyleSheet.create({
         padding: 5,
     },
     datetimeSpinner: {
-        width: Dimensions.get('window').width * .8,
+        width: width * .8,
     }
 });
 
@@ -128,6 +132,7 @@ const buttonStyles = StyleSheet.create({
         paddingVertical: 15,
         borderWidth: StyleSheet.hairlineWidth,
         borderBottomWidth: 0,
+        borderColor: Colors.settings
     },
     settingsIconArea: {
         marginRight: 12,
@@ -138,7 +143,7 @@ const buttonStyles = StyleSheet.create({
     fab: {
         position: 'absolute',
         right: 15,
-        bottom: 75,
+        bottom: 75 * sizer,
         backgroundColor: Colors.transparent,
         borderRadius: 50,
     },
@@ -150,13 +155,13 @@ const inputStyles = StyleSheet.create({
         borderWidth: 1, 
         padding: 3,
         paddingHorizontal: 10,
-        fontSize: 18,
+        fontSize: 18 * sizer,
     }, 
 });
 
 const textStyles = StyleSheet.create({
     labelText: {
-        fontSize: 20,
+        fontSize: 20 * sizer,
         paddingRight: 5,
         textAlignVertical: 'center',
         flexWrap: 'wrap',
@@ -166,25 +171,25 @@ const textStyles = StyleSheet.create({
         color: Colors.navButtonText,
         fontWeight: "bold",
         textAlign: "center",
-        fontSize: 14,
+        fontSize: 14 * sizer,
     },
     navBtnText: {
         color: Colors.navButtonText,
-        fontSize: 18
+        fontSize: 18 * sizer,
     },
     modalMsgText: {
         marginBottom: 5,
         textAlign: "center",
-        fontSize: 18,
+        fontSize: 18 * sizer,
     },
     modalBtnText: {
         color: Colors.navButtonText,
         fontWeight: "bold",
         textAlign: "center",
-        fontSize: 18,
+        fontSize: 18 * sizer,
     },
     pickerText: {
-        fontSize: 15,
+        fontSize: 16 * sizer,
         alignSelf: 'flex-start',
         marginTop: 1,
       },
@@ -192,18 +197,14 @@ const textStyles = StyleSheet.create({
         marginBottom: 15,
     }, 
     projectTitleText: {
-        fontSize: 22,
+        fontSize: 21 * sizer,
     },
     projectDueText: {
-        fontSize: 18,
+        fontSize: 17 * sizer,
     },
     settingsBtnText: {
-        fontSize: 15,
+        fontSize: 16 * sizer,
     },
-});
-
-const modalStyles = StyleSheet.create({
-
 });
 
 const progressbar = StyleSheet.create({
@@ -224,33 +225,12 @@ const progressbar = StyleSheet.create({
         backgroundColor: Colors.edit,
     },
 });
-export {containers, rows, buttonStyles, modalStyles, inputStyles, textStyles, progressbar};
 
+const iconSizes = StyleSheet.create({
+    navIconSize: 30 * sizer,
+    settingsIconSize: 22 * sizer,
+    fabIconSize: 50 * sizer,
+    modalIconSize: 18 * sizer,
+});
 
-
-
-// // Settings
-
-
-// // Calendar iOS btn styles
-// calButton: {
-//     backgroundColor: Colors.create,
-//     borderRadius: 20,
-//     padding: 10,
-//     elevation: 0
-// },
-// calButtonText: {
-//     color: Colors.navButtonText,
-//     fontWeight: "bold",
-//     textAlign: "center",
-//     fontSize: 14,
-// },
-
-
-// // Modal
-
-// labelText: {
-//     fontSize: 20,
-//     paddingRight: 5,
-//     textAlignVertical: 'center'
-// }, 
+export {containers, rows, buttonStyles, inputStyles, textStyles, progressbar, iconSizes};

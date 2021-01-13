@@ -5,7 +5,7 @@ import ButtonBar from '../components/ButtonBar'
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
 import { Ionicons } from '@expo/vector-icons';
-import {containers, buttonStyles, textStyles, rows} from "../constants/Styles";
+import {containers, buttonStyles, textStyles, rows, iconSizes} from "../constants/Styles";
 import AllButtons from '../constants/ButtonClass';
 import CustModal from '../components/Modal';
 import Moment from 'moment';
@@ -116,7 +116,7 @@ export default function HomeScreen({ route, navigation }) {
 				></ProjectButton>}
 			/>
 			<BorderlessButton key='information' style={buttonStyles.fab} onPress={infoPress}>
-				<Ionicons name="information-circle-outline" size={50} color={Colors.settings} />
+				<Ionicons name="information-circle-outline" size={iconSizes.fabIconSize} color={Colors.settings} />
 			</BorderlessButton>
 			<ButtonBar buttons={[settingsbtn, orderbtn, createbtn]} />
 			<CustModal 

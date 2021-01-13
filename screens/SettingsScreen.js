@@ -9,7 +9,7 @@ import CustModal from '../components/Modal';
 import Notify from '../components/Notify';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
-import {containers, rows, buttonStyles, textStyles} from "../constants/Styles";
+import {containers, rows, buttonStyles, textStyles, iconSizes} from "../constants/Styles";
 import Storage from '../storage/Async';
 import Moment from 'moment';
 import Reminders from '../constants/Reminders';
@@ -516,7 +516,7 @@ export default function SettingsScreen( {route, navigation} ) {
 							<RectButton style={[buttonStyles.settingsBtnArea, (index === buttonsArr.length - 1) && buttonStyles.settingslastBtn]} onPress={unit.onPress} key={unit._title}>
 								<View style={rows.rowSetBtn}>
 									<View style={buttonStyles.settingsIconArea}>
-										<Ionicons name={unit._iconName} size={22} color={Colors.settingsIcons} />
+										<Ionicons name={unit._iconName} size={iconSizes.settingsIconSize} color={Colors.settingsIcons} />
 									</View>
 									<View>
 										<Text style={[textStyles.settingsBtnText, {color: darkMode ? Colors.darkmode.text : Colors.maintext}]}>{unit._title}</Text>
