@@ -46,7 +46,7 @@ const containers = StyleSheet.create({
         elevation: 5
     },
     pickerArea: {
-        maxHeight: 150,
+        maxHeight: 150 * sizer,
         marginVertical: 10,
         borderColor: Colors.done,
         borderWidth: .5,

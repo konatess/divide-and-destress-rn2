@@ -158,7 +158,7 @@ export default function SettingsScreen( {route, navigation} ) {
 			let defaultProj = projects.filter(proj => {
 				return proj.obj._frequency === 0 || proj.obj._time === 'default'
 			})
-			for (let i = 0; 1 < defaultProj.length; i++) {
+			for (let i = 0; i < defaultProj.length; i++) {
 				await Reminders.cancelNotification([defaultProj[i].obj._reminders.dueTom]);
 				await Reminders.cancelNotification(defaultProj[i].obj._reminders.regular);
 				let remindersObj = await Reminders.scheduleNotification(
