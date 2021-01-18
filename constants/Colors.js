@@ -1,6 +1,6 @@
 const tintColor = '#2f95dc';
 const purple = '#580084' // '#9200DA';
-const iconColor = '#3A8BA6'
+const iconColor = '#409AB5'
 
 export default {
     tintColor,
@@ -32,6 +32,7 @@ export default {
     modalbackground: '#eee',
     settingsIcons: '#888',
     transparent: '#0000',
+    translucentWhite: '#FFF4',
     toggle: {
         trackfalse: '#888', 
         tracktrue: '#006EC3', // '#0090FF',

@@ -13,6 +13,7 @@ export default {
         projPrefix: 'PROJ-',
     },
     mailto: 'mailto:<admin@buddingapps.com>?subject=Divide%20%26%20De-Stress',
+    website: 'https://www.buddingapps.com/projects/divide-%26-de-stress',
     languages: ['English', 'Español',],
     dateFormats: ['MM/DD', 'DD/MM', 'MM-DD', 'DD-MM', 'YY/MM/DD', 'DD/MM/YY', 'MM/DD/YY', 'YY-MM-DD', 'DD-MM-YY', 'MM-DD-YY'],
     timeFormat: 'h:mm a',
@@ -20,7 +21,7 @@ export default {
     regex: {
         titles: /[^\wÀ-ÖØ-öø-ÿ'\- _/&:!]/,
         units: /[^A-Za-zÀ-ÖØ-öø-ÿ ]/,
-        numbers: /([0-9])\w+/,
+        numbers: /[^0-9]/,
     },
     capitalize: (str) => {
         if (typeof str !== 'string' || /[^a-zÀ-ÖØ-öø-ÿ]/.test(str.charAt(0))) {
@@ -52,15 +53,16 @@ export default {
             allSettings: {
                 darkMode: 'Dark Mode On/Off',
                 language: 'Language',
-                dateFormat: 'Date Format:   ',
+                dateFormat: 'Date Format:  ',
                 notifications: 'Default Notification Preferences',
-                freq: 'Notification Frequency:   ',
-                time: 'Notification Time:   ', 
-                unit: 'Set Default Unit:   ',
+                freq: 'Notification Frequency:  ',
+                time: 'Notification Time:  ', 
+                unit: 'Set Default Unit:  ',
                 editUnit: 'Edit or Add Unit Names',
                 tags: 'Edit Your Tags',
                 deleteAll: 'Start Fresh - Delete All Projects',
-                feedback: 'Send Us Your Feedback'
+                feedback: 'Send Us Your Feedback',
+                site: 'Visit Our Website'
             }
         },
         labels: {
@@ -96,6 +98,7 @@ export default {
         frequencyWords: ['default', 'daily', 'every 2 days', 'every 3 days', 'every 4 days', 'every 5 days', 'every 6 days', 'weekly'],
         orders: ['Title', 'Due Next'],
         alerts: {
+            info: `Thank you for downloading\nDivide & De-Stress!\n\nPress "Settings" to:\n\u2022 change app language\n\u2022 change default settings\n\u2022 add unit names\n\u2022 send feedback \n\u2022 visit our website\n\nPress "New" to start tracking a new project.\n\nOnce you have created a project, it will appear on this page. You can view or edit by pressing it.`,
             title: {
                 exists: 'Title already exists.',
                 blank: 'Title cannot be blank.'
@@ -160,15 +163,16 @@ export default {
             allSettings: {
                 darkMode: 'Modo Oscuro Encender/Apagar',
                 language: 'Idioma',
-                dateFormat: 'Formato de Fecha:   ',
+                dateFormat: 'Formato de Fecha:  ',
                 notifications: 'Preferencias por defecto para Notificaciónes',
-                freq: 'Frecuencia de Notificación:   ',
-                time: 'Tiempo de Notificación:   ',
-                unit: 'Establecer Unidad por Defecto:   ',
+                freq: 'Frecuencia de Notificación:  ',
+                time: 'Tiempo de Notificación:  ',
+                unit: 'Establecer Unidad por Defecto:  ',
                 editUnit: 'Editar o Añadir Nombres de Unidad',
                 tags: 'Edita Tu Etiqueta',
-                deleteAll: 'Nuevo Comienzo - quitar Todos los Proyectos',
-                feedback: 'Envíenos Sus Comentarios'
+                deleteAll: 'Quitar Todos los Proyectos',
+                feedback: 'Envíenos Sus Comentarios',
+                site: 'Visite Nuestra Pagina Web'
             }
         },
         labels: {
@@ -204,6 +208,7 @@ export default {
         frequencyWords: ['por defecto', 'diario', 'cada 2 dias', 'cada 3 dias', 'cada 4 dias', 'cada 5 dias', 'cada 6 dias', 'semanal'],
         orders: ['Título', 'Debido Próximo'],
         alerts: {
+            info: `Gracias por descargar\nDivide & De-Stress!\n\nToca "Ajustes" para:\n\u2022 cambiar idioma del app\n\u2022 cambiar ajustes por defecto\n\u2022 añadir nombres de unidad\n\u2022 envíarnos tus comentarios\n\u2022 visitar nuestra pagina web\n\nToca "Nuevo" para comenzar a seguir un nuevo proyecto.\n\nNuevo proyectos aparecen en esta pagina. Toca el proyecto para ver o editar.`,
             title: {
                 exists: 'Título ya existe.',
                 blank: 'Título no puede dejarse en blanco.'

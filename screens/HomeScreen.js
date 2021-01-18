@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, FlatList, StatusBar} from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import { SafeAreaView, Text, View, FlatList, StatusBar } from 'react-native';
+import { RectButton, BorderlessButton } from 'react-native-gesture-handler';
 import ButtonBar from '../components/ButtonBar'
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
+import { Ionicons } from '@expo/vector-icons';
+import {containers, buttonStyles, textStyles, rows, iconSizes} from "../constants/Styles";
 import AllButtons from '../constants/ButtonClass';
 import CustModal from '../components/Modal';
 import Moment from 'moment';
@@ -33,6 +35,11 @@ export default function HomeScreen({ route, navigation }) {
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[settings.language].buttons.cancel;
 	modalCancelbtn.onPress = () => setModalVisible(false);
+	const infoPress = () => {
+		setModalVisible(true);
+		setModalMessage(Strings[settings.language].alerts.info);
+		setModalPickers([])
+	};
 	const modalOrders = Strings[settings.language].orders.map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setModalVisible(false);
@@ -84,12 +91,12 @@ export default function HomeScreen({ route, navigation }) {
 		return refreshData;
 	}, [navigation])
 	return (
-		<SafeAreaView style={[styles.container, {backgroundColor: settings.darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
+		<SafeAreaView style={[containers.safeArea, {backgroundColor: settings.darkmode ? Colors.darkmode.background : Colors.mainbackground}]}>
 			<StatusBar 
 				barStyle={settings.darkmode ? "light-content" : "dark-content"} 
 				backgroundColor={settings.darkmode ? Colors.darkmode.background : Colors.mainbackground} 
 			/>
-			{!projArr.length && <Text style={[styles.labelText, {padding: 20}]}>
+			{!projArr.length && <Text style={[textStyles.projectTitleText, {padding: 20}]}>
 				{Strings[settings.language].placeholder.noProj}
 			</Text>}
 			<FlatList 
@@ -108,6 +115,9 @@ export default function HomeScreen({ route, navigation }) {
 					})}
 				></ProjectButton>}
 			/>
+			<BorderlessButton key='information' style={buttonStyles.fab} onPress={infoPress}>
+				<Ionicons name="information-circle-outline" size={iconSizes.fabIconSize} color={Colors.settings} />
+			</BorderlessButton>
 			<ButtonBar buttons={[settingsbtn, orderbtn, createbtn]} />
 			<CustModal 
 				visible={modalVisible} 
@@ -115,55 +125,32 @@ export default function HomeScreen({ route, navigation }) {
 				pickers={modalPickers}
 				inputs={[]}
 				buttons={[ modalCancelbtn ]}
+				showDate={false}
 				vertical={false}
 				darkmode={settings.darkmode}
-				>
-			</CustModal>
+			/>
 		</SafeAreaView>
 	);
 }
 
 function ProjectButton({ passKey, title, due, perfreqstring, onPress, settings }) {
 	return (
-		<RectButton key={passKey} style={ styles.project } onPress={onPress}>
-			<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-				<View style={styles.projectLabelTextContainer} accessible>
-					<Text style={[styles.labelText, {color: settings.darkmode ? Colors.darkmode.text : Colors.maintext}]}>{title}</Text>
+		<RectButton key={passKey} style={ buttonStyles.projectBtnArea } onPress={onPress}>
+			<View style={[rows.row2, { marginBottom: 0 }]}>
+				<View style={buttonStyles.projectTitleArea} accessible>
+					<Text style={[textStyles.projectTitleText, {color: settings.darkmode ? Colors.darkmode.text : Colors.maintext}]}>{title}</Text>
 				</View>
-				<View style={styles.projectDueTextContainer} accessible>
-					<Text style={[styles.dueText, {color: settings.darkmode ? Colors.darkmode.text : Colors.maintext}]}>
+				<View style={buttonStyles.projectDueArea} accessible>
+					<Text style={[textStyles.projectDueText, {color: settings.darkmode ? Colors.darkmode.text : Colors.maintext}]}>
 						{Moment(due).format(settings.dateFormat)}
 					</Text>
 				</View>
 			</View>
-			<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-				<Text style={[styles.dueText, {color: settings.darkmode ? Colors.darkmode.text : Colors.maintext}]}>
+			<View>
+				<Text style={[textStyles.projectDueText, {color: settings.darkmode ? Colors.darkmode.text : Colors.maintext}]}>
 					{perfreqstring}
 				</Text>
 			</View>
 		</RectButton>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	project: {
-		padding: 15,
-	},
-	projectLabelTextContainer: {
-		flexShrink: 1,
-		paddingRight: 10,
-	},
-	labelText: {
-		fontSize: 22,
-	},
-	projectDueTextContainer: {
-		paddingLeft: 5,
-		justifyContent: 'center',
-	},
-	dueText: {
-		fontSize: 18,
-	},
-});

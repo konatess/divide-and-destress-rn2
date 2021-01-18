@@ -20,6 +20,7 @@ const cancel= new ButtonObj('', Colors.cancel, 'md-close');
 const cancel2= new ButtonObj('', Colors.cancel, 'md-close');
 const done= new ButtonObj('', Colors.done, 'md-checkmark');
 const okay= new ButtonObj('', Colors.done, 'md-checkmark');
+const okaySave= new ButtonObj('', Colors.save, 'md-checkmark');
 const darkMode= new ButtonObj('', Colors.done, 'md-contrast');
 const language= new ButtonObj('', Colors.done, 'language');
 const dateFormat= new ButtonObj('', Colors.done, 'md-calendar');
@@ -30,6 +31,7 @@ const unit= new ButtonObj('', Colors.done, 'list');
 const editUnit= new ButtonObj('', Colors.edit, 'md-add-sharp');
 const deleteAll= new ButtonObj('', Colors.done, 'trash-sharp');
 const feedback= new ButtonObj('', Colors.done, 'chatbubble');
+const site= new ButtonObj('', Colors.done, 'globe');
 
 export default {
     settings: settings,
@@ -45,6 +47,7 @@ export default {
     cancel2: cancel2,
     done: done,
     okay: okay,
+    okaySave: okaySave,
     settingsList: {
         darkMode: darkMode,
         language: language,
@@ -55,6 +58,7 @@ export default {
         defaultUnit: unit,
         editUnit: editUnit,
         deleteAll: deleteAll,
-        feedback: feedback
+        feedback: feedback,
+        site: site
     }
 };

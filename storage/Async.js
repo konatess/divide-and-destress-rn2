@@ -89,13 +89,23 @@ export default {
         }
     },
     updateProj: async (projkey, projobj, language) => {
-        AsyncStorage.mergeItem(projkey, JSON.stringify(projobj), (err) => {
-            err && Notify(language, err);
-        })
+        try {
+            AsyncStorage.mergeItem(projkey, JSON.stringify(projobj), (err) => {
+                err && Notify(language, err);
+            })
+        }
+        catch (error) {
+            return Notify(language, error);
+        }
     },
     deleteProj: async (projkey, language) => {
-        AsyncStorage.removeItem(projkey, (err) => {
-            err && Notify(language, err);
-        });
+        try {
+            AsyncStorage.removeItem(projkey, (err) => {
+                err && Notify(language, err);
+            });
+        }
+        catch (error) {
+            return Notify(language, error);
+        }
     }
 };

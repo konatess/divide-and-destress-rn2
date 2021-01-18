@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { 
     Keyboard, 
+    Platform, 
     SafeAreaView,
-    StyleSheet, 
     Text, 
     TextInput, 
     TouchableHighlight, 
@@ -14,6 +14,7 @@ import ButtonBar from '../components/ButtonBar';
 import CustModal from '../components/Modal';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
+import {containers, rows, buttonStyles, inputStyles, textStyles} from "../constants/Styles";
 import AllButtons from '../constants/ButtonClass.js';
 import Storage from '../storage/Async';
 import Moment from 'moment';
@@ -35,16 +36,23 @@ export default function EditScreen({ route, navigation }) {
     // date/time picker
     const [showDate, setShowDate] = React.useState(false);
     const [dateMode, setDateMode] = React.useState('date');
-    const [dateValue, setDateValue] = React.useState(Moment(project._dueDate).toDate())
+    const generateTempDate = () => {
+        let time = project._time === 'default' ? settings.notifications.time : project._time;
+        let timeM = Moment(time, Strings.timeFormat);
+        let temp = Moment(project._dueDate).hour(timeM.hour()).minute(timeM.minute());
+        return temp.toDate();
+    }
+    const [dateValue, setDateValue] = React.useState(generateTempDate());
+    const [tempDate, setTempDate] = React.useState(generateTempDate());
     const [timeValue, setTimeValue] = React.useState(project._time);
     // Frequency picker
     const [freqValue, setFreqValue] = React.useState(project._frequency);
     // title value
     const [titleValue, setTitleValue] = React.useState(project._title);
     // start and end units
-    const [startValue, setStartValue] = React.useState(project._startUnit);
-    const [currentValue, setCurrentValue] = React.useState(project._currentUnit);
-    const [endValue, setEndValue] = React.useState(project._endUnit);
+    const [startValue, setStartValue] = React.useState(project._startUnit.toString());
+    const [currentValue, setCurrentValue] = React.useState(project._currentUnit.toString());
+    const [endValue, setEndValue] = React.useState(project._endUnit.toString());
     const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s);
     const allPUnits = Strings[settings.language].unitPlurals.concat(settings.userUnits.p);
     // android hide bottom buttons if keyboard is showing
@@ -57,8 +65,8 @@ export default function EditScreen({ route, navigation }) {
             Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
         };
     }, []);
-    const _keyboardDidShow = () => {setKeyboardOut(true)};
-    const _keyboardDidHide = () => { setKeyboardOut(false)};
+    const _keyboardDidShow = () => { setKeyboardOut(true) };
+    const _keyboardDidHide = () => { setKeyboardOut(false) };
     // project to save
     const newProj = new Project();
     const updateProj = async () => {
@@ -77,23 +85,26 @@ export default function EditScreen({ route, navigation }) {
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!startValue === '' || isNaN(parseInt(startValue))) {
+        else if (startValue === '' || isNaN(parseInt(startValue))) {
             if (isNaN(parseInt(startValue))) {
-                setStartValue("0");
+                setStartValue("");
             }
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.first.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!endValue === '' || isNaN(parseInt(endValue))) {
+        else if (endValue === '' || isNaN(parseInt(endValue))) {
             if (isNaN(parseInt(endValue))) {
-                setEndValue("0");
+                setEndValue("");
             }
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.last.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
         }
-        else if (!currentValue) {
+        else if (currentValue === '' || isNaN(parseInt(currentValue))) {
+            if (isNaN(parseInt(currentValue))) {
+                setCurrentValue("");
+            }
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.current.replace(/\*unit\*/g, allSUnits[unitValue])));
             setModalButtons([modalokaybtn]);
             setmodalVisible(true);
@@ -160,6 +171,8 @@ export default function EditScreen({ route, navigation }) {
     modaldonebtn._title = Strings[settings.language].buttons.done;
     const modalcancelbtn = AllButtons.cancel2;
     modalcancelbtn._title = Strings[settings.language].buttons.cancel;
+    const modalTimeOkayBtn = AllButtons.okaySave;
+	modalTimeOkayBtn._title = Strings[settings.language].buttons.okay;
     savebtn.onPress = () => updateProj();
     cancelbtn.onPress = () => navigation.navigate(Strings.routes.display);
     modalokaybtn.onPress = () => setmodalVisible(false);
@@ -167,7 +180,14 @@ export default function EditScreen({ route, navigation }) {
         setmodalVisible(false);
         setModalButtons([]);
         setModalPickers([]);
+        setShowDate(false);
+        setTempDate(dateValue);
     }
+	modalTimeOkayBtn.onPress = () => {
+		dateMode === 'time' ? setTimeValue(Moment(tempDate).format(Strings.timeFormat)) : setDateValue(tempDate);
+		setShowDate(false);
+		setmodalVisible(false);
+	};
     // modal picker buttons
     const unitBtns = allPUnits.map((string, index) => {
 		return ({_title: string, onPress: () => {
@@ -190,78 +210,88 @@ export default function EditScreen({ route, navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <CustModal 
-                visible={modalVisible} 
-                message={modalMessage} 
-				pickers={modalPickers}
-				inputs={[]}
-                buttons={modalButtons} 
-                darkmode={settings.darkmode}
-            />
-            <View style={styles.mainview}>
-                <Text style={styles.labelText}>{Strings[settings.language].labels.title}</Text>
+        <SafeAreaView style={containers.safeArea}>
+            <View style={containers.projArea}>
+                <Text style={textStyles.labelText}>{Strings[settings.language].labels.title}</Text>
                 <TextInput
-                    style={[styles.inputField, {marginBottom: 10}]}
+                    style={[inputStyles.inputField, {marginBottom: 10}]}
                     placeholder={Strings[settings.language].placeholder.title}
                     value={titleValue}
                     autoCapitalize={'words'}
                     onChangeText={text => setTitleValue(text)}
                     onFocus={() => {setShowDate(false);}}
                 />
-                <View style={[styles.row]}>
-                    <Text style={styles.labelText}>{Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[unitValue]))}</Text>
+                <View style={rows.row1}>
+                    <Text style={textStyles.labelText}>{Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[unitValue]))}</Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={inputStyles.inputField}
                         placeholder={'42'}
                         value={currentValue.toString()}
                         keyboardType={'number-pad'}
-                        onChangeText={text => setCurrentValue(text)}
+                        onChangeText={text => {
+                            if (text.length === 0 || !Strings.regex.numbers.test(text)) {
+                                setCurrentValue(text)
+                            }
+                        }}
                         onFocus={() => {setShowDate(false);}}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {color: getTextColor()}]}>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, {color: getTextColor()}]}>
                         {Strings.capitalize(Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={inputStyles.inputField}
                         placeholder={'1'}
                         value={startValue.toString()}
                         keyboardType={'number-pad'}
-                        onChangeText={text => setStartValue(text)}
+                        onChangeText={text => {
+                            if (text.length === 0 || !Strings.regex.numbers.test(text)) {
+                                setStartValue(text)
+                            }
+                        }}
                         onFocus={() => {setShowDate(false);}}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {color: getTextColor()}]}>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, {color: getTextColor()}]}>
                         {Strings.capitalize(Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={inputStyles.inputField}
                         placeholder={'42'}
                         value={endValue.toString()}
                         keyboardType={'number-pad'}
-                        onChangeText={text => setEndValue(text)}
+                        onChangeText={text => {
+                            if (text.length === 0 || !Strings.regex.numbers.test(text)) {
+                                setEndValue(text)
+                            }
+                        }}
                         onFocus={() => {setShowDate(false);}}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {flexWrap: 'wrap'}]}>{Strings[settings.language].labels.dueDate}</Text>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, {flexWrap: 'wrap'}]}>{Strings[settings.language].labels.dueDate}</Text>
                     <TextInput 
-                        style={styles.inputField} 
+                        style={inputStyles.inputField} 
                         value={Moment(dateValue).format(settings.dateFormat)}
                         onFocus={() => {
                             Keyboard.dismiss();
                             setShowDate(true);
                             setDateMode('date');
+                            if (Platform.OS === 'ios') {
+                                setmodalVisible(true);
+                                setModalButtons([modalcancelbtn, modalTimeOkayBtn]);
+                                setModalPickers([]);
+                                setModalMessage('');
+                            }
                         }}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
                     <TextInput
-                        style={[styles.inputField, {color: getTextColor()}]}
+                        style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={allPUnits[unitValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
@@ -273,37 +303,43 @@ export default function EditScreen({ route, navigation }) {
                         }}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
+                <View style={rows.row1}>
+                    <Text style={textStyles.labelText}>{Strings[settings.language].labels.notification}</Text>
                     <TouchableHighlight
-                        style={[styles.defaultsButton, {marginLeft: 5}]}
+                        style={[buttonStyles.basicButton, {marginLeft: 5, backgroundColor: Colors.cancel}]}
                         onPress={() => {
                             setTimeValue('default');
                             setFreqValue(0);
                             setShowDate(false);
                         }}
                         >
-                        <Text style={styles.buttonText}>
+                        <Text style={textStyles.buttonText}>
                             {Strings[settings.language].buttons.setToDefault}
                         </Text>
                     </TouchableHighlight>
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.time}</Text>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.time}</Text>
                     <TextInput
-                        style={styles.inputField}
+                        style={inputStyles.inputField}
                         value={timeValue === 'default' ? Strings[settings.language].frequencyWords[0] : timeValue}
                         onFocus={() => {
                             Keyboard.dismiss();
                             setShowDate(true);
                             setDateMode('time');
+                            if (Platform.OS === 'ios') {
+                                setmodalVisible(true);
+                                setModalButtons([modalcancelbtn, modalTimeOkayBtn]);
+                                setModalPickers([]);
+                                setModalMessage('');
+                            }
                         }}
                     />
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {paddingLeft: 10}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
+                <View style={rows.row1}>
+                    <Text style={[textStyles.labelText, {paddingLeft: 10}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
                     <TextInput
-                        style={[styles.inputField, {color: getTextColor()}]}
+                        style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={Strings[settings.language].frequencyWords[freqValue]}
                         onFocus={() => {
                             Keyboard.dismiss();
@@ -315,13 +351,13 @@ export default function EditScreen({ route, navigation }) {
                         }}
                     />
                 </View>
-                { showDate && <DateTimePicker 
+                { Platform.OS ==='android' && showDate && <DateTimePicker 
                     value={dateValue}
                     mode={dateMode}
-                    minimumDate={Moment().toDate()}
+                    minimumDate={Moment().add(2, 'day').toDate()}
                     onChange={(event, date) => {
-                        if (Platform.OS === 'android') {
-                            setShowDate(false)
+                        if (Platform.OS === "android") {
+                            setShowDate(false);
                         }
                         if (dateMode === 'date' && date !== undefined) {
                             setDateValue(date); 
@@ -332,71 +368,22 @@ export default function EditScreen({ route, navigation }) {
                         }
                     }}
                 />}
-                {Platform.OS === 'ios' && showDate && <View style={[styles.row, {justifyContent: 'center'}]}>
-                    <TouchableHighlight 
-                        key={'cancel'} 
-                        style={styles.defaultsButton}
-                        onPress={() => {
-                            setShowDate(false);
-                            dateMode === 'time' && setTimeValue('default');
-                            dateMode === 'date' && setDateValue(Moment().add(7, 'day').toDate());
-                        }}
-                    >
-                        <Text style={styles.buttonText}>{Strings[settings.language].buttons.cancel}</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight 
-                        key={'accept'} 
-                        style={[styles.defaultsButton, {backgroundColor: Colors.create, marginLeft: 10}]}
-                        onPress={() => {
-                            setShowDate(false);
-                        }}
-                    >
-                        <Text style={styles.buttonText}>{Strings[settings.language].buttons.okay}</Text>
-                    </TouchableHighlight>
-                </View>}
             </View>
+            <CustModal 
+                visible={modalVisible} 
+                message={modalMessage} 
+				pickers={modalPickers}
+				inputs={[]}
+				showDate={showDate}
+                datemode={dateMode}
+                dateValue={tempDate}
+                minDate={Moment().toDate()}
+				dateOnChange={(value) => setTempDate(value)}
+                buttons={modalButtons} 
+                darkmode={settings.darkmode}
+            />
             {Platform.OS === 'ios' && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
             {Platform.OS === 'android' && !keyboardOut && <ButtonBar buttons={[ cancelbtn, savebtn ]} />}
         </SafeAreaView>
     )
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-      },
-    mainview: {
-        flex: 1,
-        padding: 10,
-    }, 
-    row: {
-        flexDirection: 'row', 
-        marginBottom: 10,
-    },
-    labelText: {
-        fontSize: 20,
-        paddingRight: 5,
-        textAlignVertical: 'center',
-        flexWrap: 'wrap',
-        flexShrink: 1,
-    }, 
-    inputField: {
-        borderColor: Colors.inputBorder, 
-        borderWidth: 1, 
-        padding: 3,
-        paddingHorizontal: 10,
-        fontSize: 18,
-    }, 
-    defaultsButton: {
-        backgroundColor: Colors.cancel,
-        borderRadius: 20,
-        padding: 10,
-        elevation: 0
-    },
-    buttonText: {
-        color: Colors.navButtonText,
-        fontWeight: "bold",
-        textAlign: "center",
-        fontSize: 14,
-    },
-});

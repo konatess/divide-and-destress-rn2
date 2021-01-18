@@ -4,6 +4,7 @@ import ButtonBar from '../components/ButtonBar'
 import CustModal from '../components/Modal';
 import Colors from '../constants/Colors';
 import Strings from '../constants/Strings';
+import {containers, rows, buttonStyles, textStyles, progressbar} from "../constants/Styles";
 import AllButtons from '../constants/ButtonClass.js';
 import Storage from '../storage/Async';
 import Moment from 'moment';
@@ -158,17 +159,17 @@ export default function DisplayScreen({ route, navigation }) {
         }
     };
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.mainview}>
-                <Text style={styles.labelText}>{Strings[settings.language].labels.title + project._title}</Text>
-                <Text style={styles.labelText}>{perOrDue}</Text>
-                <View style={[styles.row, {justifyContent: 'flex-start', flexWrap: 'wrap'}]}>
-                    <Text style={[styles.labelText, {marginBottom: 0} ]}>
+        <SafeAreaView style={containers.safeArea}>
+            <View style={containers.projArea}>
+                <Text style={[textStyles.labelText, textStyles.displayMargin]}>{Strings[settings.language].labels.title + project._title}</Text>
+                <Text style={[textStyles.labelText, textStyles.displayMargin]}>{perOrDue}</Text>
+                <View style={[rows.row2, rows.row3]}>
+                    <Text style={textStyles.labelText}>
                         {Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[project._unitName]) + current)}
                     </Text>
                     {current < project._endUnit && <TouchableHighlight
                         key='updatebtn'
-                        style={[styles.updateButton, {marginLeft: 20, marginTop: 5}]}
+                        style={[buttonStyles.basicButton, {backgroundColor: Colors.edit, marginLeft: 20, marginTop: 5}]}
                         onPress={() => {
                             setmodalVisible(true)
                             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.updateCurrent.replace(/\*units\*/g, allPUnits[project._unitName]).replace(/\*unit\*/g, allSUnits[project._unitName])))
@@ -190,32 +191,32 @@ export default function DisplayScreen({ route, navigation }) {
                             }])
                         }}
                         >
-                        <Text style={styles.buttonText}>
+                        <Text style={textStyles.buttonText}>
                             {Strings[settings.language].buttons.updateCurrent}
                         </Text>
                     </TouchableHighlight>}
                 </View>
-                <Text style={styles.labelText}>
+                <Text style={[textStyles.labelText, textStyles.displayMargin]}>
                     {Strings[settings.language].labels.dueDate + Moment(project._dueDate).format(settings.dateFormat)}
                 </Text>
-                <Text style={styles.labelText}>
+                <Text style={[textStyles.labelText, textStyles.displayMargin]}>
                     {Strings[settings.language].labels.startDate + Moment(project._startDate).format(settings.dateFormat)}
                 </Text>
-                <Text style={styles.labelText}>
+                <Text style={[textStyles.labelText, textStyles.displayMargin]}>
                     {Strings.capitalize(Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[project._unitName]) + project._startUnit)}
                 </Text>
-                <Text style={styles.labelText}>
+                <Text style={[textStyles.labelText, textStyles.displayMargin]}>
                     {Strings.capitalize(Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[project._unitName]) + project._endUnit)}
                 </Text>
-                <Text style={styles.labelText}>{Strings[settings.language].labels.notification}</Text>
-                <View style={[styles.row, {marginBottom: 0}]}>
-                    <Text style={[styles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.time + '  ' + (project._time === 'default' ? Strings[settings.language].frequencyWords[0] : project._time)}</Text>
+                <Text style={[textStyles.labelText, textStyles.displayMargin]}>{Strings[settings.language].labels.notification}</Text>
+                <View style={[rows.row2, {marginBottom: 0}]}>
+                    <Text style={[textStyles.labelText, textStyles.displayMargin, {paddingLeft: 10}]}>{Strings[settings.language].labels.time + '  ' + (project._time === 'default' ? Strings[settings.language].frequencyWords[0] : project._time)}</Text>
                 </View>
-                <View style={styles.row}>
-                    <Text style={[styles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.frequency + '  ' + Strings[settings.language].frequencyWords[project._frequency]}</Text>
+                <View style={rows.row2}>
+                    <Text style={[textStyles.labelText, textStyles.displayMargin, {paddingLeft: 10}]}>{Strings[settings.language].labels.frequency + '  ' + Strings[settings.language].frequencyWords[project._frequency]}</Text>
                 </View>
-                <View style={styles.progressbar}>
-                    <View style={[styles.progressfill, {width: `${progress*100}%`}]}></View>
+                <View style={progressbar.outline}>
+                    <View style={[progressbar.fill, {width: `${progress*100}%`}]}></View>
                 </View>
             </View>
             {Platform.OS === 'ios' && <ButtonBar buttons={[ deletebtn, editbtn, homebtn ]} />}
@@ -232,55 +233,3 @@ export default function DisplayScreen({ route, navigation }) {
         </SafeAreaView>
     )
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-      },
-    mainview: {
-        flex: 1,
-        padding: 10,
-    }, 
-    row: {
-        flexDirection: 'row', 
-        justifyContent: 'space-between',
-        paddingRight: 10,
-        marginBottom: 15,
-    },
-    labelText: {
-        fontSize: 20,
-        paddingRight: 5,
-        textAlignVertical: 'center',
-        marginBottom: 15,
-        flexWrap: 'wrap',
-        flexShrink: 1,
-    }, 
-    updateButton: {
-        backgroundColor: Colors.edit,
-        borderRadius: 20,
-        padding: 10,
-        elevation: 0
-    },
-    buttonText: {
-        color: Colors.navButtonText,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: 14,
-    },
-    progressbar: {
-        flexDirection: 'row',
-        height: 15,
-        width: '100%',
-        borderColor: Colors.edit,
-        borderWidth: 2,
-        borderRadius: 5,
-    },
-    progressfill: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        backgroundColor: Colors.edit,
-    },
-});
