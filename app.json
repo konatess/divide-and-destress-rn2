@@ -7,7 +7,7 @@
       "android"
     ],
     "description": "A task management app for those projects that need a little effort on a regular basis. Ideal for students managing long-term assignments, or avid readers trying to hit a monthly goal.",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon_words.png",
     "primaryColor": "#409AB5",
@@ -30,7 +30,7 @@
     },
     "android": {
       "package": "com.buddingapps.dividedestress",
-      "versionCode": 1,
+      "versionCode": 2,
       "permissions": []
     }
   }
