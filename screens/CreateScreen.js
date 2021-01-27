@@ -98,14 +98,20 @@ export default function CreateScreen({ route, navigation}) {
             setmodalVisible(true);
         }
         else {
-            let remindersObj = await Reminders.scheduleNotification( 
-                titleValue, 
-                settings.language,
-                (freqValue === 0 ? settings.notifications.freq : freqValue), 
-                (timeValue === 'default' ? settings.notifications.time : timeValue),
-                dateValue
-            )
-            console.log(remindersObj);
+            let remindAllowed = await Reminders.askPermissions();
+            let remindersObj = {
+                dueTom: null,
+                regular: [],
+            }
+            if (remindAllowed) {
+                remindersObj = await Reminders.scheduleNotification( 
+                    titleValue, 
+                    settings.language,
+                    (freqValue === 0 ? settings.notifications.freq : freqValue), 
+                    (timeValue === 'default' ? settings.notifications.time : timeValue),
+                    dateValue
+                )
+            }
             newProj.title = titleValue.trim();
             newProj.startDate = Moment().toDate();
             newProj.dueDate = dateValue;

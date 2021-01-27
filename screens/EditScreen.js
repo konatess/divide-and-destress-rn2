@@ -129,24 +129,31 @@ export default function EditScreen({ route, navigation }) {
                 setmodalVisible(true);
             }
             else {
-                if (current === end) {
-                    await Reminders.cancelNotification([project._reminders.dueTom]);
-                    await Reminders.cancelNotification(project._reminders.regular);
-                    newProj.reminders = {
-                        dueTom: null,
-                        regular: [],
-                    }
+                let remindAllowed = await Reminders.askPermissions();
+                let remindersObj = {
+                    dueTom: null,
+                    regular: [],
                 }
-                else if (project._frequency !== freqValue || project._time !== timeValue || project._dueDate !== dateValue) {
-                    await Reminders.cancelNotification([project._reminders.dueTom]);
-                    await Reminders.cancelNotification(project._reminders.regular);
-                    let remindersObj = await Reminders.scheduleNotification(
-                        titleValue, 
-                        settings.language,
-                        (freqValue === 0 ? settings.notifications.freq : freqValue), 
-                        (timeValue === 'default' ? settings.notifications.time : timeValue),
-                        dateValue)
-                    newProj.reminders = remindersObj;
+                if (remindAllowed) {
+                    if (current === end) {
+                        await Reminders.cancelNotification([project._reminders.dueTom]);
+                        await Reminders.cancelNotification(project._reminders.regular);
+                        newProj.reminders = {
+                            dueTom: null,
+                            regular: [],
+                        }
+                    }
+                    else if (project._frequency !== freqValue || project._time !== timeValue || project._dueDate !== dateValue) {
+                        await Reminders.cancelNotification([project._reminders.dueTom]);
+                        await Reminders.cancelNotification(project._reminders.regular);
+                        remindersObj = await Reminders.scheduleNotification(
+                            titleValue, 
+                            settings.language,
+                            (freqValue === 0 ? settings.notifications.freq : freqValue), 
+                            (timeValue === 'default' ? settings.notifications.time : timeValue),
+                            dateValue)
+                        newProj.reminders = remindersObj;
+                    }
                 }
                 newProj.title = titleValue.trim();
                 newProj.dueDate = dateValue;

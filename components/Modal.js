@@ -65,7 +65,7 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateValu
 							}
 						}}
 					/>}
-					<View style={vertical ? rows.vertical : rows.rowModal}>
+					<View style={[vertical ? rows.vertical : rows.rowModal, {marginTop: 10}]}>
 						{buttons.map((unit, index) => {
 							return (
 								<TouchableHighlight

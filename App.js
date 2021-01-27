@@ -35,11 +35,6 @@ export default function App(props) {
 			setInitialNavigationState(await getInitialState());
 			fetchSettingsObj(await Storage.getSettings('English'));
 
-			// Load fonts
-			await Font.loadAsync({
-			...Ionicons.font,
-			'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
-			});
 		} catch (e) {
 			// We might want to provide this error information to an error reporting service
 			Notify('English', e);
