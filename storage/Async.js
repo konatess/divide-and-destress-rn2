@@ -27,7 +27,7 @@ export default {
             }
         }
         catch (error) {
-            return Notify(language, error);
+            return Notify(language, error.message);
         }
     },
     saveSettings: async (settingsobj, language) => {
@@ -35,7 +35,7 @@ export default {
             await AsyncStorage.setItem(Strings.keys.settings, JSON.stringify(settingsobj))
         }
         catch (error) {
-            return Notify(language, error);
+            return Notify(language, error.message);
         }
     },
     getAllProj: async (language) => {
@@ -57,7 +57,7 @@ export default {
             return projArr;
         }
         catch (error) {
-            return Notify(language, error);
+            return Notify(language, error.message);
         }
     },
     deleteAllProj: async (keys, language) => {
@@ -68,7 +68,7 @@ export default {
                 });
             }
             catch (error) {
-                return Notify(language, error);
+                return Notify(language, error.message);
             }
         }
     },
@@ -85,7 +85,7 @@ export default {
             }
         }
         catch (error) {
-            return Notify(language, error);
+            return Notify(language, error.message);
         }
     },
     updateProj: async (projkey, projobj, language) => {
@@ -95,7 +95,7 @@ export default {
             })
         }
         catch (error) {
-            return Notify(language, error);
+            return Notify(language, error.message);
         }
     },
     deleteProj: async (projkey, language) => {
@@ -105,7 +105,7 @@ export default {
             });
         }
         catch (error) {
-            return Notify(language, error);
+            return Notify(language, error.message);
         }
     }
 };

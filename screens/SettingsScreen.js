@@ -541,7 +541,9 @@ export default function SettingsScreen( {route, navigation} ) {
 					mode={dateMode}
 					onChange={(event, date) => {
 						setShowDate(false);
-						setTime(Moment(date).format(Strings.timeFormat));
+						if (date !== undefined) {
+							setTime(Moment(date).format(Strings.timeFormat));
+						}
 					}}
 				/>}
 			</View>
@@ -552,6 +554,7 @@ export default function SettingsScreen( {route, navigation} ) {
 				inputs={modalInputs}
 				showDate={showDate}
 				datemode={dateMode}
+                dateString={dateMode === 'date' ? Strings[settings.language].labels.dueDate : Strings[settings.language].labels.time}
 				dateValue={dateValue}
 				minDate={Moment().toDate()}
 				dateOnChange={(value) => setDateValue(Moment(value).toDate())}

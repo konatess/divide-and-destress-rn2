@@ -27,19 +27,33 @@ export default {
         Notifications.setNotificationHandler({
             handleNotification: async () => ({
               shouldShowAlert: true,
-              shouldPlaySound: false,
+              shouldPlaySound: true,
               shouldSetBadge: false,
             }),
         });
-
+        console.log("Scheduling " + title)
         const from = Moment(time, Strings.timeFormat);
         const h = from.hour();
         const m = from.minute();
         const d = Moment(dueDate).hour(h).minute(m).subtract(1, 'day');
         const remain = d.diff(from,'day');
         let trigger = d.toDate();
+        console.log(trigger)
         try {
+            console.log('Remain = ' + remain)
             if (remain > 0) {
+                console.log('trying due for ' + title)
+                // try {
+                //     console.log(await Notifications.scheduleNotificationAsync({
+                //         content: {
+                //         title: title,
+                //         body: Strings[language].alerts.reminders.dueTom,
+                //         },
+                //         trigger
+                //     }))
+                // } catch (error) {
+                //     console.error(error.message);
+                // }
                 const dueReminderID = await Notifications.scheduleNotificationAsync({
                     content: {
                     title: title,
@@ -47,10 +61,12 @@ export default {
                     },
                     trigger
                 });
+                console.log('DueTom = ' + dueReminderID)
     
                 const remindersArray = [];
     
                 for (let i = freq; i < remain; i = i + freq) {
+                    console.log("for loop");
                     // set to freq because Moment is mutable. Would change to i for DayJS or other immutable date system
                     let trigger = d.subtract(freq, 'day').toDate();
                     let id = await Notifications.scheduleNotificationAsync({
@@ -60,6 +76,7 @@ export default {
                         },
                         trigger
                     });
+                    console.log('Created ID: ' + id);
                     remindersArray.push(id);
                 }
                 return {

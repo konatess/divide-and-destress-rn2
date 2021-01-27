@@ -325,6 +325,7 @@ export default function CreateScreen({ route, navigation}) {
                 inputs={[]}
 				showDate={showDate}
                 datemode={dateMode}
+                dateString={dateMode === 'date' ? Strings[settings.language].labels.dueDate : Strings[settings.language].labels.time}
                 dateValue={tempDate}
                 minDate={Moment().add(2, 'day').toDate()}
 				dateOnChange={(value) => setTempDate(value)}

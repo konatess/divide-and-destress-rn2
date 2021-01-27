@@ -13,7 +13,7 @@ import Colors from '../constants/Colors';
 import { containers, rows, buttonStyles, textStyles, inputStyles, iconSizes } from "../constants/Styles";
 import { Ionicons } from '@expo/vector-icons';
 
-export default ({visible, message, pickers, inputs, showDate, datemode, dateValue, minDate, dateOnChange, buttons, vertical, darkmode}) => {
+export default ({visible, message, pickers, inputs, showDate, datemode, dateString, dateValue, minDate, dateOnChange, buttons, vertical, darkmode}) => {
     return (
         <Modal
 			animationType="slide"
@@ -54,7 +54,7 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateValu
 							</View>	)})
 					}
 					{Platform.OS === 'ios' && showDate && <DateTimePicker 
-                    	accessibilityLabel={dateMode === 'date' ? Strings[settings.language].labels.dueDate : Strings[settings.language].labels.time}
+                    	accessibilityLabel={dateString}
 						value={dateValue}
 						mode={datemode}
 						display={'spinner'}
