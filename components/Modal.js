@@ -54,6 +54,7 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateValu
 							</View>	)})
 					}
 					{Platform.OS === 'ios' && showDate && <DateTimePicker 
+                    	accessibilityLabel={dateMode === 'date' ? Strings[settings.language].labels.dueDate : Strings[settings.language].labels.time}
 						value={dateValue}
 						mode={datemode}
 						display={'spinner'}

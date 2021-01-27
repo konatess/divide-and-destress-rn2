@@ -302,6 +302,7 @@ export default function CreateScreen({ route, navigation}) {
                     />
                 </View>
                 { Platform.OS === 'android' && showDate && <DateTimePicker 
+                    accessibilityLabel={dateMode === 'date' ? Strings[settings.language].labels.dueDate : Strings[settings.language].labels.time}
                     value={dateValue}
                     mode={dateMode}
                     minimumDate={Moment().add(2, 'day').toDate()}

@@ -536,6 +536,7 @@ export default function SettingsScreen( {route, navigation} ) {
 						)
 				})}
 				{ Platform.OS === 'android' && showDate && <DateTimePicker 
+                    accessibilityLabel={dateMode === 'date' ? Strings[settings.language].labels.dueDate : Strings[settings.language].labels.time}
 					value={Moment(time, Strings.timeFormat).toDate()}
 					mode={dateMode}
 					onChange={(event, date) => {
