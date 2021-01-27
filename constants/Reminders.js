@@ -13,7 +13,7 @@ export default {
           const { status } = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS);
           finalStatus = status;
         }
-        console.log(finalStatus);
+        // console.log(finalStatus);
         if (finalStatus !== "granted") {
           return false;
         }
@@ -31,29 +31,14 @@ export default {
               shouldSetBadge: false,
             }),
         });
-        console.log("Scheduling " + title)
         const from = Moment(time, Strings.timeFormat);
         const h = from.hour();
         const m = from.minute();
         const d = Moment(dueDate).hour(h).minute(m).subtract(1, 'day');
         const remain = d.diff(from,'day');
         let trigger = d.toDate();
-        console.log(trigger)
         try {
-            console.log('Remain = ' + remain)
             if (remain > 0) {
-                console.log('trying due for ' + title)
-                // try {
-                //     console.log(await Notifications.scheduleNotificationAsync({
-                //         content: {
-                //         title: title,
-                //         body: Strings[language].alerts.reminders.dueTom,
-                //         },
-                //         trigger
-                //     }))
-                // } catch (error) {
-                //     console.error(error.message);
-                // }
                 const dueReminderID = await Notifications.scheduleNotificationAsync({
                     content: {
                     title: title,
@@ -61,12 +46,10 @@ export default {
                     },
                     trigger
                 });
-                console.log('DueTom = ' + dueReminderID)
     
                 const remindersArray = [];
     
-                for (let i = freq; i < remain; i = i + freq) {
-                    console.log("for loop");
+                for (let iter = freq; iter < remain; iter = iter + freq) {
                     // set to freq because Moment is mutable. Would change to i for DayJS or other immutable date system
                     let trigger = d.subtract(freq, 'day').toDate();
                     let id = await Notifications.scheduleNotificationAsync({
@@ -76,7 +59,6 @@ export default {
                         },
                         trigger
                     });
-                    console.log('Created ID: ' + id);
                     remindersArray.push(id);
                 }
                 return {
@@ -92,7 +74,7 @@ export default {
             } 
         }
         catch (error) {
-            console.log(error);
+            console.log(error.message);
         }
     },
     cancelNotification: async (iDsArray) => {
@@ -105,7 +87,7 @@ export default {
             await Notifications.cancelAllScheduledNotificationsAsync();
         }
         catch (error) {
-            console.log(error)
+            console.log(error.message)
         }
     }
 }

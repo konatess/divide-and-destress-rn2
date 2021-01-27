@@ -140,19 +140,19 @@ export default function SettingsScreen( {route, navigation} ) {
             let remindAllowed = await Reminders.askPermissions();
             if (remindAllowed) {
 				await Reminders.cancelAll();
-				for (let i = 0; i < projects.length; i++) {
+				for (let k = 0; k < projects.length; k++) {
 					let remindersObj = await Reminders.scheduleNotification(
-						projects[i].obj._title, 
+						projects[k].obj._title, 
 						language, 
-						projects[i].obj._frequency === 0 ? freq : projects[i].obj._frequency, 
-						projects[i].obj._time === 'default' ? time : projects[i].obj._time, 
-						projects[i].obj._dueDate)
+						projects[k].obj._frequency === 0 ? freq : projects[i].obj._frequency, 
+						projects[k].obj._time === 'default' ? time : projects[i].obj._time, 
+						projects[k].obj._dueDate)
 					let updateObj = {
 						obj: {
 							_reminders: remindersObj
 						}
 					}
-					await Storage.updateProj(projects[i].key, updateObj, language);
+					await Storage.updateProj(projects[k].key, updateObj, language);
 				}
 			}
 		}
@@ -167,20 +167,20 @@ export default function SettingsScreen( {route, navigation} ) {
 				let defaultProj = projects.filter(proj => {
 					return proj.obj._frequency === 0 || proj.obj._time === 'default'
 				})
-				for (let i = 0; i < defaultProj.length; i++) {
-					await Reminders.cancelNotification([defaultProj[i].obj._reminders.dueTom]);
-					await Reminders.cancelNotification(defaultProj[i].obj._reminders.regular);
+				for (let j = 0; j < defaultProj.length; j++) {
+					await Reminders.cancelNotification([defaultProj[j].obj._reminders.dueTom]);
+					await Reminders.cancelNotification(defaultProj[j].obj._reminders.regular);
 					remindersObj = await Reminders.scheduleNotification(
-						defaultProj[i].obj._title, 
+						defaultProj[j].obj._title, 
 						language, 
-						defaultProj[i].obj._frequency === 0 ? freq : defaultProj[i].obj._frequency, 
-						defaultProj[i].obj._time === 'default' ? time : defaultProj[i].obj._time, 
-						defaultProj[i].obj._dueDate)
+						defaultProj[j].obj._frequency === 0 ? freq : defaultProj[i].obj._frequency, 
+						defaultProj[j].obj._time === 'default' ? time : defaultProj[i].obj._time, 
+						defaultProj[j].obj._dueDate)
+					let updateObj = {
+						reminders: remindersObj
+					}
+					await Storage.updateProj(defaultProj[j].key, updateObj, language);
 				}
-				let updateObj = {
-					reminders: remindersObj
-				}
-				await Storage.updateProj(defaultProj[i].key, updateObj, language);
 			}
 		}
 		settings.language = language;

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
-import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -37,7 +35,7 @@ export default function App(props) {
 
 		} catch (e) {
 			// We might want to provide this error information to an error reporting service
-			Notify('English', e);
+			Notify('English', e.message);
 		} finally {
 			setLoadingComplete(true);
 			SplashScreen.hideAsync();
