@@ -6,8 +6,6 @@ const width = Dimensions.get('window').width
 
 const sizer = width <= 400 ? 1 : ( width > 700 ? 1.6 : width/400 );
 
-// console.log('width = ' + width)
-
 const containers = StyleSheet.create({
     // safe area view
     safeArea: {

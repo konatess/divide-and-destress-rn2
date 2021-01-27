@@ -6,13 +6,14 @@ import Moment from 'moment';
 export default {
     askPermissions: async () => {
         const { status: existingStatus } = await Permissions.getAsync(
-          Permissions.NOTIFICATIONS
+          Permissions.USER_FACING_NOTIFICATIONS
         );
         let finalStatus = existingStatus;
         if (existingStatus !== "granted") {
-          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+          const { status } = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS);
           finalStatus = status;
         }
+        // console.log(finalStatus);
         if (finalStatus !== "granted") {
           return false;
         }
@@ -26,11 +27,10 @@ export default {
         Notifications.setNotificationHandler({
             handleNotification: async () => ({
               shouldShowAlert: true,
-              shouldPlaySound: false,
+              shouldPlaySound: true,
               shouldSetBadge: false,
             }),
         });
-
         const from = Moment(time, Strings.timeFormat);
         const h = from.hour();
         const m = from.minute();
@@ -49,8 +49,8 @@ export default {
     
                 const remindersArray = [];
     
-                for (let i = freq; i < remain; i = i + freq) {
-                    // set to freq because Moment is mutable. Would change to i for DayJS
+                for (let iter = freq; iter < remain; iter = iter + freq) {
+                    // set to freq because Moment is mutable. Would change to i for DayJS or other immutable date system
                     let trigger = d.subtract(freq, 'day').toDate();
                     let id = await Notifications.scheduleNotificationAsync({
                         content: {
@@ -74,7 +74,7 @@ export default {
             } 
         }
         catch (error) {
-            console.log(error);
+            console.log(error.message);
         }
     },
     cancelNotification: async (iDsArray) => {
@@ -87,7 +87,7 @@ export default {
             await Notifications.cancelAllScheduledNotificationsAsync();
         }
         catch (error) {
-            console.log(error)
+            console.log(error.message)
         }
     }
 }

@@ -137,40 +137,50 @@ export default function SettingsScreen( {route, navigation} ) {
 		setModalInputs([]);
 		// Reschedule reminders on save settings if language has changed.
 		if (settings.language !== language && projects.length) {
-			await Reminders.cancelAll();
-			for (let i = 0; i < projects.length; i++) {
-				let remindersObj = await Reminders.scheduleNotification(
-					projects[i].obj._title, 
-					language, 
-					projects[i].obj._frequency === 0 ? freq : projects[i].obj._frequency, 
-					projects[i].obj._time === 'default' ? time : projects[i].obj._time, 
-					projects[i].obj._dueDate)
-				let updateObj = {
-					obj: {
-						_reminders: remindersObj
+            let remindAllowed = await Reminders.askPermissions();
+            if (remindAllowed) {
+				await Reminders.cancelAll();
+				for (let k = 0; k < projects.length; k++) {
+					let remindersObj = await Reminders.scheduleNotification(
+						projects[k].obj._title, 
+						language, 
+						projects[k].obj._frequency === 0 ? freq : projects[i].obj._frequency, 
+						projects[k].obj._time === 'default' ? time : projects[i].obj._time, 
+						projects[k].obj._dueDate)
+					let updateObj = {
+						obj: {
+							_reminders: remindersObj
+						}
 					}
+					await Storage.updateProj(projects[k].key, updateObj, language);
 				}
-				await Storage.updateProj(projects[i].key, updateObj, language);
 			}
 		}
 		// Reschedule reminders on save if language hasn't changed, but time or frequency have.
 		else if (projects.length && (settings.notifications.freq !== freq || settings.notifications.time !== time)) {
-			let defaultProj = projects.filter(proj => {
-				return proj.obj._frequency === 0 || proj.obj._time === 'default'
-			})
-			for (let i = 0; i < defaultProj.length; i++) {
-				await Reminders.cancelNotification([defaultProj[i].obj._reminders.dueTom]);
-				await Reminders.cancelNotification(defaultProj[i].obj._reminders.regular);
-				let remindersObj = await Reminders.scheduleNotification(
-					defaultProj[i].obj._title, 
-					language, 
-					defaultProj[i].obj._frequency === 0 ? freq : defaultProj[i].obj._frequency, 
-					defaultProj[i].obj._time === 'default' ? time : defaultProj[i].obj._time, 
-					defaultProj[i].obj._dueDate)
-				let updateObj = {
-					reminders: remindersObj
+            let remindAllowed = await Reminders.askPermissions();
+            let remindersObj = {
+                dueTom: null,
+                regular: [],
+            }
+            if (remindAllowed) {
+				let defaultProj = projects.filter(proj => {
+					return proj.obj._frequency === 0 || proj.obj._time === 'default'
+				})
+				for (let j = 0; j < defaultProj.length; j++) {
+					await Reminders.cancelNotification([defaultProj[j].obj._reminders.dueTom]);
+					await Reminders.cancelNotification(defaultProj[j].obj._reminders.regular);
+					remindersObj = await Reminders.scheduleNotification(
+						defaultProj[j].obj._title, 
+						language, 
+						defaultProj[j].obj._frequency === 0 ? freq : defaultProj[i].obj._frequency, 
+						defaultProj[j].obj._time === 'default' ? time : defaultProj[i].obj._time, 
+						defaultProj[j].obj._dueDate)
+					let updateObj = {
+						reminders: remindersObj
+					}
+					await Storage.updateProj(defaultProj[j].key, updateObj, language);
 				}
-				await Storage.updateProj(defaultProj[i].key, updateObj, language);
 			}
 		}
 		settings.language = language;
@@ -526,11 +536,14 @@ export default function SettingsScreen( {route, navigation} ) {
 						)
 				})}
 				{ Platform.OS === 'android' && showDate && <DateTimePicker 
+                    accessibilityLabel={dateMode === 'date' ? Strings[settings.language].labels.dueDate : Strings[settings.language].labels.time}
 					value={Moment(time, Strings.timeFormat).toDate()}
 					mode={dateMode}
 					onChange={(event, date) => {
 						setShowDate(false);
-						setTime(Moment(date).format(Strings.timeFormat));
+						if (date !== undefined) {
+							setTime(Moment(date).format(Strings.timeFormat));
+						}
 					}}
 				/>}
 			</View>
@@ -541,6 +554,7 @@ export default function SettingsScreen( {route, navigation} ) {
 				inputs={modalInputs}
 				showDate={showDate}
 				datemode={dateMode}
+                dateString={dateMode === 'date' ? Strings[settings.language].labels.dueDate : Strings[settings.language].labels.time}
 				dateValue={dateValue}
 				minDate={Moment().toDate()}
 				dateOnChange={(value) => setDateValue(Moment(value).toDate())}

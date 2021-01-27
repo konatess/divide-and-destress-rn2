@@ -13,7 +13,7 @@ import Colors from '../constants/Colors';
 import { containers, rows, buttonStyles, textStyles, inputStyles, iconSizes } from "../constants/Styles";
 import { Ionicons } from '@expo/vector-icons';
 
-export default ({visible, message, pickers, inputs, showDate, datemode, dateValue, minDate, dateOnChange, buttons, vertical, darkmode}) => {
+export default ({visible, message, pickers, inputs, showDate, datemode, dateString, dateValue, minDate, dateOnChange, buttons, vertical, darkmode}) => {
     return (
         <Modal
 			animationType="slide"
@@ -41,6 +41,7 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateValu
 							return ( <View style={rows.rowModal}>
 								<Text style={[textStyles.labelText, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]} key={unit.label}>{unit.label}</Text>
 								<TextInput
+									accessibilityLabel={unit.label}
 									key={unit.label + '-input'}
 									keyboardType={unit.keyboardType || 'default'}
 									style={[inputStyles.inputField, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}
@@ -53,6 +54,7 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateValu
 							</View>	)})
 					}
 					{Platform.OS === 'ios' && showDate && <DateTimePicker 
+                    	accessibilityLabel={dateString}
 						value={dateValue}
 						mode={datemode}
 						display={'spinner'}
@@ -65,7 +67,7 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateValu
 							}
 						}}
 					/>}
-					<View style={vertical ? rows.vertical : rows.rowModal}>
+					<View style={[vertical ? rows.vertical : rows.rowModal, {marginTop: 10}]}>
 						{buttons.map((unit, index) => {
 							return (
 								<TouchableHighlight

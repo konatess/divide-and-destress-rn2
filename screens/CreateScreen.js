@@ -33,7 +33,7 @@ export default function CreateScreen({ route, navigation}) {
     // date picker
     const [showDate, setShowDate] = React.useState(false);
     const [dateMode, setDateMode] = React.useState('date');
-    const [dateValue, setDateValue] = React.useState(Moment().add(7, 'day').toDate());
+    const [dateValue, setDateValue] = React.useState(Moment(settings.notifications.time, Strings.timeFormat).add(7, 'day').toDate());
     const [tempDate, setTempDate] = React.useState(Moment(settings.notifications.time, Strings.timeFormat).add(7, 'day').toDate());
     // time picker
     const [timeValue, setTimeValue] = React.useState('default');
@@ -98,14 +98,20 @@ export default function CreateScreen({ route, navigation}) {
             setmodalVisible(true);
         }
         else {
-            let remindersObj = await Reminders.scheduleNotification( 
-                titleValue, 
-                settings.language,
-                (freqValue === 0 ? settings.notifications.freq : freqValue), 
-                (timeValue === 'default' ? settings.notifications.time : timeValue),
-                dateValue
-            )
-            console.log(remindersObj);
+            let remindAllowed = await Reminders.askPermissions();
+            let remindersObj = {
+                dueTom: null,
+                regular: [],
+            }
+            if (remindAllowed) {
+                remindersObj = await Reminders.scheduleNotification( 
+                    titleValue, 
+                    settings.language,
+                    (freqValue === 0 ? settings.notifications.freq : freqValue), 
+                    (timeValue === 'default' ? settings.notifications.time : timeValue),
+                    dateValue
+                )
+            }
             newProj.title = titleValue.trim();
             newProj.startDate = Moment().toDate();
             newProj.dueDate = dateValue;
@@ -170,6 +176,8 @@ export default function CreateScreen({ route, navigation}) {
             <View style={containers.projArea}>
                 <Text style={[textStyles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.title}</Text>
                 <TextInput
+                    accessibilityLabel={Strings[settings.language].labels.title}
+                    accessibilityHint={Strings[settings.language].placeholder.title}
                     style={[inputStyles.inputField, {marginBottom: 10}, {color: getTextColor()}]}
                     placeholder={Strings[settings.language].placeholder.title}
                     autoCapitalize={'words'}
@@ -180,8 +188,8 @@ export default function CreateScreen({ route, navigation}) {
                         {Strings.capitalize(Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                         style={[inputStyles.inputField, {color: getTextColor()}]}
-                        // defaultValue={'1'}
                         value={startValue}
                         placeholder={'1'}
                         keyboardType={'number-pad'}
@@ -197,6 +205,7 @@ export default function CreateScreen({ route, navigation}) {
                         {Strings.capitalize(Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                         style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={endValue}
                         placeholder={'42'}
@@ -211,6 +220,7 @@ export default function CreateScreen({ route, navigation}) {
                 <View style={rows.row1}>
                     <Text style={[textStyles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.dueDate}</Text>
                     <TextInput 
+                        accessibilityLabel={Strings[settings.language].labels.dueDate}
                         style={[inputStyles.inputField, {color: getTextColor()}]} 
                         value={Moment(dateValue).format(settings.dateFormat)}
                         onFocus={() => {
@@ -229,6 +239,7 @@ export default function CreateScreen({ route, navigation}) {
                 <View style={rows.row1}>
                     <Text style={[textStyles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.unitName}
                         style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={allPUnits[unitValue]}
                         onFocus={() => {
@@ -277,6 +288,7 @@ export default function CreateScreen({ route, navigation}) {
                 <View style={rows.row1}>
                     <Text style={[textStyles.labelText, {paddingLeft: 10}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.frequency}
                         style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={Strings[settings.language].frequencyWords[freqValue]}
                         onFocus={() => {
@@ -290,6 +302,7 @@ export default function CreateScreen({ route, navigation}) {
                     />
                 </View>
                 { Platform.OS === 'android' && showDate && <DateTimePicker 
+                    accessibilityLabel={dateMode === 'date' ? Strings[settings.language].labels.dueDate : Strings[settings.language].labels.time}
                     value={dateValue}
                     mode={dateMode}
                     minimumDate={Moment().add(2, 'day').toDate()}
@@ -312,6 +325,7 @@ export default function CreateScreen({ route, navigation}) {
                 inputs={[]}
 				showDate={showDate}
                 datemode={dateMode}
+                dateString={dateMode === 'date' ? Strings[settings.language].labels.dueDate : Strings[settings.language].labels.time}
                 dateValue={tempDate}
                 minDate={Moment().add(2, 'day').toDate()}
 				dateOnChange={(value) => setTempDate(value)}
