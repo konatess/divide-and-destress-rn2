@@ -41,6 +41,7 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateValu
 							return ( <View style={rows.rowModal}>
 								<Text style={[textStyles.labelText, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]} key={unit.label}>{unit.label}</Text>
 								<TextInput
+									accessibilityLabel={unit.label}
 									key={unit.label + '-input'}
 									keyboardType={unit.keyboardType || 'default'}
 									style={[inputStyles.inputField, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]}

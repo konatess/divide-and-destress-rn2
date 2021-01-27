@@ -221,6 +221,7 @@ export default function EditScreen({ route, navigation }) {
             <View style={containers.projArea}>
                 <Text style={textStyles.labelText}>{Strings[settings.language].labels.title}</Text>
                 <TextInput
+                    accessibilityLabel={Strings[settings.language].labels.title}
                     style={[inputStyles.inputField, {marginBottom: 10}]}
                     placeholder={Strings[settings.language].placeholder.title}
                     value={titleValue}
@@ -231,6 +232,7 @@ export default function EditScreen({ route, navigation }) {
                 <View style={rows.row1}>
                     <Text style={textStyles.labelText}>{Strings.capitalize(Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[unitValue]))}</Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.currentunit.replace(/\*unit\*/g, allSUnits[unitValue])}
                         style={inputStyles.inputField}
                         placeholder={'42'}
                         value={currentValue.toString()}
@@ -248,6 +250,7 @@ export default function EditScreen({ route, navigation }) {
                         {Strings.capitalize(Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                         style={inputStyles.inputField}
                         placeholder={'1'}
                         value={startValue.toString()}
@@ -265,6 +268,7 @@ export default function EditScreen({ route, navigation }) {
                         {Strings.capitalize(Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                         style={inputStyles.inputField}
                         placeholder={'42'}
                         value={endValue.toString()}
@@ -280,6 +284,7 @@ export default function EditScreen({ route, navigation }) {
                 <View style={rows.row1}>
                     <Text style={[textStyles.labelText, {flexWrap: 'wrap'}]}>{Strings[settings.language].labels.dueDate}</Text>
                     <TextInput 
+                        accessibilityLabel={Strings[settings.language].labels.dueDate}
                         style={inputStyles.inputField} 
                         value={Moment(dateValue).format(settings.dateFormat)}
                         onFocus={() => {
@@ -298,6 +303,7 @@ export default function EditScreen({ route, navigation }) {
                 <View style={rows.row1}>
                     <Text style={[textStyles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.unitName}
                         style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={allPUnits[unitValue]}
                         onFocus={() => {
@@ -328,6 +334,7 @@ export default function EditScreen({ route, navigation }) {
                 <View style={rows.row1}>
                     <Text style={[textStyles.labelText, {paddingLeft: 10}]}>{Strings[settings.language].labels.time}</Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.time}
                         style={inputStyles.inputField}
                         value={timeValue === 'default' ? Strings[settings.language].frequencyWords[0] : timeValue}
                         onFocus={() => {
@@ -346,6 +353,7 @@ export default function EditScreen({ route, navigation }) {
                 <View style={rows.row1}>
                     <Text style={[textStyles.labelText, {paddingLeft: 10}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.frequency}
                         style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={Strings[settings.language].frequencyWords[freqValue]}
                         onFocus={() => {

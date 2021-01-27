@@ -176,6 +176,8 @@ export default function CreateScreen({ route, navigation}) {
             <View style={containers.projArea}>
                 <Text style={[textStyles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.title}</Text>
                 <TextInput
+                    accessibilityLabel={Strings[settings.language].labels.title}
+                    accessibilityHint={Strings[settings.language].placeholder.title}
                     style={[inputStyles.inputField, {marginBottom: 10}, {color: getTextColor()}]}
                     placeholder={Strings[settings.language].placeholder.title}
                     autoCapitalize={'words'}
@@ -186,8 +188,8 @@ export default function CreateScreen({ route, navigation}) {
                         {Strings.capitalize(Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.startUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                         style={[inputStyles.inputField, {color: getTextColor()}]}
-                        // defaultValue={'1'}
                         value={startValue}
                         placeholder={'1'}
                         keyboardType={'number-pad'}
@@ -203,6 +205,7 @@ export default function CreateScreen({ route, navigation}) {
                         {Strings.capitalize(Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue]))}
                     </Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.endUnit.replace(/\*unit\*/g, allSUnits[unitValue])}
                         style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={endValue}
                         placeholder={'42'}
@@ -217,6 +220,7 @@ export default function CreateScreen({ route, navigation}) {
                 <View style={rows.row1}>
                     <Text style={[textStyles.labelText, {color: getTextColor()}]}>{Strings[settings.language].labels.dueDate}</Text>
                     <TextInput 
+                        accessibilityLabel={Strings[settings.language].labels.dueDate}
                         style={[inputStyles.inputField, {color: getTextColor()}]} 
                         value={Moment(dateValue).format(settings.dateFormat)}
                         onFocus={() => {
@@ -235,6 +239,7 @@ export default function CreateScreen({ route, navigation}) {
                 <View style={rows.row1}>
                     <Text style={[textStyles.labelText, { textAlignVertical: 'center'}, {color: getTextColor()}]}>{Strings[settings.language].labels.unitName}</Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.unitName}
                         style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={allPUnits[unitValue]}
                         onFocus={() => {
@@ -283,6 +288,7 @@ export default function CreateScreen({ route, navigation}) {
                 <View style={rows.row1}>
                     <Text style={[textStyles.labelText, {paddingLeft: 10}, {color: getTextColor()}]}>{Strings[settings.language].labels.frequency}</Text>
                     <TextInput
+                        accessibilityLabel={Strings[settings.language].labels.frequency}
                         style={[inputStyles.inputField, {color: getTextColor()}]}
                         value={Strings[settings.language].frequencyWords[freqValue]}
                         onFocus={() => {
