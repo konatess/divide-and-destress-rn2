@@ -29,7 +29,7 @@ export default function DisplayScreen({ route, navigation }) {
             // units remaining
             let units = project._endUnit - current;
             // days remaining
-            let days = Moment().diff(project._dueDate, 'days')*-1
+            let days = Moment(project._time === "default" ? settings.notifications.time : project._time, Strings.timeFormat).diff(project._dueDate, 'days')*-1
             if (units === 0) {
                 return setPerOrDue(Strings[settings.language].labels.complete)
             }

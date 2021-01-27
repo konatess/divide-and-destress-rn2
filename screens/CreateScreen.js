@@ -33,7 +33,7 @@ export default function CreateScreen({ route, navigation}) {
     // date picker
     const [showDate, setShowDate] = React.useState(false);
     const [dateMode, setDateMode] = React.useState('date');
-    const [dateValue, setDateValue] = React.useState(Moment().add(7, 'day').toDate());
+    const [dateValue, setDateValue] = React.useState(Moment(settings.notifications.time, Strings.timeFormat).add(7, 'day').toDate());
     const [tempDate, setTempDate] = React.useState(Moment(settings.notifications.time, Strings.timeFormat).add(7, 'day').toDate());
     // time picker
     const [timeValue, setTimeValue] = React.useState('default');
