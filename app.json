@@ -30,7 +30,7 @@
       "buildNumber": "1.0.5"
     },
     "android": {
-      "package": "com.buddingapps.dividedestress",
+      "package": "com.buddingapps.divide_destress",
       "versionCode": 5,
       "permissions": []
     }
