@@ -41,7 +41,7 @@ export default function DisplayScreen({ route, navigation }) {
                 // days/frequency or default frequency
                 let periods = days/(project._frequency || settings.notifications.freq);
                 // number per day
-                let number = (units/periods).toFixed(1);
+                let number = (units/(periods < 1 ? 1 : periods)).toFixed(1);
                 // singular vs plural
                 let unitLabel = (number === 1) ? allSUnits : allPUnits;
                 // units remaining/freq periods remaining
