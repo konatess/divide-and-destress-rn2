@@ -38,7 +38,7 @@ export default ({visible, message, pickers, inputs, showDate, datemode, dateStri
 						</View>
 					</View>}
 					{(inputs.length > 0) && inputs.map((unit, index) => {
-							return ( <View style={rows.rowModal}>
+							return ( <View style={rows.rowModal} key={"input" + index}>
 								<Text style={[textStyles.labelText, {color: darkmode ? Colors.darkmode.text : Colors.maintext}]} key={unit.label}>{unit.label}</Text>
 								<TextInput
 									accessibilityLabel={unit.label}

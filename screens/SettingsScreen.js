@@ -144,8 +144,8 @@ export default function SettingsScreen( {route, navigation} ) {
 					let remindersObj = await Reminders.scheduleNotification(
 						projects[k].obj._title, 
 						language, 
-						projects[k].obj._frequency === 0 ? freq : projects[i].obj._frequency, 
-						projects[k].obj._time === 'default' ? time : projects[i].obj._time, 
+						projects[k].obj._frequency === 0 ? freq : projects[k].obj._frequency, 
+						projects[k].obj._time === 'default' ? time : projects[k].obj._time, 
 						projects[k].obj._dueDate)
 					let updateObj = {
 						obj: {
@@ -173,8 +173,8 @@ export default function SettingsScreen( {route, navigation} ) {
 					remindersObj = await Reminders.scheduleNotification(
 						defaultProj[j].obj._title, 
 						language, 
-						defaultProj[j].obj._frequency === 0 ? freq : defaultProj[i].obj._frequency, 
-						defaultProj[j].obj._time === 'default' ? time : defaultProj[i].obj._time, 
+						defaultProj[j].obj._frequency === 0 ? freq : defaultProj[j].obj._frequency, 
+						defaultProj[j].obj._time === 'default' ? time : defaultProj[j].obj._time, 
 						defaultProj[j].obj._dueDate)
 					let updateObj = {
 						reminders: remindersObj
