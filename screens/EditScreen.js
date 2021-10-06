@@ -131,7 +131,7 @@ export default function EditScreen({ route, navigation }) {
             else {
                 let remindAllowed = await Reminders.askPermissions();
                 let remindersObj = {
-                    dueTom: null,
+                    dueTom: "",
                     regular: [],
                 }
                 if (remindAllowed) {
@@ -139,7 +139,7 @@ export default function EditScreen({ route, navigation }) {
                         await Reminders.cancelNotification([project._reminders.dueTom]);
                         await Reminders.cancelNotification(project._reminders.regular);
                         newProj.reminders = {
-                            dueTom: null,
+                            dueTom: "",
                             regular: [],
                         }
                     }

@@ -81,7 +81,7 @@ export default {
             }
             else {
                 return {
-                    dueTom: null,
+                    dueTom: "",
                     regular: [],
                 }
             } 

@@ -100,7 +100,7 @@ export default function CreateScreen({ route, navigation}) {
         else {
             let remindAllowed = await Reminders.askPermissions();
             let remindersObj = {
-                dueTom: null,
+                dueTom: "",
                 regular: [],
             }
             if (remindAllowed) {

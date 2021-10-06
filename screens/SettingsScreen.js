@@ -160,7 +160,7 @@ export default function SettingsScreen( {route, navigation} ) {
 		else if (projects.length && (settings.notifications.freq !== freq || settings.notifications.time !== time)) {
             let remindAllowed = await Reminders.askPermissions();
             let remindersObj = {
-                dueTom: null,
+                dueTom: "",
                 regular: [],
             }
             if (remindAllowed) {
