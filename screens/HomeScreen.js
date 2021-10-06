@@ -44,7 +44,12 @@ export default function HomeScreen({ route, navigation }) {
 		return ({_title: string, onPress: () => {
 			setModalVisible(false);
 			let key = Strings.orderKeys[index]
-			setProjArr(projArr.sort((a, b) => a.obj[key].localeCompare(b.obj[key])));
+			if (index === 2) {
+				setProjArr(projArr.sort((a,b) => (a.obj._currentUnit - a.obj._endUnit) - (b.obj._currentUnit - b.obj._endUnit)))
+			}
+			else {
+				setProjArr(projArr.sort((a, b) => a.obj[key].localeCompare(b.obj[key])));
+			}
 		}})
 	});
 	const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s)
