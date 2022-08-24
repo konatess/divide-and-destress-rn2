@@ -32,6 +32,8 @@ const editUnit= new ButtonObj('', Colors.edit, 'md-add-sharp');
 const deleteAll= new ButtonObj('', Colors.done, 'trash-sharp');
 const feedback= new ButtonObj('', Colors.done, 'chatbubble');
 const site= new ButtonObj('', Colors.done, 'globe');
+const hideComp= new ButtonObj('', Colors.edit, 'file-tray');
+const showComp= new ButtonObj('', Colors.edit, 'file-tray-full');
 
 export default {
     settings: settings,
@@ -47,6 +49,8 @@ export default {
     cancel2: cancel2,
     done: done,
     okay: okay,
+    hideComp: hideComp,
+    showComp: showComp,
     okaySave: okaySave,
     settingsList: {
         darkMode: darkMode,

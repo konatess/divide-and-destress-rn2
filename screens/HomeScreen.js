@@ -17,8 +17,10 @@ export default function HomeScreen({ route, navigation }) {
 	const [modalVisible, setModalVisible] = React.useState(false);
     const [modalMessage, setModalMessage] = React.useState();
 	const [modalPickers, setModalPickers] = React.useState([]);
+	const [modalButtons, setModalButtons] = React.useState([])
 	const [projArr, setProjArr] = React.useState([])
 	const [titles, setTitles] = React.useState([]);
+	const [compVisible, setCompVisible] = React.useState(false);
 	const settingsbtn = AllButtons.settings;
 	settingsbtn._title = Strings[settings.language].buttons.settings
 	settingsbtn.onPress = () => navigation.navigate(Strings.routes.settings, {settings: settings, knowntitles: titles, projects: projArr});
@@ -28,6 +30,7 @@ export default function HomeScreen({ route, navigation }) {
 		setModalVisible(true);
 		setModalMessage(Strings[settings.language].alerts.order);
 		setModalPickers([modalOrders])
+		setModalButtons([ compVisible ? modalHideCompbtn : modalShowCompbtn, modalCancelbtn ])
 	};
 	const createbtn = AllButtons.create;
 	createbtn._title = Strings[settings.language].buttons.create;
@@ -39,17 +42,35 @@ export default function HomeScreen({ route, navigation }) {
 		setModalVisible(true);
 		setModalMessage(Strings[settings.language].alerts.info);
 		setModalPickers([])
+		setModalButtons([modalCancelbtn])
 	};
+	const modalHideCompbtn = AllButtons.hideComp;
+	modalHideCompbtn._title = Strings[settings.language].buttons.hideComp;
+	modalHideCompbtn.onPress = () => {
+		setProjArr(projArr.filter(proj => {
+			return proj.obj._endUnit - proj.obj._currentUnit > 0
+		}))
+		setCompVisible(false);
+		setModalVisible(false);
+	}
+	const modalShowCompbtn = AllButtons.showComp;
+	modalShowCompbtn._title = Strings[settings.language].buttons.showComp;
+	modalShowCompbtn.onPress = async () => {
+		let storedProjArr = await Storage.getAllProj(settings.language);
+		if (storedProjArr) {
+			setProjArr(storedProjArr);
+			setTitles(storedProjArr.map((item) => {
+				return item.obj._title
+			}))
+		}
+		setCompVisible(true);
+		setModalVisible(false);
+	}
 	const modalOrders = Strings[settings.language].orders.map((string, index) => {
 		return ({_title: string, onPress: () => {
 			setModalVisible(false);
 			let key = Strings.orderKeys[index]
-			if (index === 2) {
-				setProjArr(projArr.sort((a,b) => (a.obj._currentUnit - a.obj._endUnit) - (b.obj._currentUnit - b.obj._endUnit)))
-			}
-			else {
 				setProjArr(projArr.sort((a, b) => a.obj[key].localeCompare(b.obj[key])));
-			}
 		}})
 	});
 	const allSUnits = Strings[settings.language].units.concat(settings.userUnits.s)
@@ -83,7 +104,10 @@ export default function HomeScreen({ route, navigation }) {
 		const projFromStorage = async () => {
 			let storedProjArr = await Storage.getAllProj(settings.language);
 			if (storedProjArr) {
-				setProjArr(storedProjArr);
+				setProjArr(storedProjArr.filter(proj => {
+					return proj.obj._endUnit - proj.obj._currentUnit > 0
+				}));
+				setCompVisible(false);
 				setTitles(storedProjArr.map((item) => {
 					return item.obj._title
 				}))
@@ -129,9 +153,9 @@ export default function HomeScreen({ route, navigation }) {
 				message={modalMessage}
 				pickers={modalPickers}
 				inputs={[]}
-				buttons={[ modalCancelbtn ]}
+				buttons={modalButtons}
 				showDate={false}
-				vertical={false}
+				vertical={true}
 				darkmode={settings.darkmode}
 			/>
 		</SafeAreaView>
