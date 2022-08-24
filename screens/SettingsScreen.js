@@ -81,17 +81,20 @@ export default function SettingsScreen( {route, navigation} ) {
 		setDeletableUnits(list);
 	}, [userUnits, unit]);
     // android hide bottom buttons if keyboard is showing
-    const [keyboardOut, setKeyboardOut] = React.useState(false);
+	const [keyboardOut, setKeyboardOut] = React.useState(false);
     Platform.OS === 'android' &&  React.useEffect(() => {
-        Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
-        Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+          setKeyboardOut(true);
+        });
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+          setKeyboardOut(false);
+        });
+    
         return () => {
-            Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
-            Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
+          showSubscription.remove();
+          hideSubscription.remove();
         };
-    }, []);
-    const _keyboardDidShow = () => {setKeyboardOut(true)};
-    const _keyboardDidHide = () => { setKeyboardOut(false)};
+      }, []);
 	const modalCancelbtn = AllButtons.cancel2;
 	modalCancelbtn._title = Strings[language].buttons.cancel;
 	modalCancelbtn.onPress = () => {
