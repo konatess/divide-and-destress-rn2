@@ -27,7 +27,7 @@ export default {
     cancel: '#888',
     done: '#777',
     inputBorder: '#ddd',
-    mainbackground: '#eee',
+    mainbackground: '#fcfcfc',
     maintext: '#111',
     modalbackground: '#eee',
     settingsIcons: '#888',
