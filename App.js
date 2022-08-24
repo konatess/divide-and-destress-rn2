@@ -4,7 +4,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import useLinking from './navigation/useLinking';
 import HomeScreen from './screens/HomeScreen'
 import SettingsScreen from './screens/SettingsScreen';
 import DisplayScreen from './screens/DisplayScreen';
@@ -18,19 +17,13 @@ const Stack = createStackNavigator();
 
 export default function App(props) {
 	const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-	const [initialNavigationState, setInitialNavigationState] = React.useState();
 	const [settingsObj, fetchSettingsObj] = React.useState();
-	const containerRef = React.useRef();
-	const { getInitialState } = useLinking(containerRef);
 
 	// Load any resources or data that we need prior to rendering the app
 	React.useEffect(() => {
 		async function loadResourcesAndDataAsync() {
 		try {
 			SplashScreen.preventAutoHideAsync();
-
-			// Load our initial navigation state
-			setInitialNavigationState(await getInitialState());
 			fetchSettingsObj(await Storage.getSettings('English'));
 
 		} catch (e) {
@@ -51,10 +44,10 @@ export default function App(props) {
 		return (
 		<View style={styles.container}>
 			{Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-			<NavigationContainer ref={containerRef} initialState={initialNavigationState}>
+			<NavigationContainer >
 				<Stack.Navigator 
 					initialRouteName={Strings.routes.home}
-					headerMode={'none'}
+					screenOptions={{headerShown: false}}
 				>
 					<Stack.Screen name={Strings.routes.home} 
 						component={HomeScreen}
