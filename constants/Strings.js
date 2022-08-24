@@ -46,6 +46,8 @@ export default {
             cancel: 'Cancel',
             done: 'Done',
             okay: 'Okay',
+            hideComp: 'Hide Completed',
+            showComp: 'Show Completed',
             setToDefault: 'Set to Default',
             updateCurrent: 'Update',
             add: 'Add to',
@@ -96,7 +98,7 @@ export default {
         units: ['word', 'page', 'chapter'],
         unitPlurals: ['words', 'pages', 'chapters'],
         frequencyWords: ['default', 'daily', 'every 2 days', 'every 3 days', 'every 4 days', 'every 5 days', 'every 6 days', 'weekly'],
-        orders: ['Title', 'Due Next', 'In Progress'],
+        orders: ['Title', 'Due Next'],
         alerts: {
             info: `Thank you for downloading\nDivide & De-Stress!\n\nPress "Settings" to:\n\u2022 change app language\n\u2022 change default settings\n\u2022 add unit names\n\u2022 send feedback \n\u2022 visit our website\n\nPress "New" to start tracking a new project.\n\nOnce you have created a project, it will appear on this page. You can view or edit by pressing it.`,
             title: {
@@ -156,6 +158,8 @@ export default {
             cancel: 'Cancelar',
             done: 'Realizar',    
             okay: 'Okay',
+            hideComp: 'Ocultar Completos',
+            showComp: 'Mostrar Completos',
             setToDefault: 'Establecer por Defecto',
             updateCurrent: 'Actualizar el Corriente',
             add: 'Añadir',
@@ -206,7 +210,7 @@ export default {
         units: ['palabra', 'página', 'capítulo'],
         unitPlurals: ['palabras', 'páginas', 'capítulos'],
         frequencyWords: ['por defecto', 'diario', 'cada 2 dias', 'cada 3 dias', 'cada 4 dias', 'cada 5 dias', 'cada 6 dias', 'semanal'],
-        orders: ['Título', 'Debido Próximo', 'In Progreso'],
+        orders: ['Título', 'Debido Próximo'],
         alerts: {
             info: `Gracias por descargar\nDivide & De-Stress!\n\nToca "Ajustes" para:\n\u2022 cambiar idioma del app\n\u2022 cambiar ajustes por defecto\n\u2022 añadir nombres de unidad\n\u2022 envíarnos tus comentarios\n\u2022 visitar nuestra pagina web\n\nToca "Nuevo" para comenzar a seguir un nuevo proyecto.\n\nNuevo proyectos aparecen en esta pagina. Toca el proyecto para ver o editar.`,
             title: {
