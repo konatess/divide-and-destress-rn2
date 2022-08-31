@@ -14,9 +14,6 @@
   },
   "submit": {
     "production": {
-      "android": {
-        "changesNotSentForReview": true
-      }
     }
   }
 }
