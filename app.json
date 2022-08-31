@@ -33,7 +33,11 @@
     },
     "android": {
       "package": "com.buddingapps.divide_destress",
-      "versionCode": 9
+      "versionCode": 9,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon_words.png",
+        "backgroundColor": "#000"
+      }
     },
     "extra": {
       "eas": {
