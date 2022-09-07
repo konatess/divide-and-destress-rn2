@@ -144,7 +144,7 @@ export default function CreateScreen({ route, navigation}) {
     const modalTimeOkayBtn = AllButtons.okaySave;
 	modalTimeOkayBtn._title = Strings[settings.language].buttons.okay;
     savebtn.onPress = () => saveProj();
-	cancelbtn.onPress = () => navigation.navigate(Strings.routes.home);
+	cancelbtn.onPress = () => navigation.goBack();
     modalokaybtn.onPress = () => setmodalVisible(false);
     modalcancelbtn.onPress = () => {
         setmodalVisible(false);

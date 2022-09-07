@@ -1,23 +1,9 @@
 import * as Notifications from "expo-notifications";
-// import * as Permissions from "expo-permissions";
 import Strings from '../constants/Strings';
 import Moment from 'moment';
 
 export default {
     askPermissions: async () => {
-        // const { status: existingStatus } = await Permissions.getAsync(
-        //   Permissions.USER_FACING_NOTIFICATIONS
-        // );
-        // let finalStatus = existingStatus;
-        // if (existingStatus !== "granted") {
-        //   const { status } = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS);
-        //   finalStatus = status;
-        // }
-        // // console.log(finalStatus);
-        // if (finalStatus !== "granted") {
-        //   return false;
-        // }
-        // return true;
         const settings = await Notifications.getPermissionsAsync();
         if (!(settings.granted || settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL || settings.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED)) {
             return await Notifications.requestPermissionsAsync({

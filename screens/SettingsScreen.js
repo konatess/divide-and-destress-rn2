@@ -201,7 +201,7 @@ export default function SettingsScreen( {route, navigation} ) {
 	const cancelbtn = AllButtons.cancel;
 	cancelbtn._title = Strings[language].buttons.cancel;
 	cancelbtn.onPress = () => {
-		navigation.navigate(Strings.routes.home); 
+		navigation.goBack(); 
 	};
 	const dateFormatBtns = Strings.dateFormats.map((string) => {
 		return ({_title: string, onPress: () => {

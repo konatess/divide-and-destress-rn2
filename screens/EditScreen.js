@@ -184,7 +184,7 @@ export default function EditScreen({ route, navigation }) {
     const modalTimeOkayBtn = AllButtons.okaySave;
 	modalTimeOkayBtn._title = Strings[settings.language].buttons.okay;
     savebtn.onPress = () => updateProj();
-    cancelbtn.onPress = () => navigation.navigate(Strings.routes.display);
+    cancelbtn.onPress = () => navigation.goBack();
     modalokaybtn.onPress = () => setmodalVisible(false);
     modalcancelbtn.onPress = () => {
         setmodalVisible(false);
