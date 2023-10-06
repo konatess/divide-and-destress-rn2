@@ -146,7 +146,7 @@ export default function DisplayScreen({ route, navigation }) {
             setModalButtons([modalokaybtn])
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.currentBig.replace(/\*unit\*/g, allSUnits[project._unitName])))
         }
-        else if (updateNum < project._startUnit) {
+        else if (updateNum < project._startUnit -1) {
             setmodalVisible(true);
             setModalButtons([modalokaybtn])
             setModalMessage(Strings.capitalize(Strings[settings.language].alerts.currentSmall.replace(/\*unit\*/g, allSUnits[project._unitName])))

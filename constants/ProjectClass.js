@@ -5,7 +5,7 @@ export class Project {
         this._dueDate = dD;
         this._startUnit = sU || 1;
         this._endUnit = eU;
-        this._currentUnit = cU || 1;
+        this._currentUnit = cU || 0;
         this._unitName = uN || 1;
         this._frequency = freq || 0;
         this._time = time || 'default';
