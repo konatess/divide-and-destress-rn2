@@ -130,6 +130,7 @@ export default function HomeScreen({ route, navigation }) {
 				{Strings[settings.language].placeholder.noProj}
 			</Text>}
 			<FlatList 
+				style={containers.notBehindButtonBar}
 				data={projArr}
 				renderItem={({ item }) => <ProjectButton
 					passKey={item.key}

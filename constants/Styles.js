@@ -16,6 +16,9 @@ const containers = StyleSheet.create({
         flex: 1,
         padding: 10,
     }, 
+    notBehindButtonBar: {
+        marginBottom: 85 * sizer
+    },
     buttonBar: {
         flexDirection: 'row',
         height: 70 * sizer,
