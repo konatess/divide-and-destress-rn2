@@ -88,8 +88,9 @@ export default function HomeScreen({ route, navigation }) {
 		} else if (days < 0) {
 			return Strings[settings.language].labels.overDue;
 		} else {
+			let thisFreq = freq || settings.notifications.freq;
 			// days/frequency or default frequency
-			let periods = days/(freq || settings.notifications.freq);
+			let periods = days < thisFreq ? 1 : days/(thisFreq);
 			// number per day
 			let number = (units/periods).toFixed(1);
 			// singular vs plural
@@ -129,6 +130,7 @@ export default function HomeScreen({ route, navigation }) {
 				{Strings[settings.language].placeholder.noProj}
 			</Text>}
 			<FlatList 
+				style={containers.notBehindButtonBar}
 				data={projArr}
 				renderItem={({ item }) => <ProjectButton
 					passKey={item.key}

@@ -121,7 +121,7 @@ export default function EditScreen({ route, navigation }) {
                 setModalButtons([modalokaybtn]);
                 setmodalVisible(true);
             }
-            else if (current < start) {
+            else if (current < start-1) {
                 setModalMessage(Strings[settings.language].alerts.currentSmall.replace(/\*unit\*/g, allSUnits[unitValue]));
                 setModalButtons([modalokaybtn]);
                 setmodalVisible(true);

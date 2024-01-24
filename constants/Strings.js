@@ -114,7 +114,7 @@ export default {
             order: 'Select below to reorder your projects.',
             updateCurrent: 'Enter a number below to add to or update current *unit*.',
             currentBig: 'Current *unit* cannot be bigger than last *unit*.',
-            currentSmall: 'Current *unit* cannot be smaller than first *unit*.',
+            currentSmall: 'Current *unit* cannot be smaller than first *unit* minus one.',
             create_edit: {
                 unit: 'Choose a unit below. You can add your own units in Settings.',
                 time: 'Choose a time of day to be notified. You can edit the default time in Settings.',
@@ -226,7 +226,7 @@ export default {
             order: 'Selecciona abajo para reordenar tus proyectos.',
             updateCurrent: 'Ingresa un numero abajo para añadir o actualizar *unit* corriente.',
             currentBig: '*unit* corriente no puede ser más grande que *unit* final.',
-            currentSmall: '*unit* corriente no puede ser más menor que *unit* inicial.',
+            currentSmall: '*unit* corriente no puede ser más menor que *unit* inicial menos uno.',
             create_edit: {
                 unit: 'Elige una unidad abajo. Tu puedes añadir tus unidades en Ajustes.',
                 time: 'Elige un tiempo del día para ser notificado. Tu puedes editar el tiempo por defecto en Ajustes.',
