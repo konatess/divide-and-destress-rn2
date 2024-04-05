@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Keyboard, SafeAreaView, StyleSheet, Text, TouchableHighlight, View, } from 'react-native';
+import { Platform, Keyboard, SafeAreaView, Text, TouchableHighlight, View, } from 'react-native';
 import ButtonBar from '../components/ButtonBar'
 import CustModal from '../components/Modal';
 import Colors from '../constants/Colors';
