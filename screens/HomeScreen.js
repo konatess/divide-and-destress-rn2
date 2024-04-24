@@ -10,6 +10,7 @@ import AllButtons from '../constants/ButtonClass';
 import CustModal from '../components/Modal';
 import Moment from 'moment';
 import Storage from '../storage/Async';
+import { GAMBannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 
 
 export default function HomeScreen({ route, navigation }) {
@@ -125,6 +126,13 @@ export default function HomeScreen({ route, navigation }) {
 			<StatusBar 
 				barStyle={settings.darkmode ? "light-content" : "dark-content"} 
 				backgroundColor={settings.darkmode ? Colors.darkmode.background : Colors.mainbackground} 
+			/>
+			<GAMBannerAd
+				unitId={TestIds.BANNER}
+				sizes={[BannerAdSize.FULL_BANNER]}
+				requestOptions={{
+					requestNonPersonalizedAdsOnly: true,
+				}}
 			/>
 			{!projArr.length && <Text style={[textStyles.projectTitleText, {padding: 20}]}>
 				{Strings[settings.language].placeholder.noProj}
