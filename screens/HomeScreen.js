@@ -10,7 +10,7 @@ import AllButtons from '../constants/ButtonClass';
 import CustModal from '../components/Modal';
 import Moment from 'moment';
 import Storage from '../storage/Async';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import MyAdBar from '../components/AdBar';
 
 
 export default function HomeScreen({ route, navigation }) {
@@ -127,13 +127,7 @@ export default function HomeScreen({ route, navigation }) {
 				barStyle={settings.darkmode ? "light-content" : "dark-content"} 
 				backgroundColor={settings.darkmode ? Colors.darkmode.background : Colors.mainbackground} 
 			/>
-			<BannerAd
-				unitId={TestIds.BANNER}
-				sizes={[BannerAdSize.FULL_BANNER]}
-				requestOptions={{
-					requestNonPersonalizedAdsOnly: true,
-				}}
-			/>
+			<MyAdBar/>
 			{!projArr.length && <Text style={[textStyles.projectTitleText, {padding: 20}]}>
 				{Strings[settings.language].placeholder.noProj}
 			</Text>}
