@@ -127,13 +127,13 @@ export default function HomeScreen({ route, navigation }) {
 				barStyle={settings.darkmode ? "light-content" : "dark-content"} 
 				backgroundColor={settings.darkmode ? Colors.darkmode.background : Colors.mainbackground} 
 			/>
-			<GAMBannerAd
+			{/* <GAMBannerAd
 				unitId={TestIds.BANNER}
 				sizes={[BannerAdSize.FULL_BANNER]}
 				requestOptions={{
 					requestNonPersonalizedAdsOnly: true,
 				}}
-			/>
+			/> */}
 			{!projArr.length && <Text style={[textStyles.projectTitleText, {padding: 20}]}>
 				{Strings[settings.language].placeholder.noProj}
 			</Text>}
