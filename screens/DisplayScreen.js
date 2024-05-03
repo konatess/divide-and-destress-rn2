@@ -9,6 +9,7 @@ import AllButtons from '../constants/ButtonClass.js';
 import Storage from '../storage/Async';
 import Moment from 'moment';
 import Reminders from '../constants/Reminders';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 export default function DisplayScreen({ route, navigation }) {
     const { knowntitles } = route.params;
@@ -163,6 +164,13 @@ export default function DisplayScreen({ route, navigation }) {
     };
     return (
         <SafeAreaView style={containers.safeArea}>
+            <BannerAd
+				unitId={TestIds.BANNER}
+				sizes={[BannerAdSize.FULL_BANNER]}
+				requestOptions={{
+					requestNonPersonalizedAdsOnly: true,
+				}}
+			/>
             <View style={containers.projArea}>
                 <Text style={[textStyles.labelText, textStyles.displayMargin]}>{Strings[settings.language].labels.title + project._title}</Text>
                 <Text style={[textStyles.labelText, textStyles.displayMargin]}>{perOrDue}</Text>
