@@ -43,10 +43,7 @@
       "eas": {
         "projectId": "689f619e-4c01-41a4-a2d1-419e90c46ca4"
       }
-    },
-    "plugins": [
-      "expo-asset"
-    ]
+    }
   },
   "react-native-google-mobile-ads": {
     "android_app_id": "ca-app-pub-4985866248559217~8464918921",
