@@ -16,10 +16,12 @@
       "ios": {
         "simulator": true
       },
-      "env": {}
+      "env": {
+      }
     },
     "production": {
-    "env": {}
+      "env": {
+      }
     }
   },
   "submit": {
